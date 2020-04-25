@@ -17,8 +17,11 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
     m_presetsModel{*presetsConfig.presets}
 {
     m_ui->setupUi(this);
+    m_ui->splitter->setSizes({99999, 1});
 
     connect(&m_midiIn, &MidiInWrapper::messageReceived, this, &MainWindow::messageReceived);
+
+    connect(m_ui->sequencerWidget, &SequencerWidget::triggerSample, m_ui->samplesWidget, &SamplesWidget::sequencerTriggerSample);
 
     updateMidiDevices();
 
@@ -99,6 +102,7 @@ void MainWindow::currentRowChanged(const QModelIndex &current)
 
     m_ui->presetDetailWidget->setPreset(preset);
     m_filesModel.setPreset(preset);
+    m_ui->sequencerWidget->setPreset(preset);
     m_ui->samplesWidget->setPreset(preset);
 }
 

@@ -2,12 +2,14 @@
 
 #include <memory>
 #include <vector>
+#include <array>
 
 #include <QWidget>
 #include <QTimer>
 
 namespace Ui { class SequencerWidget; }
 namespace presets { class Preset; class Sequence; }
+class QLabel;
 
 class SequencerWidget : public QWidget
 {
@@ -41,4 +43,5 @@ private:
     QTimer m_timer;
 
     int m_pos;
+    std::array<QLabel*, 24> m_sampleLabels;
 };

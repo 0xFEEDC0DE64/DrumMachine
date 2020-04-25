@@ -11,6 +11,11 @@ win32: {
     LIBS += -lwinmm
 }
 
+unix: {
+    DEFINES += __LINUX_ALSA__
+    LIBS += -lasound
+}
+
 DEFINES += QT_DEPRECATED_WARNINGS QT_DISABLE_DEPRECATED_BEFORE=0x060000
 
 SOURCES += \

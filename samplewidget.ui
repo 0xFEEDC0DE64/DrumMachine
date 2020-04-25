@@ -33,7 +33,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton">
+      <widget class="QToolButton" name="toolButtonReload">
        <property name="text">
         <string>↻</string>
        </property>

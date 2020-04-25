@@ -2,7 +2,6 @@
 #include "ui_samplewidget.h"
 
 #include <QAbstractEventDispatcher>
-#include <QAudioDeviceInfo>
 #include <QSoundEffect>
 #include <QDebug>
 
@@ -32,14 +31,14 @@ SampleWidget::SampleWidget(QWidget *parent) :
 
     connect(m_ui->pushButton, &QAbstractButton::pressed, this, [this](){ pressed(127); });
     connect(m_ui->pushButton, &QAbstractButton::released, this, &SampleWidget::released);
+    connect(m_ui->toolButtonReload, &QAbstractButton::pressed, this, &SampleWidget::createEffect);
 
     updateStatus();
 }
 
 SampleWidget::~SampleWidget()
 {
-    if (m_effect)
-        QMetaObject::invokeMethod(m_effect.get(), [effect=m_effect.release()](){ delete effect; });
+    destroyEffect();
 }
 
 void SampleWidget::setFile(const QString &presetId, const presets::File &file)
@@ -112,7 +111,9 @@ void SampleWidget::pressed(quint8 velocity)
     Q_UNUSED(velocity)
 
     if (m_effect)
+    {
         QMetaObject::invokeMethod(m_effect.get(), &QSoundEffect::play);
+    }
 
     if (m_file && m_file->choke && *m_file->choke)
         emit chokeTriggered(*m_file->choke);
@@ -130,8 +131,16 @@ void SampleWidget::forceStop()
 
 void SampleWidget::setupAudioThread(const QAudioDeviceInfo &device, QThread &thread)
 {
-    const auto setupEffect = [this,device](){
-        m_effect = std::make_unique<QSoundEffect>(device);
+    m_device = device;
+    m_thread = &thread;
+
+    createEffect();
+}
+
+void SampleWidget::createEffect()
+{
+    QMetaObject::invokeMethod(QAbstractEventDispatcher::instance(m_thread), [this](){
+        m_effect = std::make_unique<QSoundEffect>(m_device);
 
         connect(m_effect.get(), &QSoundEffect::playingChanged, this, &SampleWidget::updateStatus);
         connect(m_effect.get(), &QSoundEffect::statusChanged, this, &SampleWidget::updateStatus);
@@ -141,10 +150,7 @@ void SampleWidget::setupAudioThread(const QAudioDeviceInfo &device, QThread &thr
             m_effect->setSource(sampleUrl);
 
         QMetaObject::invokeMethod(this, &SampleWidget::updateStatus);
-    };
-
-    QMetaObject::invokeMethod(QAbstractEventDispatcher::instance(&thread), setupEffect);
-    //setupEffect();
+    });
 }
 
 void SampleWidget::updateStatus()
@@ -181,6 +187,12 @@ void SampleWidget::updateStatus()
         m_ui->statusLabel->setText(tr("No player"));
     else
         m_ui->statusLabel->setText(toString(m_effect->status()));
+}
+
+void SampleWidget::destroyEffect()
+{
+    if (m_effect)
+        QMetaObject::invokeMethod(m_effect.get(), [effect=m_effect.release()](){ delete effect; });
 }
 
 QUrl SampleWidget::sampleUrl() const

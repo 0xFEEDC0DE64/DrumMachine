@@ -28,10 +28,12 @@ public:
 
     void setAudioDevice(const QAudioDeviceInfo &device);
 
+public slots:
+    void sequencerTriggerSample(int index);
+
 private slots:
     void chokeTriggered(int choke);
     void updateWidgets();
-    void sequencerTriggerSample(int index);
     void stopAll();
 
 private:

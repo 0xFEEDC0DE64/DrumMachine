@@ -3,6 +3,8 @@
 
 #include <algorithm>
 
+#include <QDebug>
+
 #include "presets.h"
 
 SequencerWidget::SequencerWidget(QWidget *parent) :
@@ -29,6 +31,9 @@ void SequencerWidget::setPreset(const presets::Preset &preset)
 {
     if (preset.tempo)
         m_ui->spinBoxTempo->setValue(*preset.tempo);
+
+    for (int i = 0; i < 24; i++)
+        qobject_cast<QLabel*>(m_ui->gridLayout->itemAtPosition(2+(i*2), 0)->widget())->setText(*preset.files->at(i).filename);
 
     m_selectedSequence = nullptr;
     m_ui->horizontalSlider->setMaximum(0);

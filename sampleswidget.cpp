@@ -28,8 +28,6 @@ SamplesWidget::SamplesWidget(QWidget *parent) :
     for (const auto &ref : getWidgets())
         connect(&ref.get(), &SampleWidget::chokeTriggered, this, &SamplesWidget::chokeTriggered);
 
-    connect(m_ui->sequencerWidget, &SequencerWidget::triggerSample, this, &SamplesWidget::sequencerTriggerSample);
-
     m_ui->sampleWidget_1->setNote(48);
     m_ui->sampleWidget_2->setNote(50);
     m_ui->sampleWidget_3->setNote(52);
@@ -57,8 +55,6 @@ SamplesWidget::~SamplesWidget()
 void SamplesWidget::setPreset(const presets::Preset &preset)
 {
     m_preset = preset;
-
-    m_ui->sequencerWidget->setPreset(preset);
 
     updateWidgets();
 }
@@ -95,6 +91,17 @@ void SamplesWidget::setAudioDevice(const QAudioDeviceInfo &device)
     }
 }
 
+void SamplesWidget::sequencerTriggerSample(int index)
+{
+    const auto widgets = getWidgets();
+    if (index < 0 || index >= std::size(widgets))
+    {
+        qDebug() << "index out of range" << index;
+        return;
+    }
+    widgets[index].get().pressed(127);
+}
+
 void SamplesWidget::chokeTriggered(int choke)
 {
     for (const auto &ref : getWidgets())
@@ -122,17 +129,6 @@ void SamplesWidget::updateWidgets()
 
     for (; filesIter != std::cend(files) && widgetsIter != std::cend(widgets); std::advance(filesIter, 1), std::advance(widgetsIter, 1))
         widgetsIter->get().setFile(*m_preset.id, *filesIter);
-}
-
-void SamplesWidget::sequencerTriggerSample(int index)
-{
-    const auto widgets = getWidgets();
-    if (index < 0 || index >= std::size(widgets))
-    {
-        qDebug() << "index out of range" << index;
-        return;
-    }
-    widgets[index].get().pressed(127);
 }
 
 void SamplesWidget::stopAll()

@@ -3,12 +3,12 @@
 #include <memory>
 
 #include <QFrame>
+#include <QAudioDeviceInfo>
 
 #include "presets.h"
 
 namespace Ui { class SampleWidget; }
 class QThread;
-class QAudioDeviceInfo;
 class QSoundEffect;
 
 class SampleWidget : public QFrame
@@ -40,9 +40,12 @@ signals:
     void chokeTriggered(int choke);
 
 private slots:
+    void createEffect();
     void updateStatus();
 
 private:
+    void destroyEffect();
+
     QUrl sampleUrl() const;
 
     const std::unique_ptr<Ui::SampleWidget> m_ui;
@@ -51,4 +54,7 @@ private:
     std::optional<presets::File> m_file;
 
     std::unique_ptr<QSoundEffect> m_effect;
+
+    QThread *m_thread{};
+    QAudioDeviceInfo m_device;
 };

@@ -192,7 +192,16 @@
         </widget>
        </widget>
       </widget>
-      <widget class="SamplesWidget" name="samplesWidget" native="true"/>
+      <widget class="QWidget" name="layoutWidget">
+       <layout class="QVBoxLayout" stretch="1,0">
+        <item>
+         <widget class="SequencerWidget" name="sequencerWidget" native="true"/>
+        </item>
+        <item>
+         <widget class="SamplesWidget" name="samplesWidget" native="true"/>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -220,6 +229,12 @@
    <class>PresetDetailWidget</class>
    <extends>QScrollArea</extends>
    <header>presetdetailwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SequencerWidget</class>
+   <extends>QWidget</extends>
+   <header>sequencerwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
