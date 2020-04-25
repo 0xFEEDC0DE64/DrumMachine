@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/drummachine">
+        <file>splashscreen.png</file>
+    </qresource>
+</RCC>
