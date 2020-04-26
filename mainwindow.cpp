@@ -6,14 +6,54 @@
 #include <QTimer>
 #include <QAbstractEventDispatcher>
 #include <QAudioDeviceInfo>
+#include <QDebug>
 
 #include "presets.h"
 #include "midiinwrapper.h"
 #include "midicontainers.h"
 
+namespace {
+void DummyDeleter(PaStream *stream) {}
+void PaStreamCloser(PaStream *stream)
+{
+    if (PaError err = Pa_CloseStream(stream); err != paNoError)
+        fprintf(stderr, "Could not close stream!\n");
+}
+void PaStreamStopperAndCloser(PaStream *stream)
+{
+    if (PaError err = Pa_StopStream(stream); err != paNoError)
+        fprintf(stderr, "Could not stop stream!\n");
+    PaStreamCloser(stream);
+}
+
+void paStreamFinished(void* userData)
+{
+    printf("Stream Completed\n");
+}
+
+int paCallback(const void *inputBuffer, void *outputBuffer,
+               unsigned long framesPerBuffer,
+               const PaStreamCallbackTimeInfo* timeInfo,
+               PaStreamCallbackFlags statusFlags,
+               void *userData)
+{
+    Q_UNUSED(inputBuffer)
+    Q_ASSERT(outputBuffer);
+    Q_ASSERT(framesPerBuffer);
+    Q_UNUSED(timeInfo)
+    Q_UNUSED(statusFlags)
+    Q_ASSERT(userData);
+
+    auto begin = static_cast<frame_t*>(outputBuffer);
+
+    static_cast<MainWindow*>(userData)->writeSamples(begin, begin+framesPerBuffer);
+}
+}
+
 MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *parent) :
     QMainWindow{parent},
     m_ui{std::make_unique<Ui::MainWindow>()},
+    m_paStream(nullptr, DummyDeleter),
     m_presetsModel{*presetsConfig.presets}
 {
     m_ui->setupUi(this);
@@ -40,19 +80,9 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
 
     updateAudioDevices();
 
-    {
-        const auto index = m_devices.indexOf(QAudioDeviceInfo::defaultOutputDevice());
-        if (index != -1)
-            m_ui->comboBoxAudioDevice->setCurrentIndex(index);
-    }
+    m_ui->comboBoxAudioDevice->setCurrentIndex(Pa_GetDefaultOutputDevice());
 
-    {
-        const auto callback = [this](int index){
-            m_ui->samplesWidget->setAudioDevice(m_devices.at(index));
-        };
-        connect(m_ui->comboBoxAudioDevice, qOverload<int>(&QComboBox::currentIndexChanged), m_ui->samplesWidget, callback);
-        callback(m_ui->comboBoxAudioDevice->currentIndex());
-    }
+    connect(m_ui->pushButtonAudioDevice, &QAbstractButton::pressed, this, &MainWindow::openAudioDevice);
 
     m_presetsProxyModel.setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_presetsProxyModel.setSourceModel(&m_presetsModel);
@@ -81,6 +111,65 @@ void MainWindow::selectFirstPreset()
             m_ui->presetsView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
             currentRowChanged(index);
         }
+    }
+}
+
+void MainWindow::writeSamples(frame_t *begin, frame_t *end)
+{
+    std::fill(begin, end, frame_t{0.,0.});
+
+    m_ui->samplesWidget->writeSamples(begin, end);
+}
+
+void MainWindow::openAudioDevice()
+{
+    if (m_paStream)
+    {
+        m_paStream = nullptr;
+        m_ui->pushButtonAudioDevice->setText(tr("Open"));
+    }
+    else
+    {
+        PaDeviceIndex index = m_ui->comboBoxAudioDevice->currentIndex();
+
+        const PaDeviceInfo* pInfo = Pa_GetDeviceInfo(index);
+
+        const PaStreamParameters outputParameters {
+            .device = index,
+            .channelCount = channelCount,
+            .sampleFormat = paFloat32, /* 32 bit floating point output */
+            .suggestedLatency = pInfo->defaultLowOutputLatency,
+            .hostApiSpecificStreamInfo = NULL
+        };
+
+        PaStream *stream{};
+
+        if (PaError err = Pa_OpenStream(&stream, NULL, &outputParameters, sampleRate, m_ui->spinBoxBufferSize->value(), paNoFlag, &paCallback, this); err != paNoError)
+        {
+            QMessageBox::warning(this, tr("Error opening stream!"), tr("Error opening stream!") + "\n\n" + Pa_GetErrorText(err));
+            return;
+        }
+
+        auto smartPtr = std::unique_ptr<PaStream, void(*)(PaStream*)>(stream, PaStreamCloser);
+        stream = nullptr;
+
+        if (PaError err = Pa_SetStreamFinishedCallback(smartPtr.get(), &paStreamFinished); err != paNoError)
+        {
+            QMessageBox::warning(this, tr("Error setting finished callback!"), tr("Error setting finished callback!") + "\n\n" + Pa_GetErrorText(err));
+            return;
+        }
+
+        if (PaError err = Pa_StartStream(smartPtr.get()); err != paNoError)
+        {
+            QMessageBox::warning(this, tr("Error starting stream!"), tr("Error starting stream!") + "\n\n" + Pa_GetErrorText(err));
+            return;
+        }
+
+        // stream has been started and from now on we not only need to delete it, but also stop it first
+        smartPtr.get_deleter() = PaStreamStopperAndCloser;
+
+        m_paStream = std::move(smartPtr);
+        m_ui->pushButtonAudioDevice->setText(tr("Close"));
     }
 }
 
@@ -120,8 +209,11 @@ void MainWindow::updateAudioDevices()
 {
     m_ui->comboBoxAudioDevice->clear();
 
-    m_devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+    const auto count = Pa_GetDeviceCount();
 
-    for (const auto &device : m_devices)
-        m_ui->comboBoxAudioDevice->addItem(device.deviceName());
+    for (PaDeviceIndex i = 0; i < count; i++)
+    {
+        const auto info = Pa_GetDeviceInfo(i);
+        m_ui->comboBoxAudioDevice->addItem(info->name);
+    }
 }

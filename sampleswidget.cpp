@@ -3,7 +3,6 @@
 
 #include <iterator>
 
-#include <QEventLoop>
 #include <QDebug>
 
 #include "midicontainers.h"
@@ -14,10 +13,13 @@ SamplesWidget::SamplesWidget(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
+    m_cache.setCacheDirectory("cache");
+    m_networkAccessManager.setCache(&m_cache);
+
     {
         QEventLoop eventLoop;
-        connect(&m_audioThread, &QThread::started, &eventLoop, &QEventLoop::quit);
-        m_audioThread.start(QThread::HighestPriority);
+        connect(&m_decoderThread, &QThread::started, &eventLoop, &QEventLoop::quit);
+        m_decoderThread.start(QThread::HighestPriority);
         eventLoop.exec();
     }
 
@@ -26,7 +28,11 @@ SamplesWidget::SamplesWidget(QWidget *parent) :
     connect(m_ui->pushButtonStopAll, &QAbstractButton::pressed, this, &SamplesWidget::stopAll);
 
     for (const auto &ref : getWidgets())
+    {
+        ref.get().injectNetworkAccessManager(m_networkAccessManager);
+        ref.get().injectDecodingThread(m_decoderThread);
         connect(&ref.get(), &SampleWidget::chokeTriggered, this, &SamplesWidget::chokeTriggered);
+    }
 
     m_ui->sampleWidget_1->setNote(48);
     m_ui->sampleWidget_2->setNote(50);
@@ -48,8 +54,8 @@ SamplesWidget::SamplesWidget(QWidget *parent) :
 
 SamplesWidget::~SamplesWidget()
 {
-    m_audioThread.exit();
-    m_audioThread.wait();
+    m_decoderThread.exit();
+    m_decoderThread.wait();
 }
 
 void SamplesWidget::setPreset(const presets::Preset &preset)
@@ -82,13 +88,10 @@ void SamplesWidget::messageReceived(const midi::MidiMessage &message)
     }
 }
 
-void SamplesWidget::setAudioDevice(const QAudioDeviceInfo &device)
+void SamplesWidget::writeSamples(frame_t *begin, frame_t *end)
 {
     for (const auto &ref : getWidgets())
-    {
-        connect(&ref.get(), &SampleWidget::chokeTriggered, this, &SamplesWidget::chokeTriggered);
-        ref.get().setupAudioThread(device, m_audioThread);
-    }
+        ref.get().writeSamples(begin, end);
 }
 
 void SamplesWidget::sequencerTriggerSample(int index)

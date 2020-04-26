@@ -32,14 +32,14 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QToolButton" name="toolButtonReload">
-       <property name="text">
-        <string>↻</string>
-       </property>
-      </widget>
-     </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QProgressBar" name="progressBar">
+     <property name="value">
+      <number>24</number>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QPushButton" name="pushButton">

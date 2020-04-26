@@ -8,8 +8,35 @@
 #include <QMessageBox>
 #include <QDebug>
 
+#include "portaudio.h"
+
 #include "jsonconverters.h"
 #include "mainwindow.h"
+
+namespace {
+template<typename T>
+class CleanupHelper
+{
+public:
+    CleanupHelper(T &&callback) :
+        m_callback{std::move(callback)}
+    {}
+
+    ~CleanupHelper()
+    {
+        m_callback();
+    }
+
+private:
+    T m_callback;
+};
+
+template<typename T>
+auto makeCleanupHelper(T &&callback)
+{
+    return CleanupHelper<T>{std::move(callback)};
+}
+}
 
 int main(int argc, char *argv[])
 {
@@ -22,6 +49,18 @@ int main(int argc, char *argv[])
     qDebug() << "supportsSsl" << QSslSocket::supportsSsl();
     qDebug() << "sslLibraryVersionString" << QSslSocket::sslLibraryVersionString();
     qDebug() << "sslLibraryBuildVersionString" << QSslSocket::sslLibraryBuildVersionString();
+
+    if (PaError err = Pa_Initialize(); err != paNoError)
+    {
+        QMessageBox::warning({}, QApplication::translate("main", "Error initializing PortAudio!"), QApplication::translate("main", "Error initializing PortAudio!") + "\n\n" + Pa_GetErrorText(err));
+        return 1;
+    }
+
+    auto helper0 = makeCleanupHelper([](){
+        qDebug() << "helper0";
+        if (PaError err = Pa_Terminate(); err != paNoError)
+            fprintf(stderr, "Could not terminate PortAudio!\n");
+    });
 
     qSetMessagePattern("%{time dd.MM.yyyy HH:mm:ss.zzz} "
                        "["

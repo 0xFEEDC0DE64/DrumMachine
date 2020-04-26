@@ -3,13 +3,16 @@
 #include <memory>
 
 #include <QFrame>
-#include <QAudioDeviceInfo>
 
+#include "audioformat.h"
 #include "presets.h"
+#include "audioplayer.h"
 
 namespace Ui { class SampleWidget; }
-class QThread;
-class QSoundEffect;
+class QNetworkAccessManager;
+class QNetworkReply;
+class QAudioBuffer;
+class AudioDecoder;
 
 class SampleWidget : public QFrame
 {
@@ -34,27 +37,33 @@ public:
 
     void forceStop();
 
-    void setupAudioThread(const QAudioDeviceInfo &device, QThread &thread);
+    void injectNetworkAccessManager(QNetworkAccessManager &networkAccessManager);
+    void injectDecodingThread(QThread &thread);
+
+    void writeSamples(frame_t *begin, frame_t *end);
 
 signals:
     void chokeTriggered(int choke);
+    void startDecoding(const std::shared_ptr<QIODevice> &device);
 
 private slots:
-    void createEffect();
     void updateStatus();
+    void requestFinished();
+    void decodingFinished(const QAudioBuffer &buffer);
 
 private:
-    void destroyEffect();
-
-    QUrl sampleUrl() const;
+    void startRequest();
 
     const std::unique_ptr<Ui::SampleWidget> m_ui;
+
+    std::shared_ptr<QNetworkReply> m_reply;
+
+    std::unique_ptr<AudioDecoder> m_decoder;
+
+    AudioPlayer m_player;
 
     QString m_presetId;
     std::optional<presets::File> m_file;
 
-    std::unique_ptr<QSoundEffect> m_effect;
-
-    QThread *m_thread{};
-    QAudioDeviceInfo m_device;
+    QNetworkAccessManager *m_networkAccessManager{};
 };

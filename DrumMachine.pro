@@ -6,19 +6,14 @@ release: QMAKE_CXXFLAGS_RELEASE -= -O1
 release: QMAKE_CXXFLAGS_RELEASE -= -O2
 release: QMAKE_CXXFLAGS_RELEASE += -O3 -ffast-math -march=native -mtune=native
 
-win32: {
-    DEFINES += __WINDOWS_MM__
-    LIBS += -lwinmm
-}
-
-unix: {
-    DEFINES += __LINUX_ALSA__
-    LIBS += -lasound
-}
+LIBS += -lrtmidi -lportaudio
 
 DEFINES += QT_DEPRECATED_WARNINGS QT_DISABLE_DEPRECATED_BEFORE=0x060000
 
 SOURCES += \
+    audiodecoder.cpp \
+    audioformat.cpp \
+    audioplayer.cpp \
     filesmodel.cpp \
     jsonconverters.cpp \
     main.cpp \
@@ -28,12 +23,14 @@ SOURCES += \
     presetdetailwidget.cpp \
     presets.cpp \
     presetsmodel.cpp \
-    rtmidi/RtMidi.cpp \
     sampleswidget.cpp \
     samplewidget.cpp \
     sequencerwidget.cpp
 
 HEADERS += \
+    audiodecoder.h \
+    audioformat.h \
+    audioplayer.h \
     filesmodel.h \
     jsonconverters.h \
     mainwindow.h \
@@ -42,7 +39,6 @@ HEADERS += \
     presetdetailwidget.h \
     presets.h \
     presetsmodel.h \
-    rtmidi/RtMidi.h \
     sampleswidget.h \
     samplewidget.h \
     sequencerwidget.h

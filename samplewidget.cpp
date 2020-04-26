@@ -3,24 +3,18 @@
 
 #include <QAbstractEventDispatcher>
 #include <QSoundEffect>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QNetworkAccessManager>
+#include <QMetaEnum>
 #include <QDebug>
+
+#include "audiodecoder.h"
 
 namespace {
 QString toString(QString value) { return value; }
 QString toString(int value) { return QString::number(value); }
 QString toString(bool value) { return value?"true":"false"; }
-QString toString(QSoundEffect::Status value)
-{
-    switch (value)
-    {
-    case QSoundEffect::Null: return "Null";
-    case QSoundEffect::Loading: return "Loading";
-    case QSoundEffect::Ready: return "Ready";
-    case QSoundEffect::Error: return "Error";
-    }
-
-    return QString{"Unknown (%0)"}.arg(value);
-}
 }
 
 SampleWidget::SampleWidget(QWidget *parent) :
@@ -29,31 +23,22 @@ SampleWidget::SampleWidget(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
+    connect(&m_player, &AudioPlayer::playingChanged, this, &SampleWidget::updateStatus);
+
     connect(m_ui->pushButton, &QAbstractButton::pressed, this, [this](){ pressed(127); });
     connect(m_ui->pushButton, &QAbstractButton::released, this, &SampleWidget::released);
-    connect(m_ui->toolButtonReload, &QAbstractButton::pressed, this, &SampleWidget::createEffect);
 
     updateStatus();
 }
 
-SampleWidget::~SampleWidget()
-{
-    destroyEffect();
-}
+SampleWidget::~SampleWidget() = default;
 
 void SampleWidget::setFile(const QString &presetId, const presets::File &file)
 {
     m_presetId = presetId;
     m_file = file;
 
-    if (m_effect)
-    {
-        auto sampleUrl = this->sampleUrl();
-        if (!sampleUrl.isEmpty())
-            QMetaObject::invokeMethod(m_effect.get(), [&effect=*m_effect,sampleUrl=std::move(sampleUrl)](){
-                effect.setSource(sampleUrl);
-            });
-    }
+    startRequest();
 
     const auto setupLabel = [&](const auto &value, QLabel *label){
         QString text;
@@ -110,10 +95,7 @@ void SampleWidget::pressed(quint8 velocity)
 {
     Q_UNUSED(velocity)
 
-    if (m_effect)
-    {
-        QMetaObject::invokeMethod(m_effect.get(), &QSoundEffect::play);
-    }
+    m_player.restart();
 
     if (m_file && m_file->choke && *m_file->choke)
         emit chokeTriggered(*m_file->choke);
@@ -125,41 +107,39 @@ void SampleWidget::released()
 
 void SampleWidget::forceStop()
 {
-    if (m_effect)
-        QMetaObject::invokeMethod(m_effect.get(), &QSoundEffect::stop);
+    m_player.setPlaying(false);
 }
 
-void SampleWidget::setupAudioThread(const QAudioDeviceInfo &device, QThread &thread)
+void SampleWidget::injectNetworkAccessManager(QNetworkAccessManager &networkAccessManager)
 {
-    m_device = device;
-    m_thread = &thread;
-
-    createEffect();
+    m_networkAccessManager = &networkAccessManager;
+    if (m_file)
+        startRequest();
 }
 
-void SampleWidget::createEffect()
+void SampleWidget::injectDecodingThread(QThread &thread)
 {
-    QMetaObject::invokeMethod(QAbstractEventDispatcher::instance(m_thread), [this](){
-        m_effect = std::make_unique<QSoundEffect>(m_device);
-
-        connect(m_effect.get(), &QSoundEffect::playingChanged, this, &SampleWidget::updateStatus);
-        connect(m_effect.get(), &QSoundEffect::statusChanged, this, &SampleWidget::updateStatus);
-
-        const auto sampleUrl = this->sampleUrl();
-        if (!sampleUrl.isEmpty())
-            m_effect->setSource(sampleUrl);
-
-        QMetaObject::invokeMethod(this, &SampleWidget::updateStatus);
+    QMetaObject::invokeMethod(QAbstractEventDispatcher::instance(&thread), [this](){
+        m_decoder = std::make_unique<AudioDecoder>();
+        connect(this, &SampleWidget::startDecoding, m_decoder.get(), &AudioDecoder::startDecoding);
+        connect(m_decoder.get(), &AudioDecoder::decodingFinished, this, &SampleWidget::decodingFinished);
+        if (m_reply && m_reply->isFinished() && m_reply->error() == QNetworkReply::NoError)
+            m_decoder->startDecoding(m_reply);
     });
+}
+
+void SampleWidget::writeSamples(frame_t *begin, frame_t *end)
+{
+    m_player.writeSamples(begin, end);
 }
 
 void SampleWidget::updateStatus()
 {
     QPalette pal;
-    if (m_effect && m_file && m_file->color)
+    if (m_file && m_file->color)
     {
-        const auto bright = m_effect->isPlaying() ? 255 : 155;
-        const auto dark = m_effect->isPlaying() ?
+        const auto bright = m_player.playing() ? 255 : 155;
+        const auto dark = m_player.playing() ?
 #if !defined(Q_OS_WIN)
         80 : 0
 #else
@@ -183,22 +163,52 @@ void SampleWidget::updateStatus()
     }
     setPalette(pal);
 
-    if (!m_effect)
-        m_ui->statusLabel->setText(tr("No player"));
+    if (m_reply)
+    {
+        if (!m_reply->isFinished())
+            m_ui->statusLabel->setText(tr("Downloading..."));
+        else if (m_reply->error() != QNetworkReply::NoError)
+            m_ui->statusLabel->setText(QMetaEnum::fromType<QNetworkReply::NetworkError>().valueToKey(m_reply->error()));
+        else
+        {
+            if (!m_decoder)
+                m_ui->statusLabel->setText(tr("Waiting for decoder thread..."));
+            else
+                m_ui->statusLabel->setText(tr("Decoding"));
+        }
+    }
     else
-        m_ui->statusLabel->setText(toString(m_effect->status()));
+        m_ui->statusLabel->setText(m_player.playing() ? tr("Playing") : tr("Ready"));
 }
 
-void SampleWidget::destroyEffect()
+void SampleWidget::requestFinished()
 {
-    if (m_effect)
-        QMetaObject::invokeMethod(m_effect.get(), [effect=m_effect.release()](){ delete effect; });
+    qDebug() << "called" << m_reply->error() << m_reply->attribute(QNetworkRequest::SourceIsFromCacheAttribute);
+    if (m_reply->error() == QNetworkReply::NoError)
+    {
+        emit startDecoding(m_reply);
+    }
+    updateStatus();
 }
 
-QUrl SampleWidget::sampleUrl() const
+void SampleWidget::decodingFinished(const QAudioBuffer &buffer)
 {
-    if (!m_file || !m_file->filename)
-        return {};
+    qDebug() << "called";
+    m_reply = nullptr;
+    m_player.setBuffer(buffer);
+    updateStatus();
+}
 
-    return QUrl{QString{"https://brunner.ninja/komposthaufen/dpm/presets/extracted/%0/%1"}.arg(m_presetId, *m_file->filename)};
+void SampleWidget::startRequest()
+{
+    if (m_networkAccessManager && m_file->filename)
+    {
+        QNetworkRequest request{QUrl{QString{"https://brunner.ninja/komposthaufen/dpm/presets/extracted/%0/%1"}.arg(m_presetId, *m_file->filename)}};
+        request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache);
+        request.setAttribute(QNetworkRequest::CacheSaveControlAttribute, true);
+        m_reply = std::shared_ptr<QNetworkReply>{m_networkAccessManager->get(request)};
+        connect(m_reply.get(), &QNetworkReply::finished, this, &SampleWidget::requestFinished);
+    }
+
+    updateStatus();
 }

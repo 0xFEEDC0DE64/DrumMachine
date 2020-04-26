@@ -5,14 +5,16 @@
 #include <functional>
 
 #include <QWidget>
+#include <QNetworkAccessManager>
+#include <QNetworkDiskCache>
 #include <QThread>
 
+#include "audioformat.h"
 #include "presets.h"
 
 namespace Ui { class SamplesWidget; }
 namespace midi { class MidiMessage; }
 class SampleWidget;
-class QAudioDeviceInfo;
 
 class SamplesWidget : public QWidget
 {
@@ -26,7 +28,7 @@ public:
 
     void messageReceived(const midi::MidiMessage &message);
 
-    void setAudioDevice(const QAudioDeviceInfo &device);
+    void writeSamples(frame_t *begin, frame_t *end);
 
 public slots:
     void sequencerTriggerSample(int index);
@@ -41,7 +43,10 @@ private:
 
     const std::unique_ptr<Ui::SamplesWidget> m_ui;
 
-    presets::Preset m_preset;
+    QNetworkDiskCache m_cache;
+    QNetworkAccessManager m_networkAccessManager;
 
-    QThread m_audioThread;
+    QThread m_decoderThread;
+
+    presets::Preset m_preset;
 };
