@@ -14,7 +14,10 @@ SOURCES += \
     audiodecoder.cpp \
     audioformat.cpp \
     audioplayer.cpp \
+    djwidget.cpp \
     filesmodel.cpp \
+    flatfilesystemmodel.cpp \
+    graphrenderer.cpp \
     jsonconverters.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -23,15 +26,22 @@ SOURCES += \
     presetdetailwidget.cpp \
     presets.cpp \
     presetsmodel.cpp \
+    previewwidget.cpp \
     sampleswidget.cpp \
     samplewidget.cpp \
-    sequencerwidget.cpp
+    scratchwidget.cpp \
+    sequencerwidget.cpp \
+    synthisizer.cpp \
+    trackdeck.cpp
 
 HEADERS += \
     audiodecoder.h \
     audioformat.h \
     audioplayer.h \
+    djwidget.h \
     filesmodel.h \
+    flatfilesystemmodel.h \
+    graphrenderer.h \
     jsonconverters.h \
     mainwindow.h \
     midicontainers.h \
@@ -39,16 +49,22 @@ HEADERS += \
     presetdetailwidget.h \
     presets.h \
     presetsmodel.h \
+    previewwidget.h \
     sampleswidget.h \
     samplewidget.h \
-    sequencerwidget.h
+    scratchwidget.h \
+    sequencerwidget.h \
+    synthisizer.h \
+    trackdeck.h
 
 FORMS += \
+    djwidget.ui \
     mainwindow.ui \
     presetdetailwidget.ui \
     sampleswidget.ui \
     samplewidget.ui \
-    sequencerwidget.ui
+    sequencerwidget.ui \
+    trackdeck.ui
 
 RESOURCES += \
     resources.qrc

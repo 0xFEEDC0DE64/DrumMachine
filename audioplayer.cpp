@@ -19,7 +19,14 @@ void AudioPlayer::writeSamples(frame_t *begin, frame_t *end)
     if (!m_playing)
         return;
 
-    const auto frames = std::min<size_t>(std::distance(begin, end), m_buffer.frameCount()-m_position);
+    // thread safe copies
+    auto position = m_position;
+    const auto speed = m_speed;
+    const auto buffer = m_buffer;
+    const auto volume = m_volume;
+    const auto &data = buffer.constData<frame_t>();
+
+    const auto frames = std::min<size_t>(std::distance(begin, end), buffer.frameCount()-position);
 
     if (!frames)
     {
@@ -28,25 +35,80 @@ void AudioPlayer::writeSamples(frame_t *begin, frame_t *end)
         return;
     }
 
-    std::transform(static_cast<const frame_t *>(begin), static_cast<const frame_t *>(begin+frames), m_buffer.constData<frame_t>() + m_position, begin,
-                   [](const frame_t &frame, const frame_t &frame2)->frame_t{
-        frame_t newFrame;
-        std::transform(std::begin(frame), std::end(frame), std::begin(frame2), std::begin(newFrame),
-                       [](const sample_t &left, const sample_t &right) { return left + right; });
-        return newFrame;
+    bool ended{};
+    std::transform(static_cast<const frame_t *>(begin), static_cast<const frame_t *>(begin+frames), begin,
+                   [&](frame_t frame)->frame_t{
+        if (ended)
+            return frame;
+
+        const auto index = std::size_t(position);
+        if (index >= buffer.frameCount())
+        {
+            ended = true;
+            return frame;
+        }
+
+        const frame_t &frame2 = data[index];
+        position += speed;
+
+        std::transform(std::cbegin(frame), std::cend(frame), std::begin(frame2), std::begin(frame),
+                       [&volume](const sample_t &left, const sample_t &right) { return left + (right*volume); });
+
+        return frame;
     });
 
-    m_position += frames;
+    m_position = position;
+    const auto now = QDateTime::currentDateTime();
+    if (m_lastPositionUpdate.isNull() || m_lastPositionUpdate.msecsTo(now) > 100)
+        emit positionChanged(m_position);
+
+    if (ended)
+        emit playingChanged(m_playing = false);
+}
+
+void AudioPlayer::setPlaying(bool playing)
+{
+    m_playing = playing;
+    emit playingChanged(playing);
+}
+
+void AudioPlayer::setPosition(double position)
+{
+    m_position = position;
+    emit positionChanged(position);
+}
+
+void AudioPlayer::setSpeed(float speed)
+{
+    m_speed = speed;
+    emit speedChanged(speed);
+}
+
+void AudioPlayer::setVolume(float volume)
+{
+    m_volume = volume;
+    emit volumeChanged(volume);
+}
+
+void AudioPlayer::setBuffer(const QAudioBuffer &buffer)
+{
+    stop();
+    emit bufferChanged(m_buffer = buffer);
+}
+
+void AudioPlayer::togglePlaying()
+{
+    emit playingChanged(m_playing = !m_playing);
 }
 
 void AudioPlayer::restart()
 {
-    setPosition(0);
+    setPosition(0.);
     setPlaying(true);
 }
 
 void AudioPlayer::stop()
 {
-    setPosition(0);
+    setPosition(0.);
     setPlaying(false);
 }

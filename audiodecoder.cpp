@@ -22,10 +22,19 @@ AudioDecoder::AudioDecoder(QObject *parent) :
     m_decoder.setAudioFormat(audioFormat());
 }
 
-void AudioDecoder::startDecoding(std::shared_ptr<QIODevice> device)
+void AudioDecoder::startDecodingFilename(const QString &filename)
 {
-    qDebug() << "called" << device.get();
+    if (m_decoder.state() == QAudioDecoder::DecodingState)
+        m_decoder.stop();
 
+    m_decoder.setSourceFilename(filename);
+    m_device = nullptr;
+    m_bytearray.clear();
+    m_decoder.start();
+}
+
+void AudioDecoder::startDecodingDevice(std::shared_ptr<QIODevice> device)
+{
     if (m_decoder.state() == QAudioDecoder::DecodingState)
         m_decoder.stop();
 
@@ -42,7 +51,6 @@ void AudioDecoder::error(const QAudioDecoder::Error error)
 
 void AudioDecoder::finished()
 {
-    qDebug() << "called";
     emit decodingFinished(QAudioBuffer{std::move(m_bytearray), audioFormat()});
 }
 
@@ -71,7 +79,6 @@ void AudioDecoder::durationChanged(const qint64 duration)
     const auto &format = m_decoder.audioFormat();
     const auto reserve = (format.sampleSize()/8) * format.sampleRate() * format.channelCount() * (duration + 1000) / 1000;
     m_bytearray.reserve(reserve);
-    qDebug() << "duration:" << duration << reserve;
 }
 
 namespace {

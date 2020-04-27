@@ -23,6 +23,9 @@ SampleWidget::SampleWidget(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
+    connect(m_ui->dialSpeed, &QAbstractSlider::valueChanged, &m_player, [&player=m_player](int value){ player.setSpeed(float(value)/100.f); });
+    connect(m_ui->dialVolume, &QAbstractSlider::valueChanged, &m_player, [&player=m_player](int value){ player.setVolume(float(value)/100.f); });
+
     connect(&m_player, &AudioPlayer::playingChanged, this, &SampleWidget::updateStatus);
 
     connect(m_ui->pushButton, &QAbstractButton::pressed, this, [this](){ pressed(127); });
@@ -37,6 +40,8 @@ void SampleWidget::setFile(const QString &presetId, const presets::File &file)
 {
     m_presetId = presetId;
     m_file = file;
+
+    m_player.setBuffer({});
 
     startRequest();
 
@@ -84,6 +89,26 @@ void SampleWidget::setNote(quint8 note)
     m_ui->noteSpinBox->setValue(note);
 }
 
+int SampleWidget::speed() const
+{
+    return m_ui->dialSpeed->value();
+}
+
+void SampleWidget::setSpeed(int speed)
+{
+    m_ui->dialSpeed->setValue(speed);
+}
+
+int SampleWidget::volume() const
+{
+    return m_ui->dialVolume->value();
+}
+
+void SampleWidget::setVolume(int volume)
+{
+    m_ui->dialVolume->setValue(volume);
+}
+
 std::optional<int> SampleWidget::choke() const
 {
     if (!m_file)
@@ -121,10 +146,10 @@ void SampleWidget::injectDecodingThread(QThread &thread)
 {
     QMetaObject::invokeMethod(QAbstractEventDispatcher::instance(&thread), [this](){
         m_decoder = std::make_unique<AudioDecoder>();
-        connect(this, &SampleWidget::startDecoding, m_decoder.get(), &AudioDecoder::startDecoding);
+        connect(this, &SampleWidget::startDecoding, m_decoder.get(), &AudioDecoder::startDecodingDevice);
         connect(m_decoder.get(), &AudioDecoder::decodingFinished, this, &SampleWidget::decodingFinished);
         if (m_reply && m_reply->isFinished() && m_reply->error() == QNetworkReply::NoError)
-            m_decoder->startDecoding(m_reply);
+            m_decoder->startDecodingDevice(m_reply);
     });
 }
 
@@ -136,7 +161,7 @@ void SampleWidget::writeSamples(frame_t *begin, frame_t *end)
 void SampleWidget::updateStatus()
 {
     QPalette pal;
-    if (m_file && m_file->color)
+    if (m_file && m_file->color && m_player.buffer().isValid())
     {
         const auto bright = m_player.playing() ? 255 : 155;
         const auto dark = m_player.playing() ?
@@ -183,7 +208,6 @@ void SampleWidget::updateStatus()
 
 void SampleWidget::requestFinished()
 {
-    qDebug() << "called" << m_reply->error() << m_reply->attribute(QNetworkRequest::SourceIsFromCacheAttribute);
     if (m_reply->error() == QNetworkReply::NoError)
     {
         emit startDecoding(m_reply);
@@ -193,9 +217,10 @@ void SampleWidget::requestFinished()
 
 void SampleWidget::decodingFinished(const QAudioBuffer &buffer)
 {
-    qDebug() << "called";
     m_reply = nullptr;
     m_player.setBuffer(buffer);
+    setSpeed(100);
+    setVolume(100);
     updateStatus();
 }
 

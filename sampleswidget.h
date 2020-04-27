@@ -7,7 +7,6 @@
 #include <QWidget>
 #include <QNetworkAccessManager>
 #include <QNetworkDiskCache>
-#include <QThread>
 
 #include "audioformat.h"
 #include "presets.h"
@@ -30,6 +29,8 @@ public:
 
     void writeSamples(frame_t *begin, frame_t *end);
 
+    void injectDecodingThread(QThread &thread);
+
 public slots:
     void sequencerTriggerSample(int index);
 
@@ -45,8 +46,6 @@ private:
 
     QNetworkDiskCache m_cache;
     QNetworkAccessManager m_networkAccessManager;
-
-    QThread m_decoderThread;
 
     presets::Preset m_preset;
 };

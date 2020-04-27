@@ -22,7 +22,8 @@ signals:
     void decodingFinished(const QAudioBuffer &buffer);
 
 public slots:
-    void startDecoding(std::shared_ptr<QIODevice> device);
+    void startDecodingFilename(const QString &filename);
+    void startDecodingDevice(std::shared_ptr<QIODevice> device);
 
 private slots:
     void error(const QAudioDecoder::Error error);

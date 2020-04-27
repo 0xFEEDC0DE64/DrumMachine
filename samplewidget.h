@@ -30,6 +30,12 @@ public:
     quint8 note() const;
     void setNote(quint8 note);
 
+    int speed() const;
+    void setSpeed(int speed);
+
+    int volume() const;
+    void setVolume(int volume);
+
     std::optional<int> choke() const;
 
     void pressed(quint8 velocity);

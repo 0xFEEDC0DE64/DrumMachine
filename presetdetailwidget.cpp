@@ -12,5 +12,5 @@ PresetDetailWidget::~PresetDetailWidget() = default;
 
 void PresetDetailWidget::setPreset(const presets::Preset &preset)
 {
-
+    // TODO
 }

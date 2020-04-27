@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QEventLoop>
 #include <QMetaEnum>
 #include <QMessageBox>
 #include <QTimer>
@@ -53,13 +54,23 @@ int paCallback(const void *inputBuffer, void *outputBuffer,
 MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *parent) :
     QMainWindow{parent},
     m_ui{std::make_unique<Ui::MainWindow>()},
-    m_paStream(nullptr, DummyDeleter),
+    m_paStream{nullptr, DummyDeleter},
     m_presetsModel{*presetsConfig.presets}
 {
     m_ui->setupUi(this);
     m_ui->splitter->setSizes({99999, 1});
 
     connect(&m_midiIn, &MidiInWrapper::messageReceived, this, &MainWindow::messageReceived);
+
+    {
+        QEventLoop eventLoop;
+        connect(&m_decoderThread, &QThread::started, &eventLoop, &QEventLoop::quit);
+        m_decoderThread.start(QThread::HighestPriority);
+        eventLoop.exec();
+    }
+
+    m_ui->samplesWidget->injectDecodingThread(m_decoderThread);
+    m_ui->djWidget->injectDecodingThread(m_decoderThread);
 
     connect(m_ui->sequencerWidget, &SequencerWidget::triggerSample, m_ui->samplesWidget, &SamplesWidget::sequencerTriggerSample);
 
@@ -75,6 +86,7 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
                 m_midiIn.openPort(index);
         }
 
+        m_ui->comboBoxMidiController->setDisabled(m_midiIn.isPortOpen());
         m_ui->pushButtonMidiController->setText(m_midiIn.isPortOpen() ? tr("Close") : tr("Open"));
     });
 
@@ -99,7 +111,11 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
     connect(m_ui->presetsView->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &MainWindow::currentRowChanged);
 }
 
-MainWindow::~MainWindow() = default;
+MainWindow::~MainWindow()
+{
+    m_decoderThread.exit();
+    m_decoderThread.wait();
+}
 
 void MainWindow::selectFirstPreset()
 {
@@ -119,6 +135,15 @@ void MainWindow::writeSamples(frame_t *begin, frame_t *end)
     std::fill(begin, end, frame_t{0.,0.});
 
     m_ui->samplesWidget->writeSamples(begin, end);
+    m_ui->djWidget->writeSamples(begin, end);
+    m_synthisizer.writeSamples(begin, end);
+
+    std::transform(begin, end, begin, [factor=float(m_ui->horizontalSliderMaster->value())/100.f](frame_t frame){
+        std::transform(std::cbegin(frame), std::cend(frame), std::begin(frame), [&factor](const sample_t &sample){
+            return sample*factor;
+        });
+        return frame;
+    });
 }
 
 void MainWindow::openAudioDevice()
@@ -126,6 +151,8 @@ void MainWindow::openAudioDevice()
     if (m_paStream)
     {
         m_paStream = nullptr;
+        m_ui->comboBoxAudioDevice->setEnabled(true);
+        m_ui->spinBoxBufferSize->setEnabled(true);
         m_ui->pushButtonAudioDevice->setText(tr("Open"));
     }
     else
@@ -169,6 +196,8 @@ void MainWindow::openAudioDevice()
         smartPtr.get_deleter() = PaStreamStopperAndCloser;
 
         m_paStream = std::move(smartPtr);
+        m_ui->comboBoxAudioDevice->setEnabled(false);
+        m_ui->spinBoxBufferSize->setEnabled(false);
         m_ui->pushButtonAudioDevice->setText(tr("Close"));
     }
 }
@@ -179,7 +208,10 @@ void MainWindow::messageReceived(const midi::MidiMessage &message)
                                  .arg(message.flag?"true":"false", QMetaEnum::fromType<midi::Command>().valueToKey(int(message.cmd)))
                                  .arg(message.channel).arg(message.note).arg(message.velocity), 1000);
 
-    m_ui->samplesWidget->messageReceived(message);
+    if (m_ui->comboBoxMidiType->currentIndex() == 0)
+        m_ui->samplesWidget->messageReceived(message);
+    else if (m_ui->comboBoxMidiType->currentIndex() == 1)
+        m_synthisizer.messageReceived(message);
 }
 
 void MainWindow::currentRowChanged(const QModelIndex &current)

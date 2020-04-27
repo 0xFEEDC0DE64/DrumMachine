@@ -4,6 +4,7 @@
 
 #include <QMainWindow>
 #include <QSortFilterProxyModel>
+#include <QThread>
 
 #include "portaudio.h"
 
@@ -11,6 +12,7 @@
 #include "presetsmodel.h"
 #include "filesmodel.h"
 #include "midiinwrapper.h"
+#include "synthisizer.h"
 
 namespace Ui { class MainWindow; }
 namespace presets { struct PresetsConfig; }
@@ -42,6 +44,10 @@ private:
     std::unique_ptr<PaStream, void(*)(PaStream*)> m_paStream;
 
     MidiInWrapper m_midiIn;
+
+    QThread m_decoderThread;
+
+    Synthisizer m_synthisizer;
 
     PresetsModel m_presetsModel;
     QSortFilterProxyModel m_presetsProxyModel;

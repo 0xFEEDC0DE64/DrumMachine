@@ -16,13 +16,6 @@ SamplesWidget::SamplesWidget(QWidget *parent) :
     m_cache.setCacheDirectory("cache");
     m_networkAccessManager.setCache(&m_cache);
 
-    {
-        QEventLoop eventLoop;
-        connect(&m_decoderThread, &QThread::started, &eventLoop, &QEventLoop::quit);
-        m_decoderThread.start(QThread::HighestPriority);
-        eventLoop.exec();
-    }
-
     connect(m_ui->checkBox, &QCheckBox::toggled, this, &SamplesWidget::updateWidgets);
 
     connect(m_ui->pushButtonStopAll, &QAbstractButton::pressed, this, &SamplesWidget::stopAll);
@@ -30,7 +23,6 @@ SamplesWidget::SamplesWidget(QWidget *parent) :
     for (const auto &ref : getWidgets())
     {
         ref.get().injectNetworkAccessManager(m_networkAccessManager);
-        ref.get().injectDecodingThread(m_decoderThread);
         connect(&ref.get(), &SampleWidget::chokeTriggered, this, &SamplesWidget::chokeTriggered);
     }
 
@@ -52,11 +44,7 @@ SamplesWidget::SamplesWidget(QWidget *parent) :
     m_ui->sampleWidget_24->setNote(72);
 }
 
-SamplesWidget::~SamplesWidget()
-{
-    m_decoderThread.exit();
-    m_decoderThread.wait();
-}
+SamplesWidget::~SamplesWidget() = default;
 
 void SamplesWidget::setPreset(const presets::Preset &preset)
 {
@@ -92,6 +80,12 @@ void SamplesWidget::writeSamples(frame_t *begin, frame_t *end)
 {
     for (const auto &ref : getWidgets())
         ref.get().writeSamples(begin, end);
+}
+
+void SamplesWidget::injectDecodingThread(QThread &thread)
+{
+    for (const auto &ref : getWidgets())
+        ref.get().injectDecodingThread(thread);
 }
 
 void SamplesWidget::sequencerTriggerSample(int index)
