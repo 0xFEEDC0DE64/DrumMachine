@@ -25,13 +25,14 @@ TrackDeck::TrackDeck(QWidget *parent) :
 
     connect(m_ui->verticalSliderVolume, &QAbstractSlider::valueChanged, &m_player, [&player=m_player](int value){ player.setVolume(float(value)/100.f); });
 
-    connect(m_ui->horizontalSliderSpeed, &QAbstractSlider::valueChanged, &m_player, [&player=m_player](int value){ player.setSpeed(float(value)/100.f); });
+    connect(m_ui->horizontalSliderSpeed, &QAbstractSlider::valueChanged, this, &TrackDeck::speedChanged);
 
     connect(m_ui->previewWidget, &PreviewWidget::positionSelected, &m_player, &AudioPlayer::setPosition);
     connect(&m_player, &AudioPlayer::positionChanged, m_ui->previewWidget, &PreviewWidget::setPosition);
-    connect(m_ui->scratchWidget, &ScratchWidget::scratchSpeed, &m_player, &AudioPlayer::setSpeed);
+    connect(m_ui->scratchWidget, &ScratchWidget::scratchBegin, this, &TrackDeck::scratchBegin);
+    connect(m_ui->scratchWidget, &ScratchWidget::scratchEnd, this, &TrackDeck::scratchEnd);
     connect(&m_player, &AudioPlayer::positionChanged, m_ui->scratchWidget, &ScratchWidget::setPosition);
-    connect(&m_player, &AudioPlayer::playingChanged, m_ui->pushButtonPlay, [&button=*m_ui->pushButtonPlay](bool playing){ button.setText(playing ? tr("▮▮") : tr("▶")); });
+    connect(&m_player, &AudioPlayer::playingChanged, this, &TrackDeck::updatePlayButtonText);
 }
 
 TrackDeck::~TrackDeck() = default;
@@ -143,4 +144,42 @@ void TrackDeck::decodingFinished(const QAudioBuffer &buffer)
     m_ui->previewWidget->setBuffer(buffer);
     m_ui->scratchWidget->setBuffer(buffer);
     m_ui->progressBar->hide();
+}
+
+void TrackDeck::scratchBegin()
+{
+    disconnect(m_ui->horizontalSliderSpeed, &QAbstractSlider::valueChanged, this, &TrackDeck::speedChanged);
+    m_ui->horizontalSliderSpeed->setEnabled(false);
+    connect(m_ui->scratchWidget, &ScratchWidget::scratchSpeed, &m_player, &AudioPlayer::setSpeed);
+    disconnect(&m_player, &AudioPlayer::playingChanged, this, &TrackDeck::updatePlayButtonText);
+
+    m_playingBeforeScratch = m_player.playing();
+    m_player.setPlaying(true);
+
+    m_speedBeforeScratch = m_player.speed();
+
+    m_stopOnEndBeforeScratch = m_player.stopOnEnd();
+    m_player.setStopOnEnd(false);
+}
+
+void TrackDeck::scratchEnd()
+{
+    m_player.setPlaying(m_playingBeforeScratch);
+    m_player.setSpeed(m_speedBeforeScratch);
+    m_player.setStopOnEnd(m_stopOnEndBeforeScratch);
+
+    disconnect(m_ui->scratchWidget, &ScratchWidget::scratchSpeed, &m_player, &AudioPlayer::setSpeed);
+    m_ui->horizontalSliderSpeed->setEnabled(true);
+    connect(m_ui->horizontalSliderSpeed, &QAbstractSlider::valueChanged, this, &TrackDeck::speedChanged);
+    connect(&m_player, &AudioPlayer::playingChanged, this, &TrackDeck::updatePlayButtonText);
+}
+
+void TrackDeck::speedChanged(int value)
+{
+    m_player.setSpeed(float(value)/100.f);
+}
+
+void TrackDeck::updatePlayButtonText(bool playing)
+{
+        m_ui->pushButtonPlay->setText(playing ? tr("▮▮") : tr("▶"));
 }

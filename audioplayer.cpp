@@ -65,8 +65,11 @@ void AudioPlayer::writeSamples(frame_t *begin, frame_t *end)
         m_lastPositionUpdate = now;
     }
 
-    if (ended)
-        emit playingChanged(m_playing = false);
+    if (ended && m_stopOnEnd)
+    {
+        m_playing = false;
+        emit playingChanged(m_playing);
+    }
 }
 
 void AudioPlayer::setPlaying(bool playing)

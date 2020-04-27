@@ -20,7 +20,9 @@ public:
     void setPosition(std::size_t position) { m_position = position; repaint(); }
 
 signals:
+    void scratchBegin();
     void scratchSpeed(float speed);
+    void scratchEnd();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -39,6 +41,7 @@ private:
     QCache<int, QPixmap> m_graphCache;
 
     bool m_scratching{};
+    bool m_dragging{};
     int m_mouseX;
     QDateTime m_timestamp;
     QTimer m_timer;

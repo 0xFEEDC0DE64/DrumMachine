@@ -31,6 +31,9 @@ public:
     float volume() const { return m_volume; }
     void setVolume(float volume);
 
+    bool stopOnEnd() { return m_stopOnEnd; }
+    void setStopOnEnd(bool stopOnEnd) { m_stopOnEnd = stopOnEnd; emit stopOnEndChanged(m_stopOnEnd); }
+
     const QAudioBuffer &buffer() const { return m_buffer; }
     void setBuffer(const QAudioBuffer &buffer);
 
@@ -43,6 +46,7 @@ signals:
     void positionChanged(double position);
     void speedChanged(float speed);
     void volumeChanged(float volume);
+    void stopOnEndChanged(bool stopOnEnd);
     void bufferChanged(const QAudioBuffer &buffer);
 
 private:
@@ -50,6 +54,7 @@ private:
     double m_position{};
     float m_speed{1.f};
     float m_volume{1.f};
+    bool m_stopOnEnd{true};
     QAudioBuffer m_buffer;
 
     QDateTime m_lastPositionUpdate;

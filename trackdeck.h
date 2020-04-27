@@ -36,6 +36,10 @@ protected:
 private slots:
     void decodingProgress(int progress, int total);
     void decodingFinished(const QAudioBuffer &buffer);
+    void scratchBegin();
+    void scratchEnd();
+    void speedChanged(int value);
+    void updatePlayButtonText(bool playing);
 
 private:
     const std::unique_ptr<Ui::TrackDeck> m_ui;
@@ -45,4 +49,8 @@ private:
     AudioPlayer m_player;
 
     QString m_filename;
+
+    bool m_playingBeforeScratch;
+    float m_speedBeforeScratch;
+    bool m_stopOnEndBeforeScratch;
 };

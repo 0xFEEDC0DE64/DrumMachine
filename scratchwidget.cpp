@@ -68,6 +68,7 @@ void ScratchWidget::mousePressEvent(QMouseEvent *event)
         m_mouseX = event->x();
         m_timestamp = QDateTime::currentDateTime();
         setMouseTracking(true);
+        emit scratchBegin();
     }
 }
 
@@ -79,6 +80,7 @@ void ScratchWidget::mouseReleaseEvent(QMouseEvent *event)
         emit scratchSpeed(1.f);
         m_scratching = false;
         setMouseTracking(false);
+        emit scratchEnd();
     }
 }
 
