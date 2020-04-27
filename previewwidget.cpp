@@ -27,7 +27,7 @@ void PreviewWidget::paintEvent(QPaintEvent *event)
         painter.drawRect(m_graphCache.rect());
 
         if (m_buffer.isValid())
-            GraphRenderer::render(size(), m_buffer.constData<frame_t>(), m_buffer.constData<frame_t>() + m_buffer.frameCount(), painter, palette());
+            GraphRenderer::render(m_graphCache.rect(), m_buffer.constData<frame_t>(), m_buffer.constData<frame_t>() + m_buffer.frameCount(), painter, palette());
 
         painter.end();
     }

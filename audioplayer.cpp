@@ -59,8 +59,11 @@ void AudioPlayer::writeSamples(frame_t *begin, frame_t *end)
 
     m_position = position;
     const auto now = QDateTime::currentDateTime();
-    if (m_lastPositionUpdate.isNull() || m_lastPositionUpdate.msecsTo(now) > 100)
+    if (m_lastPositionUpdate.isNull() || m_lastPositionUpdate.msecsTo(now) > 1000/30)
+    {
         emit positionChanged(m_position);
+        m_lastPositionUpdate = now;
+    }
 
     if (ended)
         emit playingChanged(m_playing = false);

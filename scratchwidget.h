@@ -1,9 +1,8 @@
 #pragma once
 
-#include <vector>
-
 #include <QWidget>
 #include <QAudioBuffer>
+#include <QCache>
 
 class ScratchWidget : public QWidget
 {
@@ -15,8 +14,8 @@ public:
     const QAudioBuffer &buffer() const { return m_buffer; }
     void setBuffer(const QAudioBuffer &buffer) { m_buffer = buffer; m_graphCache.clear(); repaint(); }
 
-    double position() const { return m_position; }
-    void setPosition(double position) { m_position = position; repaint(); }
+    std::size_t position() const { return m_position; }
+    void setPosition(std::size_t position) { m_position = position; repaint(); }
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -25,7 +24,9 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
 
 private:
+    QPixmap getPixmap(int index);
+
     QAudioBuffer m_buffer;
-    double m_position{};
-    std::vector<QPixmap> m_graphCache;
+    std::size_t m_position{};
+    QCache<int, QPixmap> m_graphCache;
 };

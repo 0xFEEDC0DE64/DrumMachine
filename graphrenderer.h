@@ -10,5 +10,5 @@ class QPalette;
 namespace GraphRenderer
 {
     QPixmap render(const QSize &size, const frame_t *frameBegin, const frame_t *frameEnd, const QPalette &palette);
-    void render(const QSize &size, const frame_t *frameBegin, const frame_t *frameEnd, QPainter &painter, const QPalette &palette);
+    void render(const QRect &rect, const frame_t *frameBegin, const frame_t *frameEnd, QPainter &painter, const QPalette &palette);
 }

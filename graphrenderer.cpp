@@ -15,17 +15,16 @@ QPixmap GraphRenderer::render(const QSize &size, const frame_t *frameBegin, cons
 
     painter.fillRect(pixmap.rect(), palette.base());
 
-    painter.setPen(Qt::white);
-    painter.setBrush(Qt::black);
+    painter.setBrush(palette.base());
 
-    painter.drawRect(QRect({}, size));
+    painter.drawRect(pixmap.rect());
 
-    render(size, frameBegin, frameEnd, painter, palette);
+    render(pixmap.rect(), frameBegin, frameEnd, painter, palette);
     painter.end();
     return pixmap;
 }
 
-void GraphRenderer::render(const QSize &size, const frame_t *frameBegin, const frame_t *frameEnd, QPainter &painter, const QPalette &palette)
+void GraphRenderer::render(const QRect &rect, const frame_t *frameBegin, const frame_t *frameEnd, QPainter &painter, const QPalette &palette)
 {
     if (frameEnd == frameBegin)
         return;
@@ -33,9 +32,9 @@ void GraphRenderer::render(const QSize &size, const frame_t *frameBegin, const f
     painter.setPen(QPen{palette.color(QPalette::Text)});
     painter.setBrush(palette.text());
 
-    const auto framesPerPixel = std::distance(frameBegin, frameEnd) / size.width();
+    const auto framesPerPixel = std::distance(frameBegin, frameEnd) / rect.width();
 
-    for (int x = 0; x < size.width(); x++)
+    for (int x = 0; x < rect.width(); x++)
     {
         const frame_t *begin = frameBegin + (x * framesPerPixel);
         const frame_t *end = begin + framesPerPixel;
@@ -53,7 +52,7 @@ void GraphRenderer::render(const QSize &size, const frame_t *frameBegin, const f
                 max[1] = (*iter)[1];
         }
 
-        painter.drawLine(x, (size.height() / 2) - (min[0] * (size.height() / 2)),
-                         x, (size.height() / 2) + (max[0] * (size.height() / 2)));
+        painter.drawLine(rect.x() + x, rect.y() + (rect.height() / 2) - (min[0] * (rect.height() / 2)),
+                         rect.x() + x, rect.y() + (rect.height() / 2) + (max[0] * (rect.height() / 2)));
     }
 }
