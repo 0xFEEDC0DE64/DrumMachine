@@ -2,6 +2,7 @@
 
 #include <QPainter>
 #include <QRect>
+#include <QMouseEvent>
 #include <QDebug>
 
 #include "graphrenderer.h"
@@ -11,6 +12,9 @@ constexpr auto theWidth = 100;
 ScratchWidget::ScratchWidget(QWidget *parent) :
     QWidget{parent}
 {
+    connect(&m_timer, &QTimer::timeout, this, &ScratchWidget::timeout);
+    m_timer.setSingleShot(true);
+    m_timer.setInterval(100);
 }
 
 void ScratchWidget::paintEvent(QPaintEvent *event)
@@ -58,17 +62,46 @@ void ScratchWidget::paintEvent(QPaintEvent *event)
 
 void ScratchWidget::mousePressEvent(QMouseEvent *event)
 {
-
+    if (event->button() == Qt::LeftButton)
+    {
+        m_scratching = true;
+        m_mouseX = event->x();
+        m_timestamp = QDateTime::currentDateTime();
+        setMouseTracking(true);
+    }
 }
 
 void ScratchWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-
+    if (event->button() == Qt::LeftButton)
+    {
+        m_timer.stop();
+        emit scratchSpeed(1.f);
+        m_scratching = false;
+        setMouseTracking(false);
+    }
 }
 
 void ScratchWidget::mouseMoveEvent(QMouseEvent *event)
 {
+    if (m_scratching)
+    {
+        const auto now = QDateTime::currentDateTime();
 
+        int dx = m_mouseX - event->x();
+        int dt = m_timestamp.msecsTo(now);
+
+        emit scratchSpeed(float(dx) / dt * 5.f);
+
+        m_mouseX = event->x();
+        m_timestamp = now;
+        m_timer.start();
+    }
+}
+
+void ScratchWidget::timeout()
+{
+    emit scratchSpeed(0.f);
 }
 
 QPixmap ScratchWidget::getPixmap(int index)

@@ -3,6 +3,8 @@
 #include <QWidget>
 #include <QAudioBuffer>
 #include <QCache>
+#include <QDateTime>
+#include <QTimer>
 
 class ScratchWidget : public QWidget
 {
@@ -17,11 +19,17 @@ public:
     std::size_t position() const { return m_position; }
     void setPosition(std::size_t position) { m_position = position; repaint(); }
 
+signals:
+    void scratchSpeed(float speed);
+
 protected:
     void paintEvent(QPaintEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+
+private slots:
+    void timeout();
 
 private:
     QPixmap getPixmap(int index);
@@ -29,4 +37,9 @@ private:
     QAudioBuffer m_buffer;
     std::size_t m_position{};
     QCache<int, QPixmap> m_graphCache;
+
+    bool m_scratching{};
+    int m_mouseX;
+    QDateTime m_timestamp;
+    QTimer m_timer;
 };

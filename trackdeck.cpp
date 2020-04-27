@@ -29,6 +29,7 @@ TrackDeck::TrackDeck(QWidget *parent) :
 
     connect(m_ui->previewWidget, &PreviewWidget::positionSelected, &m_player, &AudioPlayer::setPosition);
     connect(&m_player, &AudioPlayer::positionChanged, m_ui->previewWidget, &PreviewWidget::setPosition);
+    connect(m_ui->scratchWidget, &ScratchWidget::scratchSpeed, &m_player, &AudioPlayer::setSpeed);
     connect(&m_player, &AudioPlayer::positionChanged, m_ui->scratchWidget, &ScratchWidget::setPosition);
     connect(&m_player, &AudioPlayer::playingChanged, m_ui->pushButtonPlay, [&button=*m_ui->pushButtonPlay](bool playing){ button.setText(playing ? tr("▮▮") : tr("▶")); });
 }
