@@ -7,8 +7,6 @@
 
 #include "graphrenderer.h"
 
-constexpr auto theWidth = 100;
-
 ScratchWidget::ScratchWidget(QWidget *parent) :
     QWidget{parent}
 {
@@ -26,7 +24,7 @@ void ScratchWidget::paintEvent(QPaintEvent *event)
     painter.setBrush(palette().window());
     painter.drawRect(rect());
 
-    if (m_buffer.isValid() && m_position < m_buffer.frameCount() - sampleRate)
+    if (m_buffer.isValid() && m_position < m_buffer.frameCount() - m_framesPerBeat)
     {
         {
             QPen pen{Qt::blue};
@@ -36,8 +34,8 @@ void ScratchWidget::paintEvent(QPaintEvent *event)
 
         const auto doit = [&](int offset)
         {
-            int x = ((width()/2)-(float(m_position % sampleRate) / sampleRate * theWidth)) + (theWidth*offset);
-            const auto pixmap = getPixmap((m_position/sampleRate)+offset);
+            int x = ((width()/2)-(float(m_position % m_framesPerBeat) / m_framesPerBeat * m_beatWidth)) + (m_beatWidth*offset);
+            const auto pixmap = getPixmap((m_position/m_framesPerBeat)+offset);
             if (!pixmap.isNull())
                 painter.drawPixmap(x, 0, pixmap);
         };
@@ -69,6 +67,7 @@ void ScratchWidget::mousePressEvent(QMouseEvent *event)
         m_timestamp = QDateTime::currentDateTime();
         setMouseTracking(true);
         emit scratchBegin();
+        emit scratchSpeed(0.f);
     }
 }
 
@@ -93,7 +92,7 @@ void ScratchWidget::mouseMoveEvent(QMouseEvent *event)
         int dx = m_mouseX - event->x();
         int dt = m_timestamp.msecsTo(now);
 
-        emit scratchSpeed(float(dx) / dt * 5.f);
+        emit scratchSpeed(float(dx) / dt * m_framesPerBeat / m_beatWidth / 50);
 
         m_mouseX = event->x();
         m_timestamp = now;
@@ -114,14 +113,14 @@ QPixmap ScratchWidget::getPixmap(int index)
             return *pixmap;
     }
 
-    if (!m_buffer.isValid() || index < 0 || index >= m_buffer.frameCount()/sampleRate)
+    if (!m_buffer.isValid() || index < 0 || index >= m_buffer.frameCount()/m_framesPerBeat)
     {
         qWarning() << index;
         return {};
     }
 
-    const auto *begin = m_buffer.constData<frame_t>() + (index*sampleRate);
-    const auto pixmap = GraphRenderer::render(QSize{theWidth, height()}, begin, begin+sampleRate, palette());
+    const auto *begin = m_buffer.constData<frame_t>() + (index*m_framesPerBeat);
+    const auto pixmap = GraphRenderer::render(QSize{m_beatWidth, height()}, begin, begin+m_framesPerBeat, palette());
 
     m_graphCache.insert(index, new QPixmap{pixmap});
 

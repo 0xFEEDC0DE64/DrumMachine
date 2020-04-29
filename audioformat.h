@@ -2,7 +2,7 @@
 
 #include <QAudioFormat>
 
-static constexpr int sampleRate = 44100;
+static constexpr int frameRate = 44100;
 static constexpr int channelCount = 2;
 static constexpr int sampleSize = 32;
 static constexpr auto codec = "audio/pcm";

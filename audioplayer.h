@@ -1,6 +1,7 @@
 #pragma once
 
 #include <atomic>
+#include <optional>
 
 #include <QObject>
 #include <QAudioBuffer>
@@ -37,6 +38,9 @@ public:
     const QAudioBuffer &buffer() const { return m_buffer; }
     void setBuffer(const QAudioBuffer &buffer);
 
+    const std::optional<std::pair<double, double>> &loop() const { return m_loop; }
+    void setLoop(const std::optional<std::pair<double, double>> &loop) { m_loop = loop; }
+
     void togglePlaying();
     void restart();
     void stop();
@@ -56,6 +60,7 @@ private:
     float m_volume{1.f};
     bool m_stopOnEnd{true};
     QAudioBuffer m_buffer;
+    std::optional<std::pair<double, double>> m_loop;
 
     QDateTime m_lastPositionUpdate;
 };

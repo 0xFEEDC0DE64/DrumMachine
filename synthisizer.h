@@ -15,5 +15,6 @@ public:
 
 private:
     int16_t m_frequency{};
+    int16_t m_actualFrequency{};
     double m_phase{};
 };

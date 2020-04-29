@@ -6,7 +6,6 @@
 #include <memory>
 
 #include "audioformat.h"
-#include "flatfilesystemmodel.h"
 
 namespace Ui { class DjWidget; }
 
@@ -29,5 +28,5 @@ private:
     const std::unique_ptr<Ui::DjWidget> m_ui;
 
     QFileSystemModel m_directoryModel;
-    FlatFileSystemModel m_filesModel;
+    QFileSystemModel m_filesModel;
 };

@@ -4,7 +4,7 @@ const QAudioFormat &audioFormat()
 {
     static const QAudioFormat audioFormat = [](){
         QAudioFormat format;
-        format.setSampleRate(sampleRate);
+        format.setSampleRate(frameRate);
         format.setChannelCount(channelCount);
         format.setSampleSize(sampleSize);
         format.setCodec(codec);

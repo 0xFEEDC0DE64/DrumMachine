@@ -39,9 +39,7 @@ DjWidget::DjWidget(QWidget *parent) :
         const auto index = m_directoryModel.index(locations.first());
         m_ui->treeViewDirectories->selectionModel()->select(index, QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Current|QItemSelectionModel::Rows);
 
-        const auto rootIndex = m_filesModel.setRootPath(m_directoryModel.filePath(index));
-        m_filesModel.m_root_path = rootIndex;
-        m_ui->treeViewFiles->setRootIndex(rootIndex);
+        m_ui->treeViewFiles->setRootIndex(m_filesModel.setRootPath(m_directoryModel.filePath(index)));
     }
 }
 
@@ -75,9 +73,5 @@ void DjWidget::directorySelected()
 {
     const auto selected = m_ui->treeViewDirectories->currentIndex();
     if (selected.isValid())
-    {
-        const auto rootIndex = m_filesModel.setRootPath(m_directoryModel.filePath(selected));
-        m_filesModel.m_root_path = rootIndex;
-        m_ui->treeViewFiles->setRootIndex(rootIndex);
-    }
+        m_ui->treeViewFiles->setRootIndex(m_filesModel.setRootPath(m_directoryModel.filePath(selected)));
 }

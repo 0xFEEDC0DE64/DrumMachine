@@ -16,7 +16,6 @@ SOURCES += \
     audioplayer.cpp \
     djwidget.cpp \
     filesmodel.cpp \
-    flatfilesystemmodel.cpp \
     graphrenderer.cpp \
     jsonconverters.cpp \
     main.cpp \
@@ -40,7 +39,6 @@ HEADERS += \
     audioplayer.h \
     djwidget.h \
     filesmodel.h \
-    flatfilesystemmodel.h \
     graphrenderer.h \
     jsonconverters.h \
     mainwindow.h \

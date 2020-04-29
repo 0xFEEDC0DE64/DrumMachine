@@ -76,6 +76,8 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
 
     updateMidiDevices();
 
+    connect(m_ui->pushButtonRefreshMidiControllers, &QAbstractButton::pressed, this, &MainWindow::updateMidiDevices);
+
     connect(m_ui->pushButtonMidiController, &QAbstractButton::pressed, this, [this](){
         if (m_midiIn.isPortOpen())
             m_midiIn.closePort();
@@ -91,6 +93,8 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
     });
 
     updateAudioDevices();
+
+    connect(m_ui->pushButtonRefreshAudioDevices, &QAbstractButton::pressed, this, &MainWindow::updateAudioDevices);
 
     m_ui->comboBoxAudioDevice->setCurrentIndex(Pa_GetDefaultOutputDevice());
 
@@ -171,7 +175,7 @@ void MainWindow::openAudioDevice()
 
         PaStream *stream{};
 
-        if (PaError err = Pa_OpenStream(&stream, NULL, &outputParameters, sampleRate, m_ui->spinBoxBufferSize->value(), paNoFlag, &paCallback, this); err != paNoError)
+        if (PaError err = Pa_OpenStream(&stream, NULL, &outputParameters, frameRate, m_ui->spinBoxBufferSize->value(), paNoFlag, &paCallback, this); err != paNoError)
         {
             QMessageBox::warning(this, tr("Error opening stream!"), tr("Error opening stream!") + "\n\n" + Pa_GetErrorText(err));
             return;

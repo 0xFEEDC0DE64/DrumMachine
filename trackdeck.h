@@ -1,8 +1,12 @@
 #pragma once
 
-#include <QWidget>
-
 #include <memory>
+#include <optional>
+#include <tuple>
+
+#include <QWidget>
+#include <QButtonGroup>
+#include <QTimer>
 
 #include "audioformat.h"
 #include "audioplayer.h"
@@ -40,9 +44,14 @@ private slots:
     void scratchEnd();
     void speedChanged(int value);
     void updatePlayButtonText(bool playing);
+    void bpmTap();
+    void timeout();
+    void updatePlaybackBpm();
 
 private:
     const std::unique_ptr<Ui::TrackDeck> m_ui;
+
+    QButtonGroup m_loopGroup;
 
     std::unique_ptr<AudioDecoder> m_decoder;
 
@@ -53,4 +62,8 @@ private:
     bool m_playingBeforeScratch;
     float m_speedBeforeScratch;
     bool m_stopOnEndBeforeScratch;
+
+    QTimer m_timer;
+
+    std::optional<std::tuple<double, double, int>> m_bpmTap;
 };

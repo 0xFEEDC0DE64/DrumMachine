@@ -24,7 +24,9 @@ void AudioPlayer::writeSamples(frame_t *begin, frame_t *end)
     const auto speed = m_speed;
     const auto buffer = m_buffer;
     const auto volume = m_volume;
+    const auto stopOnEnd = m_stopOnEnd;
     const auto &data = buffer.constData<frame_t>();
+    const auto loop = m_loop;
 
     const auto frames = std::min<size_t>(std::distance(begin, end), buffer.frameCount()-position);
 
@@ -38,18 +40,27 @@ void AudioPlayer::writeSamples(frame_t *begin, frame_t *end)
     bool ended{};
     std::transform(static_cast<const frame_t *>(begin), static_cast<const frame_t *>(begin+frames), begin,
                    [&](frame_t frame)->frame_t{
-        if (ended)
+        if (ended && stopOnEnd)
             return frame;
 
-        const auto index = std::size_t(position);
-        if (index >= buffer.frameCount())
+        const auto index = std::ptrdiff_t(position);
+        position += speed;
+
+        if (loop)
+        {
+            if (speed < 0 && position < loop->first)
+                position = loop->second;
+            else if (speed > 0 && position > loop->second)
+                position = loop->first;
+        }
+
+        if ((speed < 0.f && index < 0) || (speed > 0.f && index >= buffer.frameCount()))
         {
             ended = true;
             return frame;
         }
 
         const frame_t &frame2 = data[index];
-        position += speed;
 
         std::transform(std::cbegin(frame), std::cend(frame), std::begin(frame2), std::begin(frame),
                        [&volume](const sample_t &left, const sample_t &right) { return left + (right*volume); });
@@ -65,7 +76,7 @@ void AudioPlayer::writeSamples(frame_t *begin, frame_t *end)
         m_lastPositionUpdate = now;
     }
 
-    if (ended && m_stopOnEnd)
+    if (ended && stopOnEnd)
     {
         m_playing = false;
         emit playingChanged(m_playing);
