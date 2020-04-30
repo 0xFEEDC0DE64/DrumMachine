@@ -101,6 +101,13 @@
        <item>
         <layout class="QHBoxLayout">
          <item>
+          <widget class="QLineEdit" name="lineEditSearch">
+           <property name="clearButtonEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="pushButtonLoadDeckA">
            <property name="text">
             <string>Load in Deck A</string>
@@ -119,15 +126,6 @@
        <item>
         <widget class="QTreeView" name="treeViewFiles">
          <property name="dragEnabled">
-          <bool>true</bool>
-         </property>
-         <property name="rootIsDecorated">
-          <bool>false</bool>
-         </property>
-         <property name="itemsExpandable">
-          <bool>false</bool>
-         </property>
-         <property name="sortingEnabled">
           <bool>true</bool>
          </property>
         </widget>

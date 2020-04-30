@@ -31,7 +31,8 @@ SOURCES += \
     scratchwidget.cpp \
     sequencerwidget.cpp \
     synthisizer.cpp \
-    trackdeck.cpp
+    trackdeck.cpp \
+    treetotableproxymodel.cpp
 
 HEADERS += \
     audiodecoder.h \
@@ -53,7 +54,8 @@ HEADERS += \
     scratchwidget.h \
     sequencerwidget.h \
     synthisizer.h \
-    trackdeck.h
+    trackdeck.h \
+    treetotableproxymodel.h
 
 FORMS += \
     djwidget.ui \

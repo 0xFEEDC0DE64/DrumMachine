@@ -106,9 +106,7 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
 
     m_presetsProxyModel.setFilterKeyColumn(1);
 
-    connect(m_ui->lineEdit, &QLineEdit::textChanged, this, [=](){
-        m_presetsProxyModel.setFilterFixedString(m_ui->lineEdit->text());
-    });
+    connect(m_ui->lineEdit, &QLineEdit::textChanged, &m_presetsProxyModel, &QSortFilterProxyModel::setFilterFixedString);
 
     m_ui->filesView->setModel(&m_filesModel);
 

@@ -15,7 +15,7 @@ DjWidget::DjWidget(QWidget *parent) :
             const auto index = m_ui->treeViewFiles->currentIndex();
             if (!index.isValid())
                 return;
-            trackDeck.loadTrack(m_filesModel.filePath(index));
+            trackDeck.loadTrack(m_filesModel.filePath(m_filesTableModel.mapToSource(m_sortFilterProxyModel.mapToSource(index))));
         };
     };
 
@@ -31,16 +31,22 @@ DjWidget::DjWidget(QWidget *parent) :
 
     connect(m_ui->treeViewDirectories->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &DjWidget::directorySelected);
 
-    m_filesModel.setFilter(QDir::AllEntries|QDir::NoDotAndDotDot);
-    m_ui->treeViewFiles->setModel(&m_filesModel);
+    m_filesModel.setFilter(QDir::Files);
+    m_filesTableModel.setSourceModel(&m_filesModel);
+    m_sortFilterProxyModel.setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_sortFilterProxyModel.setSourceModel(&m_filesTableModel);
+    m_ui->treeViewFiles->setModel(&m_sortFilterProxyModel);
 
     if (const auto locations = QStandardPaths::standardLocations(QStandardPaths::MusicLocation); !locations.isEmpty())
     {
         const auto index = m_directoryModel.index(locations.first());
         m_ui->treeViewDirectories->selectionModel()->select(index, QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Current|QItemSelectionModel::Rows);
 
-        m_ui->treeViewFiles->setRootIndex(m_filesModel.setRootPath(m_directoryModel.filePath(index)));
+        const auto rootIndex = m_filesModel.setRootPath(m_directoryModel.filePath(index));
+        m_filesTableModel.setRootIndex(rootIndex);
     }
+
+    connect(m_ui->lineEditSearch, &QLineEdit::textChanged, &m_sortFilterProxyModel, &QSortFilterProxyModel::setFilterFixedString);
 }
 
 DjWidget::~DjWidget() = default;
@@ -73,5 +79,8 @@ void DjWidget::directorySelected()
 {
     const auto selected = m_ui->treeViewDirectories->currentIndex();
     if (selected.isValid())
-        m_ui->treeViewFiles->setRootIndex(m_filesModel.setRootPath(m_directoryModel.filePath(selected)));
+    {
+        const auto rootIndex = m_filesModel.setRootPath(m_directoryModel.filePath(selected));
+        m_filesTableModel.setRootIndex(rootIndex);
+    }
 }

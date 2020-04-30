@@ -2,10 +2,12 @@
 
 #include <QWidget>
 #include <QFileSystemModel>
+#include <QSortFilterProxyModel>
 
 #include <memory>
 
 #include "audioformat.h"
+#include "treetotableproxymodel.h"
 
 namespace Ui { class DjWidget; }
 
@@ -29,4 +31,6 @@ private:
 
     QFileSystemModel m_directoryModel;
     QFileSystemModel m_filesModel;
+    TreeToTableProxyModel m_filesTableModel;
+    QSortFilterProxyModel m_sortFilterProxyModel;
 };

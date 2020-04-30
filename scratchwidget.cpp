@@ -120,9 +120,23 @@ QPixmap ScratchWidget::getPixmap(int index)
     }
 
     const auto *begin = m_buffer.constData<frame_t>() + (index*m_framesPerBeat);
-    const auto pixmap = GraphRenderer::render(QSize{m_beatWidth, height()}, begin, begin+m_framesPerBeat, palette());
 
-    m_graphCache.insert(index, new QPixmap{pixmap});
+    const auto pixmap = new QPixmap{QSize{m_beatWidth, height()}};
 
-    return pixmap;
+    {
+        QPainter painter;
+        painter.begin(pixmap);
+
+        painter.setPen(Qt::blue);
+        painter.setBrush(palette().base());
+        painter.drawRect(pixmap->rect());
+
+        painter.setPen(QPen{palette().color(QPalette::Text)});
+        painter.setBrush(palette().text());
+        GraphRenderer::render(pixmap->rect(), begin, begin+m_framesPerBeat, painter);
+    }
+
+    m_graphCache.insert(index, pixmap);
+
+    return *pixmap;
 }

@@ -23,11 +23,13 @@ void PreviewWidget::paintEvent(QPaintEvent *event)
         painter.begin(&m_graphCache);
 
         painter.setBrush(palette().base());
-
         painter.drawRect(m_graphCache.rect());
 
+        painter.setPen(QPen{palette().color(QPalette::Text)});
+        painter.setBrush(palette().text());
+
         if (m_buffer.isValid())
-            GraphRenderer::render(m_graphCache.rect(), m_buffer.constData<frame_t>(), m_buffer.constData<frame_t>() + m_buffer.frameCount(), painter, palette());
+            GraphRenderer::render(m_graphCache.rect(), m_buffer.constData<frame_t>(), m_buffer.constData<frame_t>() + m_buffer.frameCount(), painter);
 
         painter.end();
     }

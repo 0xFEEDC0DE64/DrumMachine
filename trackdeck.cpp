@@ -179,7 +179,7 @@ void TrackDeck::decodingFinished(const QAudioBuffer &buffer)
     m_ui->labelTitle->setText(QFileInfo{m_filename}.fileName());
 
     for (auto *btn : m_loopGroup.buttons())
-        btn->setEnabled(false);
+        btn->setEnabled(true);
 
     m_ui->previewWidget->setBuffer(buffer);
     m_ui->scratchWidget->setBuffer(buffer);
@@ -233,9 +233,9 @@ void TrackDeck::bpmTap()
         std::get<1>(*m_bpmTap) = position;
         std::get<2>(*m_bpmTap)++;
         const auto framesPerBeat = (std::get<1>(*m_bpmTap)-std::get<0>(*m_bpmTap))/std::get<2>(*m_bpmTap);
+        m_ui->scratchWidget->setFramesPerBeat(framesPerBeat);
         const auto beatsPerSecond = frameRate/framesPerBeat;
         const auto bpm = 60.*beatsPerSecond;
-        qDebug() << "framesPerBeat =" << framesPerBeat << "beatsPerSecond =" << beatsPerSecond << "bpm =" << bpm;
         m_ui->doubleSpinBoxBpm->setValue(bpm);
     }
     else
@@ -250,13 +250,11 @@ void TrackDeck::bpmTap()
 void TrackDeck::timeout()
 {
     const auto framesPerBeat = (std::get<1>(*m_bpmTap)-std::get<0>(*m_bpmTap))/std::get<2>(*m_bpmTap);
+    m_ui->scratchWidget->setFramesPerBeat(framesPerBeat);
     const auto beatsPerSecond = frameRate/framesPerBeat;
     const auto bpm = 60.*beatsPerSecond;
-    qDebug() << "framesPerBeat =" << framesPerBeat << "beatsPerSecond =" << beatsPerSecond << "bpm =" << bpm;
     m_ui->pushButtonBpm->setText(tr("BPM tap"));
     m_ui->doubleSpinBoxBpm->setValue(bpm);
-    for (auto *btn : m_loopGroup.buttons())
-        btn->setEnabled(true);
     m_bpmTap = {};
 }
 
