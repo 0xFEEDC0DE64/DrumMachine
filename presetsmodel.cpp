@@ -140,7 +140,17 @@ QVariant PresetsModel::data(const QModelIndex &index, int role) const
 
     switch (index.column())
     {
-    case ColumnId: return handleData(preset.id);
+    case ColumnId:
+    {
+        if (preset.id)
+        {
+            bool ok;
+            if (auto id = preset.id->toInt(&ok); ok)
+                return id;
+        }
+
+        return handleData(preset.id);
+    }
     case ColumnName: return handleData(preset.name);
     case ColumnAuthor: return handleData(preset.author);
     case ColumnOrderBy: return handleData(preset.orderBy);

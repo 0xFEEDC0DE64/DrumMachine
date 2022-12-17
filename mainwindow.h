@@ -13,6 +13,7 @@
 #include "filesmodel.h"
 #include "midiinwrapper.h"
 #include "synthisizer.h"
+#include "drummachinesettings.h"
 
 namespace Ui { class MainWindow; }
 namespace presets { struct PresetsConfig; }
@@ -38,8 +39,11 @@ private slots:
 private:
     void updateMidiDevices();
     void updateAudioDevices();
+    void loadSettings();
 
     const std::unique_ptr<Ui::MainWindow> m_ui;
+
+    DrumMachineSettings m_settings;
 
     std::unique_ptr<PaStream, void(*)(PaStream*)> m_paStream;
 

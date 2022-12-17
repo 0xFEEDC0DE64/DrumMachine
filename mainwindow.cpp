@@ -101,6 +101,7 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
     connect(m_ui->pushButtonAudioDevice, &QAbstractButton::pressed, this, &MainWindow::openAudioDevice);
 
     m_presetsProxyModel.setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_presetsProxyModel.setSortRole(Qt::EditRole);
     m_presetsProxyModel.setSourceModel(&m_presetsModel);
     m_ui->presetsView->setModel(&m_presetsProxyModel);
 
@@ -111,6 +112,8 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
     m_ui->filesView->setModel(&m_filesModel);
 
     connect(m_ui->presetsView->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &MainWindow::currentRowChanged);
+
+    loadSettings();
 }
 
 MainWindow::~MainWindow()
@@ -250,4 +253,10 @@ void MainWindow::updateAudioDevices()
         const auto info = Pa_GetDeviceInfo(i);
         m_ui->comboBoxAudioDevice->addItem(info->name);
     }
+}
+
+void MainWindow::loadSettings()
+{
+    m_synthisizer.loadSettings(m_settings);
+    m_ui->samplesWidget->loadSettings(m_settings);
 }

@@ -20,30 +20,22 @@ SamplesWidget::SamplesWidget(QWidget *parent) :
 
     connect(m_ui->pushButtonStopAll, &QAbstractButton::pressed, this, &SamplesWidget::stopAll);
 
+    quint8 padNr{};
     for (SampleWidget &widget : getWidgets())
     {
+        widget.setPadNr(padNr++);
         widget.injectNetworkAccessManager(m_networkAccessManager);
         connect(&widget, &SampleWidget::chokeTriggered, this, &SamplesWidget::chokeTriggered);
     }
-
-    m_ui->sampleWidget_1->setNote(48);
-    m_ui->sampleWidget_2->setNote(50);
-    m_ui->sampleWidget_3->setNote(52);
-    m_ui->sampleWidget_4->setNote(53);
-    m_ui->sampleWidget_5->setNote(55);
-    m_ui->sampleWidget_6->setNote(57);
-    m_ui->sampleWidget_7->setNote(59);
-    m_ui->sampleWidget_8->setNote(60);
-    m_ui->sampleWidget_9->setNote(62);
-    m_ui->sampleWidget_10->setNote(64);
-    m_ui->sampleWidget_11->setNote(65);
-    m_ui->sampleWidget_12->setNote(67);
-    m_ui->sampleWidget_22->setNote(69);
-    m_ui->sampleWidget_23->setNote(71);
-    m_ui->sampleWidget_24->setNote(72);
 }
 
 SamplesWidget::~SamplesWidget() = default;
+
+void SamplesWidget::loadSettings(DrumMachineSettings &settings)
+{
+    for (SampleWidget &widget : getWidgets())
+        widget.loadSettings(settings);
+}
 
 void SamplesWidget::setPreset(const presets::Preset &preset)
 {

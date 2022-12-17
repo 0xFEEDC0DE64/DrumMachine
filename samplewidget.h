@@ -13,6 +13,7 @@ class QNetworkAccessManager;
 class QNetworkReply;
 class QAudioBuffer;
 class AudioDecoder;
+class DrumMachineSettings;
 
 class SampleWidget : public QFrame
 {
@@ -21,6 +22,11 @@ class SampleWidget : public QFrame
 public:
     explicit SampleWidget(QWidget *parent = nullptr);
     ~SampleWidget() override;
+
+    quint8 padNr() const { return m_padNr; }
+    void setPadNr(quint8 padNr) { m_padNr = padNr; }
+
+    void loadSettings(DrumMachineSettings &settings);
 
     void setFile(const QString &presetId, const presets::File &file);
 
@@ -66,6 +72,8 @@ private:
 
     const std::unique_ptr<Ui::SampleWidget> m_ui;
 
+    DrumMachineSettings *m_settings{};
+
     std::shared_ptr<QNetworkReply> m_reply;
 
     std::unique_ptr<AudioDecoder> m_decoder;
@@ -76,6 +84,8 @@ private:
     std::optional<presets::File> m_file;
 
     QNetworkAccessManager *m_networkAccessManager{};
+
+    quint8 m_padNr{};
 
     bool m_learning{};
     QColor m_oldColor;

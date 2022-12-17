@@ -15,6 +15,7 @@ SOURCES += \
     audioformat.cpp \
     audioplayer.cpp \
     djwidget.cpp \
+    drummachinesettings.cpp \
     filesmodel.cpp \
     graphrenderer.cpp \
     jsonconverters.cpp \
@@ -39,6 +40,7 @@ HEADERS += \
     audioformat.h \
     audioplayer.h \
     djwidget.h \
+    drummachinesettings.h \
     filesmodel.h \
     graphrenderer.h \
     jsonconverters.h \

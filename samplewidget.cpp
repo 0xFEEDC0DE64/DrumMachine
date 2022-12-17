@@ -10,6 +10,7 @@
 #include <QDebug>
 
 #include "audiodecoder.h"
+#include "drummachinesettings.h"
 
 namespace {
 QString toString(QString value) { return value; }
@@ -36,6 +37,14 @@ SampleWidget::SampleWidget(QWidget *parent) :
 }
 
 SampleWidget::~SampleWidget() = default;
+
+void SampleWidget::loadSettings(DrumMachineSettings &settings)
+{
+    m_ui->channelSpinBox->setValue(settings.padChannel(m_padNr));
+    m_ui->noteSpinBox->setValue(settings.padNote(m_padNr));
+
+    m_settings = &settings;
+}
 
 void SampleWidget::setFile(const QString &presetId, const presets::File &file)
 {
@@ -78,6 +87,9 @@ quint8 SampleWidget::channel() const
 void SampleWidget::setChannel(quint8 channel)
 {
     m_ui->channelSpinBox->setValue(channel);
+
+    if (m_settings)
+        m_settings->setPadChannel(m_padNr, channel);
 }
 
 quint8 SampleWidget::note() const
@@ -88,6 +100,9 @@ quint8 SampleWidget::note() const
 void SampleWidget::setNote(quint8 note)
 {
     m_ui->noteSpinBox->setValue(note);
+
+    if (m_settings)
+        m_settings->setPadNote(m_padNr, note);
 }
 
 int SampleWidget::speed() const

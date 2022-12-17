@@ -14,6 +14,7 @@
 namespace Ui { class SamplesWidget; }
 namespace midi { class MidiMessage; }
 class SampleWidget;
+class DrumMachineSettings;
 
 class SamplesWidget : public QWidget
 {
@@ -22,6 +23,8 @@ class SamplesWidget : public QWidget
 public:
     explicit SamplesWidget(QWidget *parent = nullptr);
     ~SamplesWidget() override;
+
+    void loadSettings(DrumMachineSettings &settings);
 
     void setPreset(const presets::Preset &preset);
 
