@@ -6,6 +6,7 @@
 #include <QEventLoop>
 #include <QSplashScreen>
 #include <QMessageBox>
+#include <QNetworkDiskCache>
 #include <QDebug>
 
 #include "portaudio.h"
@@ -83,7 +84,17 @@ int main(int argc, char *argv[])
         QEventLoop eventLoop;
 
         QNetworkAccessManager manager;
-        const auto reply = std::unique_ptr<QNetworkReply>(manager.get(QNetworkRequest{QUrl{"https://brunner.ninja/komposthaufen/dpm/presets_config_v12.json"}}));
+
+        QNetworkDiskCache cache;
+        cache.setCacheDirectory("cache");
+
+        manager.setCache(&cache);
+
+        QNetworkRequest request{QUrl{"https://brunner.ninja/komposthaufen/dpm/presets_config_v12.json"}};
+        request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache);
+        request.setAttribute(QNetworkRequest::CacheSaveControlAttribute, true);
+
+        const auto reply = std::unique_ptr<QNetworkReply>(manager.get(request));
         QObject::connect(reply.get(), &QNetworkReply::finished, &eventLoop, &QEventLoop::quit);
         eventLoop.exec();
 
