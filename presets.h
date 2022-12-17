@@ -3,8 +3,10 @@
 #include <vector>
 #include <map>
 #include <optional>
+#include <array>
 
 #include <QString>
+#include <QDateTime>
 
 namespace presets
 {
@@ -74,6 +76,7 @@ struct Preset
     std::optional<std::array<presets::File, 24>> files;
     std::optional<std::map<QString, std::vector<Sequence>>> beatSchool;
     std::optional<std::map<QString, std::vector<Sequence>>> easyPlay;
+    std::optional<QDateTime> timestamp;
 };
 
 struct PresetsConfig

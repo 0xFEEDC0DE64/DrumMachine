@@ -15,6 +15,7 @@ std::vector<QString> parseStringVector(const QJsonValue &jsonValue);
 int parseInt(const QJsonValue &jsonValue);
 bool parseBool(const QJsonValue &jsonValue);
 std::vector<int> parseIntVector(const QJsonValue &jsonValue);
+std::vector<int> parseIntVectorIgnoreNulls(const QJsonValue &jsonValue);
 
 presets::PresetsConfig parsePresetsConfig(const QJsonObject &jsonObj);
 std::vector<presets::Category> parseCategoryVector(const QJsonValue &jsonValue);

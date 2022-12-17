@@ -69,6 +69,20 @@ std::vector<int> parseIntVector(const QJsonValue &jsonValue)
     return vector;
 }
 
+std::vector<int> parseIntVectorIgnoreNulls(const QJsonValue &jsonValue)
+{
+    if (!jsonValue.isArray())
+        throw std::runtime_error{"json value for int vector is not an array"};
+
+    std::vector<int> vector;
+
+    for (const auto &jsonValue : jsonValue.toArray())
+        if (!jsonValue.isNull())
+            vector.emplace_back(parseInt(jsonValue));
+
+    return vector;
+}
+
 presets::PresetsConfig parsePresetsConfig(const QJsonObject &jsonObj)
 {
     presets::PresetsConfig presetConfig;
@@ -216,6 +230,8 @@ presets::Preset parsePreset(const QJsonValue &jsonValue)
             preset.beatSchool = parseSequenceVectorMap(iter.value());
         else if (key == "easyPlay")
             preset.easyPlay = parseSequenceVectorMap(iter.value());
+        else if (key == "timestamp")
+            preset.timestamp = QDateTime::fromSecsSinceEpoch(iter.value().toDouble());
         else if (key == "middleDescription")
         {}
         else
@@ -318,7 +334,7 @@ presets::Sequence parseSequence(const QJsonValue &jsonValue)
         else if (key == "pads")
             sequence.pads = parseSequencePadVectorMap(iter.value());
         else if (key == "embientPads")
-            sequence.embientPads = parseIntVector(iter.value());
+            sequence.embientPads = parseIntVectorIgnoreNulls(iter.value());
         else
             throw std::runtime_error{QString{"unknown key %0 for Sequence"}.arg(key).toStdString()};
     }
