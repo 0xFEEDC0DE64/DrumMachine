@@ -26,7 +26,7 @@ TrackDeck::TrackDeck(QWidget *parent) :
     m_loopGroup.addButton(m_ui->pushButtonLoop2, 2);
     m_loopGroup.addButton(m_ui->pushButtonLoop4, 4);
     m_loopGroup.addButton(m_ui->pushButtonLoop8, 8);
-    connect(&m_loopGroup, qOverload<int>(&QButtonGroup::buttonClicked), [&player=m_player,&bpmInput=*m_ui->doubleSpinBoxBpm](int id){
+    connect(&m_loopGroup, &QButtonGroup::idClicked, [&player=m_player,&bpmInput=*m_ui->doubleSpinBoxBpm](int id){
         const auto position = player.position();
 
         const auto bpm = bpmInput.value();
