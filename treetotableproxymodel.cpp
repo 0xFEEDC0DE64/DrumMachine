@@ -128,6 +128,8 @@ void TreeToTableProxyModel::setSourceModelAndRootIndex(QAbstractItemModel *sourc
 
 void TreeToTableProxyModel::setRootIndex(const QModelIndex &index)
 {
+    if (!index.isValid())
+        return;
     Q_ASSERT(index.model() == m_sourceModel);
 
     beginResetModel();
