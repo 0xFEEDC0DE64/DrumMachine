@@ -20,10 +20,10 @@ SamplesWidget::SamplesWidget(QWidget *parent) :
 
     connect(m_ui->pushButtonStopAll, &QAbstractButton::pressed, this, &SamplesWidget::stopAll);
 
-    for (const auto &ref : getWidgets())
+    for (SampleWidget &widget : getWidgets())
     {
-        ref.get().injectNetworkAccessManager(m_networkAccessManager);
-        connect(&ref.get(), &SampleWidget::chokeTriggered, this, &SamplesWidget::chokeTriggered);
+        widget.injectNetworkAccessManager(m_networkAccessManager);
+        connect(&widget, &SampleWidget::chokeTriggered, this, &SamplesWidget::chokeTriggered);
     }
 
     m_ui->sampleWidget_1->setNote(48);
@@ -38,7 +38,6 @@ SamplesWidget::SamplesWidget(QWidget *parent) :
     m_ui->sampleWidget_10->setNote(64);
     m_ui->sampleWidget_11->setNote(65);
     m_ui->sampleWidget_12->setNote(67);
-
     m_ui->sampleWidget_22->setNote(69);
     m_ui->sampleWidget_23->setNote(71);
     m_ui->sampleWidget_24->setNote(72);
@@ -64,28 +63,28 @@ void SamplesWidget::messageReceived(const midi::MidiMessage &message)
     if (message.cmd != midi::Command::NoteOn && message.cmd != midi::Command::NoteOff)
         return;
 
-    for (const auto &ref : getWidgets())
+    for (SampleWidget &widget : getWidgets())
     {
-        if (ref.get().channel() == message.channel && ref.get().note() == message.note)
+        if (widget.channel() == message.channel && widget.note() == message.note)
         {
             if (message.cmd == midi::Command::NoteOff || (message.cmd == midi::Command::NoteOn && message.velocity == 0))
-                ref.get().released();
+                widget.released();
             else if (message.cmd == midi::Command::NoteOn)
-                ref.get().pressed(message.velocity);
+                widget.pressed(message.velocity);
         }
     }
 }
 
 void SamplesWidget::writeSamples(frame_t *begin, frame_t *end)
 {
-    for (const auto &ref : getWidgets())
-        ref.get().writeSamples(begin, end);
+    for (SampleWidget &widget : getWidgets())
+        widget.writeSamples(begin, end);
 }
 
 void SamplesWidget::injectDecodingThread(QThread &thread)
 {
-    for (const auto &ref : getWidgets())
-        ref.get().injectDecodingThread(thread);
+    for (SampleWidget &widget : getWidgets())
+        widget.injectDecodingThread(thread);
 }
 
 void SamplesWidget::sequencerTriggerSample(int index)
@@ -101,13 +100,13 @@ void SamplesWidget::sequencerTriggerSample(int index)
 
 void SamplesWidget::chokeTriggered(int choke)
 {
-    for (const auto &ref : getWidgets())
+    for (SampleWidget &widget : getWidgets())
     {
-        if (&ref.get() == sender())
+        if (&widget == sender())
             continue;
 
-        if (ref.get().choke() && *ref.get().choke() && *ref.get().choke() == choke)
-            ref.get().forceStop();
+        if (widget.choke() && *widget.choke() && *widget.choke() == choke)
+            widget.forceStop();
     }
 }
 
@@ -130,8 +129,8 @@ void SamplesWidget::updateWidgets()
 
 void SamplesWidget::stopAll()
 {
-    for (const auto &ref : getWidgets())
-        ref.get().forceStop();
+    for (SampleWidget &widget : getWidgets())
+        widget.forceStop();
 }
 
 std::array<std::reference_wrapper<SampleWidget>, 24> SamplesWidget::getWidgets()
