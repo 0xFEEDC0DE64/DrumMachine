@@ -34,6 +34,11 @@ public:
 
     void injectDecodingThread(QThread &thread);
 
+    void sendColors();
+
+signals:
+    void sendMidi(const midi::MidiMessage &midiMsg);
+
 public slots:
     void sequencerTriggerSample(int index);
 

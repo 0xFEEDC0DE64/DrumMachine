@@ -14,7 +14,10 @@
 #include "midicontainers.h"
 
 namespace {
-void DummyDeleter(PaStream *stream) {}
+void DummyDeleter(PaStream *stream)
+{
+    Q_UNUSED(stream);
+}
 void PaStreamCloser(PaStream *stream)
 {
     if (PaError err = Pa_CloseStream(stream); err != paNoError)
@@ -74,22 +77,46 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
 
     connect(m_ui->sequencerWidget, &SequencerWidget::triggerSample, m_ui->samplesWidget, &SamplesWidget::sequencerTriggerSample);
 
-    updateMidiDevices();
+    updateMidiInDevices();
 
-    connect(m_ui->pushButtonRefreshMidiControllers, &QAbstractButton::pressed, this, &MainWindow::updateMidiDevices);
+    updateMidiOutDevices();
 
-    connect(m_ui->pushButtonMidiController, &QAbstractButton::pressed, this, [this](){
+    connect(m_ui->pushButtonRefreshMidiIn, &QAbstractButton::pressed, this, &MainWindow::updateMidiInDevices);
+
+    connect(m_ui->pushButtonRefreshMidiOut, &QAbstractButton::pressed, this, &MainWindow::updateMidiOutDevices);
+
+    connect(m_ui->pushButtonMidiIn, &QAbstractButton::pressed, this, [this](){
         if (m_midiIn.isPortOpen())
             m_midiIn.closePort();
         else
         {
-            const auto index = m_ui->comboBoxMidiController->currentIndex();
+            const auto index = m_ui->comboBoxMidiIn->currentIndex();
             if (index != -1)
-                m_midiIn.openPort(index);
+                m_midiIn.openPort(index, "DrumMachine");
         }
 
-        m_ui->comboBoxMidiController->setDisabled(m_midiIn.isPortOpen());
-        m_ui->pushButtonMidiController->setText(m_midiIn.isPortOpen() ? tr("Close") : tr("Open"));
+        m_ui->comboBoxMidiIn->setDisabled(m_midiIn.isPortOpen());
+        m_ui->pushButtonMidiIn->setText(m_midiIn.isPortOpen() ? tr("Close") : tr("Open"));
+    });
+
+    connect(m_ui->pushButtonMidiOut, &QAbstractButton::pressed, this, [this](){
+        if (m_midiOut.isPortOpen())
+        {
+            qDebug() << "closing port";
+            m_midiOut.closePort();
+        }
+        else
+        {
+            const auto index = m_ui->comboBoxMidiOut->currentIndex();
+            if (index != -1)
+            {
+                m_midiOut.openPort(index, "DrumMachine");
+                sendColors();
+            }
+        }
+
+        m_ui->comboBoxMidiOut->setDisabled(m_midiOut.isPortOpen());
+        m_ui->pushButtonMidiOut->setText(m_midiOut.isPortOpen() ? tr("Close") : tr("Open"));
     });
 
     updateAudioDevices();
@@ -114,6 +141,8 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
     connect(m_ui->presetsView->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &MainWindow::currentRowChanged);
 
     loadSettings();
+
+    connect(m_ui->samplesWidget, &SamplesWidget::sendMidi, this, &MainWindow::sendMidi);
 }
 
 MainWindow::~MainWindow()
@@ -232,14 +261,30 @@ void MainWindow::currentRowChanged(const QModelIndex &current)
     m_ui->samplesWidget->setPreset(preset);
 }
 
-void MainWindow::updateMidiDevices()
+void MainWindow::sendMidi(const midi::MidiMessage &midiMsg)
 {
-    m_ui->comboBoxMidiController->clear();
+    if (m_midiOut.isPortOpen())
+        m_midiOut.sendMessage(midiMsg);
+}
+
+void MainWindow::updateMidiInDevices()
+{
+    m_ui->comboBoxMidiIn->clear();
 
     for (const auto &name : m_midiIn.portNames())
-        m_ui->comboBoxMidiController->addItem(name);
+        m_ui->comboBoxMidiIn->addItem(name);
 
-    m_ui->pushButtonMidiController->setEnabled(m_ui->comboBoxMidiController->count() > 0);
+    m_ui->pushButtonMidiIn->setEnabled(m_ui->comboBoxMidiIn->count() > 0);
+}
+
+void MainWindow::updateMidiOutDevices()
+{
+    m_ui->comboBoxMidiOut->clear();
+
+    for (const auto &name : m_midiOut.portNames())
+        m_ui->comboBoxMidiOut->addItem(name);
+
+    m_ui->pushButtonMidiOut->setEnabled(m_ui->comboBoxMidiOut->count() > 0);
 }
 
 void MainWindow::updateAudioDevices()
@@ -259,4 +304,26 @@ void MainWindow::loadSettings()
 {
     m_synthisizer.loadSettings(m_settings);
     m_ui->samplesWidget->loadSettings(m_settings);
+}
+
+void MainWindow::sendColors()
+{
+    m_ui->samplesWidget->sendColors();
+    return;
+
+    int k{0};
+    for (int j = 0; j < 128; j+= 16)
+    {
+        qDebug() << k;
+        for (auto i = 0; i < 8; i++)
+        {
+            midi::MidiMessage midiMsg;
+            midiMsg.channel = 0;
+            midiMsg.cmd = midi::Command::NoteOn;
+            midiMsg.flag = true;
+            midiMsg.note = i + j;
+            midiMsg.velocity = k++;
+            sendMidi(midiMsg);
+        }
+    }
 }

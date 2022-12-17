@@ -7,6 +7,7 @@
 #include "audioformat.h"
 #include "presets.h"
 #include "audioplayer.h"
+#include "midicontainers.h"
 
 namespace Ui { class SampleWidget; }
 class QNetworkAccessManager;
@@ -60,6 +61,10 @@ public:
 signals:
     void chokeTriggered(int choke);
     void startDecoding(const std::shared_ptr<QIODevice> &device);
+    void sendMidi(const midi::MidiMessage &midiMsg);
+
+public slots:
+    void sendColor();
 
 private slots:
     void updateStatus();

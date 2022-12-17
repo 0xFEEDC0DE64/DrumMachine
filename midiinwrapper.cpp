@@ -12,9 +12,12 @@ MidiInWrapper::MidiInWrapper(RtMidi::Api api, const QString& clientName, unsigne
     midiIn.setCallback(&mycallback, this);
 }
 
-void MidiInWrapper::openPort(unsigned int portNumber)
+void MidiInWrapper::openPort(unsigned int portNumber, const QString &portName)
 {
-    midiIn.openPort(portNumber);
+    qDebug() << "opening" << QString::fromStdString(midiIn.getPortName(portNumber));
+    midiIn.openPort(portNumber, portName.toStdString());
+    if (!midiIn.isPortOpen())
+        qFatal("port did not open");
 }
 
 void MidiInWrapper::openVirtualPort(const QString &portName)

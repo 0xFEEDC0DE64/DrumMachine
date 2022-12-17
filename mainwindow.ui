@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1017</width>
-    <height>712</height>
+    <width>1520</width>
+    <height>890</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -99,10 +99,10 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="comboBoxMidiController"/>
+       <widget class="QComboBox" name="comboBoxMidiIn"/>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButtonRefreshMidiControllers">
+       <widget class="QPushButton" name="pushButtonRefreshMidiIn">
         <property name="maximumSize">
          <size>
           <width>32</width>
@@ -115,7 +115,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButtonMidiController">
+       <widget class="QPushButton" name="pushButtonMidiIn">
         <property name="text">
          <string>Open</string>
         </property>
@@ -133,6 +133,49 @@
           <string>Synthisizer</string>
          </property>
         </item>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="labelMidiOut">
+        <property name="text">
+         <string>Midi out:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboBoxMidiOut"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonRefreshMidiOut">
+        <property name="maximumSize">
+         <size>
+          <width>32</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>↻</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonMidiOut">
+        <property name="text">
+         <string>Open</string>
+        </property>
        </widget>
       </item>
       <item>
@@ -278,8 +321,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1017</width>
-     <height>20</height>
+     <width>1520</width>
+     <height>23</height>
     </rect>
    </property>
   </widget>

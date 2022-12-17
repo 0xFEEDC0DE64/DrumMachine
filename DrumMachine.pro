@@ -23,6 +23,7 @@ SOURCES += \
     mainwindow.cpp \
     midicontainers.cpp \
     midiinwrapper.cpp \
+    midioutwrapper.cpp \
     presetdetailwidget.cpp \
     presets.cpp \
     presetsmodel.cpp \
@@ -47,6 +48,7 @@ HEADERS += \
     mainwindow.h \
     midicontainers.h \
     midiinwrapper.h \
+    midioutwrapper.h \
     presetdetailwidget.h \
     presets.h \
     presetsmodel.h \

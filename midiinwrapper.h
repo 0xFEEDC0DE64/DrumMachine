@@ -17,7 +17,7 @@ public:
                 unsigned int queueSizeLimit = 100,
                 QObject *parent = nullptr);
 
-    void openPort(unsigned int portNumber);
+    void openPort(unsigned int portNumber, const QString &portName);
     void openVirtualPort(const QString &portName);
     void closePort();
     bool isPortOpen() const;

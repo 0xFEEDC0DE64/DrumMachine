@@ -11,6 +11,7 @@
 
 #include "audiodecoder.h"
 #include "drummachinesettings.h"
+#include "midicontainers.h"
 
 namespace {
 QString toString(QString value) { return value; }
@@ -182,9 +183,45 @@ void SampleWidget::learn(quint8 channel, quint8 note)
         learnPressed();
 }
 
+void SampleWidget::sendColor()
+{
+    midi::MidiMessage midiMsg;
+
+    midiMsg.channel = m_ui->channelSpinBox->value();
+    midiMsg.cmd = midi::Command::NoteOn;
+    midiMsg.flag = true;
+    midiMsg.note = m_ui->noteSpinBox->value();
+
+    if (m_file && m_file->color && m_player.buffer().isValid())
+    {
+        const auto &color = *m_file->color;
+        if (color == "purple")
+            midiMsg.velocity = m_player.playing() ? 43 : 18;
+        else if (color == "red")
+            midiMsg.velocity = m_player.playing() ? 3 : 1;
+        else if (color == "yellow")
+            midiMsg.velocity = m_player.playing() ? 58 : 33;
+        else if (color == "green")
+            midiMsg.velocity = m_player.playing() ? 56 : 16;
+        else if (color == "blue")
+            midiMsg.velocity = m_player.playing() ? 49 : 51;
+        else
+            goto noColor;
+    }
+    else
+    {
+        noColor:
+        midiMsg.velocity = 0;
+    }
+
+    emit sendMidi(midiMsg);
+}
+
 void SampleWidget::updateStatus()
 {
     QPalette pal;
+
+
     if (m_file && m_file->color && m_player.buffer().isValid())
     {
         const auto bright = m_player.playing() ? 255 : 155;
@@ -211,6 +248,8 @@ void SampleWidget::updateStatus()
             qWarning() << "unknown color:" << color;
     }
     setPalette(pal);
+
+    sendColor();
 
     if (m_reply)
     {

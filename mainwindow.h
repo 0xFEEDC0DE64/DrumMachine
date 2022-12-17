@@ -12,6 +12,7 @@
 #include "presetsmodel.h"
 #include "filesmodel.h"
 #include "midiinwrapper.h"
+#include "midioutwrapper.h"
 #include "synthisizer.h"
 #include "drummachinesettings.h"
 
@@ -35,11 +36,14 @@ private slots:
     void openAudioDevice();
     void messageReceived(const midi::MidiMessage &message);
     void currentRowChanged(const QModelIndex &current);
+    void sendMidi(const midi::MidiMessage &midiMsg);
 
 private:
-    void updateMidiDevices();
+    void updateMidiInDevices();
+    void updateMidiOutDevices();
     void updateAudioDevices();
     void loadSettings();
+    void sendColors();
 
     const std::unique_ptr<Ui::MainWindow> m_ui;
 
@@ -48,6 +52,7 @@ private:
     std::unique_ptr<PaStream, void(*)(PaStream*)> m_paStream;
 
     MidiInWrapper m_midiIn;
+    MidiOutWrapper m_midiOut;
 
     QThread m_decoderThread;
 

@@ -26,6 +26,7 @@ SamplesWidget::SamplesWidget(QWidget *parent) :
         widget.setPadNr(padNr++);
         widget.injectNetworkAccessManager(m_networkAccessManager);
         connect(&widget, &SampleWidget::chokeTriggered, this, &SamplesWidget::chokeTriggered);
+        connect(&widget, &SampleWidget::sendMidi, this, &SamplesWidget::sendMidi);
     }
 }
 
@@ -81,6 +82,12 @@ void SamplesWidget::injectDecodingThread(QThread &thread)
 {
     for (SampleWidget &widget : getWidgets())
         widget.injectDecodingThread(thread);
+}
+
+void SamplesWidget::sendColors()
+{
+    for (SampleWidget &widget : getWidgets())
+        widget.sendColor();
 }
 
 void SamplesWidget::sequencerTriggerSample(int index)
