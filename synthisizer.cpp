@@ -25,11 +25,11 @@ void Synthisizer::writeSamples(frame_t *begin, frame_t *end)
 
 void Synthisizer::messageReceived(const midi::MidiMessage &message)
 {
-    if (message.cmd == midi::Command::NoteOn)
-        m_frequency = 440.*std::pow(std::pow(2., 1./12.), message.note-48);
-    else if (message.cmd == midi::Command::NoteOff)
+    if (message.cmd == midi::Command::NoteOff || (message.cmd == midi::Command::NoteOn && message.velocity == 0))
     {
         if (m_frequency == int16_t(440.*std::pow(std::pow(2., 1./12.), message.note-48)))
             m_frequency = 0;
     }
+    else if (message.cmd == midi::Command::NoteOn)
+        m_frequency = 440.*std::pow(std::pow(2., 1./12.), message.note-48);
 }

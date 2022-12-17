@@ -68,10 +68,10 @@ void SamplesWidget::messageReceived(const midi::MidiMessage &message)
     {
         if (ref.get().channel() == message.channel && ref.get().note() == message.note)
         {
-            if (message.cmd == midi::Command::NoteOn)
-                ref.get().pressed(message.velocity);
-            else if (message.cmd == midi::Command::NoteOff)
+            if (message.cmd == midi::Command::NoteOff || (message.cmd == midi::Command::NoteOn && message.velocity == 0))
                 ref.get().released();
+            else if (message.cmd == midi::Command::NoteOn)
+                ref.get().pressed(message.velocity);
         }
     }
 }
