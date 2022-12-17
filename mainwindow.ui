@@ -241,7 +241,7 @@
            <widget class="QTabWidget" name="tabWidget">
             <widget class="PresetDetailWidget" name="presetDetailWidget">
              <attribute name="title">
-              <string/>
+              <string>Properties</string>
              </attribute>
             </widget>
             <widget class="QTreeView" name="filesView">
@@ -249,7 +249,7 @@
               <bool>false</bool>
              </property>
              <attribute name="title">
-              <string/>
+              <string>Samples</string>
              </attribute>
             </widget>
            </widget>
