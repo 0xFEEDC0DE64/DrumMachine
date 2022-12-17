@@ -100,6 +100,13 @@
      <item>
       <widget class="QSpinBox" name="noteSpinBox"/>
      </item>
+     <item>
+      <widget class="QToolButton" name="toolButtonLearn">
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

@@ -48,6 +48,9 @@ public:
 
     void writeSamples(frame_t *begin, frame_t *end);
 
+    bool isLearning() const { return m_learning; }
+    void learn(quint8 channel, quint8 note);
+
 signals:
     void chokeTriggered(int choke);
     void startDecoding(const std::shared_ptr<QIODevice> &device);
@@ -56,6 +59,7 @@ private slots:
     void updateStatus();
     void requestFinished();
     void decodingFinished(const QAudioBuffer &buffer);
+    void learnPressed();
 
 private:
     void startRequest();
@@ -72,4 +76,8 @@ private:
     std::optional<presets::File> m_file;
 
     QNetworkAccessManager *m_networkAccessManager{};
+
+    bool m_learning{};
+    QColor m_oldColor;
+    QBrush m_oldBrush;
 };

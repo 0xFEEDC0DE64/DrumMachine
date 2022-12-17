@@ -30,6 +30,7 @@ SampleWidget::SampleWidget(QWidget *parent) :
 
     connect(m_ui->pushButton, &QAbstractButton::pressed, this, [this](){ pressed(127); });
     connect(m_ui->pushButton, &QAbstractButton::released, this, &SampleWidget::released);
+    connect(m_ui->toolButtonLearn, &QAbstractButton::pressed, this, &SampleWidget::learnPressed);
 
     updateStatus();
 }
@@ -158,6 +159,14 @@ void SampleWidget::writeSamples(frame_t *begin, frame_t *end)
     m_player.writeSamples(begin, end);
 }
 
+void SampleWidget::learn(quint8 channel, quint8 note)
+{
+    setChannel(channel);
+    setNote(note);
+    if (m_learning)
+        learnPressed();
+}
+
 void SampleWidget::updateStatus()
 {
     QPalette pal;
@@ -222,6 +231,28 @@ void SampleWidget::decodingFinished(const QAudioBuffer &buffer)
     setSpeed(100);
     setVolume(100);
     updateStatus();
+}
+
+void SampleWidget::learnPressed()
+{
+    auto palette = m_ui->toolButtonLearn->palette();
+
+    if (m_learning)
+    {
+        palette.setColor(m_ui->toolButtonLearn->backgroundRole(), m_oldColor);
+        palette.setBrush(m_ui->toolButtonLearn->backgroundRole(), m_oldBrush);
+    }
+    else
+    {
+        m_oldColor = palette.color(m_ui->toolButtonLearn->backgroundRole());
+        m_oldBrush = palette.brush(m_ui->toolButtonLearn->backgroundRole());
+        palette.setColor(m_ui->toolButtonLearn->backgroundRole(), Qt::red);
+        palette.setBrush(m_ui->toolButtonLearn->backgroundRole(), Qt::red);
+    }
+    m_ui->toolButtonLearn->setPalette(palette);
+
+    m_learning = !m_learning;
+    qDebug() << m_learning;
 }
 
 void SampleWidget::startRequest()

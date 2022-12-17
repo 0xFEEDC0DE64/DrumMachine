@@ -65,7 +65,11 @@ void SamplesWidget::messageReceived(const midi::MidiMessage &message)
 
     for (SampleWidget &widget : getWidgets())
     {
-        if (widget.channel() == message.channel && widget.note() == message.note)
+        if (widget.isLearning())
+        {
+            widget.learn(message.channel, message.note);
+        }
+        else if (widget.channel() == message.channel && widget.note() == message.note)
         {
             if (message.cmd == midi::Command::NoteOff || (message.cmd == midi::Command::NoteOn && message.velocity == 0))
                 widget.released();
