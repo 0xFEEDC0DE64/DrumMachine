@@ -95,4 +95,6 @@ private:
     bool m_learning{};
     QColor m_oldColor;
     QBrush m_oldBrush;
+
+    bool m_sendColors{};
 };

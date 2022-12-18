@@ -185,6 +185,7 @@ void SampleWidget::learn(quint8 channel, quint8 note)
 
 void SampleWidget::unsendColor()
 {
+    m_sendColors = false;
     midi::MidiMessage midiMsg;
 
     midiMsg.channel = m_ui->channelSpinBox->value();
@@ -198,6 +199,7 @@ void SampleWidget::unsendColor()
 
 void SampleWidget::sendColor()
 {
+    m_sendColors = true;
     midi::MidiMessage midiMsg;
 
     midiMsg.channel = m_ui->channelSpinBox->value();
@@ -262,7 +264,8 @@ void SampleWidget::updateStatus()
     }
     setPalette(pal);
 
-    sendColor();
+    if (m_sendColors)
+        sendColor();
 
     if (m_reply)
     {
