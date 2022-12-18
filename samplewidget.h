@@ -58,13 +58,13 @@ public:
     bool isLearning() const { return m_learning; }
     void learn(quint8 channel, quint8 note);
 
+    void unsendColor();
+    void sendColor();
+
 signals:
     void chokeTriggered(int choke);
     void startDecoding(const std::shared_ptr<QIODevice> &device);
     void sendMidi(const midi::MidiMessage &midiMsg);
-
-public slots:
-    void sendColor();
 
 private slots:
     void updateStatus();

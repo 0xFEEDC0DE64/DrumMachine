@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DrumPadWidget</class>
+ <widget class="QSplitter">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>805</width>
+    <height>525</height>
+   </rect>
+  </property>
+  <property name="orientation">
+   <enum>Qt::Horizontal</enum>
+  </property>
+  <widget class="QWidget" name="layoutWidget">
+   <layout class="QVBoxLayout">
+    <item>
+     <layout class="QVBoxLayout">
+      <item>
+       <layout class="QHBoxLayout">
+        <item>
+         <widget class="QLineEdit" name="lineEdit">
+          <property name="clearButtonEnabled">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButtonRefresh">
+          <property name="maximumSize">
+           <size>
+            <width>32</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>↻</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QTreeView" name="presetsView">
+        <property name="rootIsDecorated">
+         <bool>false</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>2</number>
+      </property>
+      <widget class="PresetDetailWidget" name="presetDetailWidget">
+       <attribute name="title">
+        <string>Properties</string>
+       </attribute>
+      </widget>
+      <widget class="QTreeView" name="filesView">
+       <property name="rootIsDecorated">
+        <bool>false</bool>
+       </property>
+       <attribute name="title">
+        <string>Samples</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QSplitter">
+  <property name="orientation">
+   <enum>Qt::Vertical</enum>
+  </property>
+   <widget class="SequencerWidget" name="sequencerWidget" />
+   <widget class="SamplesWidget" name="samplesWidget" />
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SamplesWidget</class>
+   <extends>QWidget</extends>
+   <header>sampleswidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PresetDetailWidget</class>
+   <extends>QScrollArea</extends>
+   <header>presetdetailwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SequencerWidget</class>
+   <extends>QWidget</extends>
+   <header>sequencerwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

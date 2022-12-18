@@ -12,56 +12,34 @@
 #include "presets.h"
 #include "midiinwrapper.h"
 #include "midicontainers.h"
+#include "sampleswidget.h"
+#include "sequencerwidget.h"
 
 namespace {
-void DummyDeleter(PaStream *stream)
-{
-    Q_UNUSED(stream);
-}
-void PaStreamCloser(PaStream *stream)
-{
-    if (PaError err = Pa_CloseStream(stream); err != paNoError)
-        fprintf(stderr, "Could not close stream!\n");
-}
-void PaStreamStopperAndCloser(PaStream *stream)
-{
-    if (PaError err = Pa_StopStream(stream); err != paNoError)
-        fprintf(stderr, "Could not stop stream!\n");
-    PaStreamCloser(stream);
-}
-
-void paStreamFinished(void* userData)
-{
-    printf("Stream Completed\n");
-}
-
+void DummyDeleter(PaStream *stream);
+void PaStreamCloser(PaStream *stream);
+void PaStreamStopperAndCloser(PaStream *stream);
+void paStreamFinished(void* userData);
 int paCallback(const void *inputBuffer, void *outputBuffer,
                unsigned long framesPerBuffer,
                const PaStreamCallbackTimeInfo* timeInfo,
                PaStreamCallbackFlags statusFlags,
-               void *userData)
-{
-    Q_UNUSED(inputBuffer)
-    Q_ASSERT(outputBuffer);
-    Q_ASSERT(framesPerBuffer);
-    Q_UNUSED(timeInfo)
-    Q_UNUSED(statusFlags)
-    Q_ASSERT(userData);
+               void *userData);
+} // namespace
 
-    auto begin = static_cast<frame_t*>(outputBuffer);
-
-    static_cast<MainWindow*>(userData)->writeSamples(begin, begin+framesPerBuffer);
-}
-}
-
-MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent) :
     QMainWindow{parent},
     m_ui{std::make_unique<Ui::MainWindow>()},
     m_paStream{nullptr, DummyDeleter},
-    m_presetsModel{*presetsConfig.presets}
+    m_midiIn{RtMidi::UNSPECIFIED, "DrumMachine"},
+    m_midiOut{RtMidi::UNSPECIFIED, "DrumMachine"}
 {
     m_ui->setupUi(this);
-    m_ui->splitter->setSizes({99999, 1});
+
+    m_cache.setCacheDirectory("cache");
+    m_networkAccessManager.setCache(&m_cache);
+
+    m_ui->drumPadWidget->injectNetworkAccessManager(m_networkAccessManager);
 
     connect(&m_midiIn, &MidiInWrapper::messageReceived, this, &MainWindow::messageReceived);
 
@@ -72,10 +50,8 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
         eventLoop.exec();
     }
 
-    m_ui->samplesWidget->injectDecodingThread(m_decoderThread);
+    m_ui->drumPadWidget->injectDecodingThread(m_decoderThread);
     m_ui->djWidget->injectDecodingThread(m_decoderThread);
-
-    connect(m_ui->sequencerWidget, &SequencerWidget::triggerSample, m_ui->samplesWidget, &SamplesWidget::sequencerTriggerSample);
 
     updateMidiInDevices();
 
@@ -92,7 +68,7 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
         {
             const auto index = m_ui->comboBoxMidiIn->currentIndex();
             if (index != -1)
-                m_midiIn.openPort(index, "DrumMachine");
+                m_midiIn.openPort(index, "Input");
         }
 
         m_ui->comboBoxMidiIn->setDisabled(m_midiIn.isPortOpen());
@@ -103,6 +79,7 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
         if (m_midiOut.isPortOpen())
         {
             qDebug() << "closing port";
+            unsendColors(m_ui->tabWidget->currentIndex());
             m_midiOut.closePort();
         }
         else
@@ -110,8 +87,8 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
             const auto index = m_ui->comboBoxMidiOut->currentIndex();
             if (index != -1)
             {
-                m_midiOut.openPort(index, "DrumMachine");
-                sendColors();
+                m_midiOut.openPort(index, "Output");
+                sendColors(m_ui->tabWidget->currentIndex());
             }
         }
 
@@ -127,22 +104,14 @@ MainWindow::MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *par
 
     connect(m_ui->pushButtonAudioDevice, &QAbstractButton::pressed, this, &MainWindow::openAudioDevice);
 
-    m_presetsProxyModel.setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_presetsProxyModel.setSortRole(Qt::EditRole);
-    m_presetsProxyModel.setSourceModel(&m_presetsModel);
-    m_ui->presetsView->setModel(&m_presetsProxyModel);
-
-    m_presetsProxyModel.setFilterKeyColumn(1);
-
-    connect(m_ui->lineEdit, &QLineEdit::textChanged, &m_presetsProxyModel, &QSortFilterProxyModel::setFilterFixedString);
-
-    m_ui->filesView->setModel(&m_filesModel);
-
-    connect(m_ui->presetsView->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &MainWindow::currentRowChanged);
-
     loadSettings();
 
-    connect(m_ui->samplesWidget, &SamplesWidget::sendMidi, this, &MainWindow::sendMidi);
+    connect(m_ui->drumPadWidget, &DrumPadWidget::sendMidi, this, &MainWindow::sendMidi);
+    connect(m_ui->djWidget, &DjWidget::sendMidi, this, &MainWindow::sendMidi);
+    connect(m_ui->synthisizerWidget, &SynthisizerWidget::sendMidi, this, &MainWindow::sendMidi);
+
+    m_lastIndex = m_ui->tabWidget->currentIndex();
+    connect(m_ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::currentChanged);
 }
 
 MainWindow::~MainWindow()
@@ -151,26 +120,13 @@ MainWindow::~MainWindow()
     m_decoderThread.wait();
 }
 
-void MainWindow::selectFirstPreset()
-{
-    if (m_presetsProxyModel.rowCount())
-    {
-        const auto index = m_presetsProxyModel.index(0, 0);
-        if (index.isValid())
-        {
-            m_ui->presetsView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-            currentRowChanged(index);
-        }
-    }
-}
-
-void MainWindow::writeSamples(frame_t *begin, frame_t *end)
+int MainWindow::writeSamples(frame_t *begin, frame_t *end)
 {
     std::fill(begin, end, frame_t{0.,0.});
 
-    m_ui->samplesWidget->writeSamples(begin, end);
+    m_ui->drumPadWidget->writeSamples(begin, end);
     m_ui->djWidget->writeSamples(begin, end);
-    m_synthisizer.writeSamples(begin, end);
+    m_ui->synthisizerWidget->writeSamples(begin, end);
 
     std::transform(begin, end, begin, [factor=float(m_ui->horizontalSliderMaster->value())/100.f](frame_t frame){
         std::transform(std::cbegin(frame), std::cend(frame), std::begin(frame), [&factor](const sample_t &sample){
@@ -178,6 +134,8 @@ void MainWindow::writeSamples(frame_t *begin, frame_t *end)
         });
         return frame;
     });
+
+    return paContinue;
 }
 
 void MainWindow::openAudioDevice()
@@ -242,29 +200,25 @@ void MainWindow::messageReceived(const midi::MidiMessage &message)
                                  .arg(message.flag?"true":"false", QMetaEnum::fromType<midi::Command>().valueToKey(int(message.cmd)))
                                  .arg(message.channel).arg(message.note).arg(message.velocity), 1000);
 
-    if (m_ui->comboBoxMidiType->currentIndex() == 0)
-        m_ui->samplesWidget->messageReceived(message);
-    else if (m_ui->comboBoxMidiType->currentIndex() == 1)
-        m_synthisizer.messageReceived(message);
-}
-
-void MainWindow::currentRowChanged(const QModelIndex &current)
-{
-    if (!current.isValid())
-        return;
-
-    const auto &preset = m_presetsModel.getPreset(m_presetsProxyModel.mapToSource(current));
-
-    m_ui->presetDetailWidget->setPreset(preset);
-    m_filesModel.setPreset(preset);
-    m_ui->sequencerWidget->setPreset(preset);
-    m_ui->samplesWidget->setPreset(preset);
+    if (m_ui->tabWidget->currentIndex() == 0)
+        m_ui->drumPadWidget->messageReceived(message);
+    else if (m_ui->tabWidget->currentIndex() == 1)
+        m_ui->djWidget->messageReceived(message);
+    else if (m_ui->tabWidget->currentIndex() == 2)
+        m_ui->synthisizerWidget->messageReceived(message);
 }
 
 void MainWindow::sendMidi(const midi::MidiMessage &midiMsg)
 {
     if (m_midiOut.isPortOpen())
         m_midiOut.sendMessage(midiMsg);
+}
+
+void MainWindow::currentChanged(int index)
+{
+    unsendColors(m_lastIndex);
+    m_lastIndex = index;
+    sendColors(index);
 }
 
 void MainWindow::updateMidiInDevices()
@@ -302,14 +256,33 @@ void MainWindow::updateAudioDevices()
 
 void MainWindow::loadSettings()
 {
-    m_synthisizer.loadSettings(m_settings);
-    m_ui->samplesWidget->loadSettings(m_settings);
+    m_ui->drumPadWidget->loadSettings(m_settings);
+    m_ui->djWidget->loadSettings(m_settings);
+    m_ui->synthisizerWidget->loadSettings(m_settings);
 }
 
-void MainWindow::sendColors()
+void MainWindow::unsendColors(int index)
 {
-    m_ui->samplesWidget->sendColors();
+    if (index == 0)
+        m_ui->drumPadWidget->unsendColors();
+    else if (index == 1)
+        m_ui->djWidget->unsendColors();
+    else if (index == 2)
+        m_ui->synthisizerWidget->unsendColors();
+}
+
+void MainWindow::sendColors(int index)
+{
+    if (index == 0)
+        m_ui->drumPadWidget->sendColors();
+    else if (index == 1)
+        m_ui->djWidget->sendColors();
+    else if (index == 2)
+        m_ui->synthisizerWidget->sendColors();
+
     return;
+
+    // this was just for debugging all the available colors on novation launchpad mk1
 
     int k{0};
     for (int j = 0; j < 128; j+= 16)
@@ -327,3 +300,44 @@ void MainWindow::sendColors()
         }
     }
 }
+
+namespace {
+void DummyDeleter(PaStream *stream)
+{
+    Q_UNUSED(stream);
+}
+void PaStreamCloser(PaStream *stream)
+{
+    if (PaError err = Pa_CloseStream(stream); err != paNoError)
+        fprintf(stderr, "Could not close stream!\n");
+}
+void PaStreamStopperAndCloser(PaStream *stream)
+{
+    if (PaError err = Pa_StopStream(stream); err != paNoError)
+        fprintf(stderr, "Could not stop stream!\n");
+    PaStreamCloser(stream);
+}
+
+void paStreamFinished(void* userData)
+{
+    printf("Stream Completed\n");
+}
+
+int paCallback(const void *inputBuffer, void *outputBuffer,
+               unsigned long framesPerBuffer,
+               const PaStreamCallbackTimeInfo* timeInfo,
+               PaStreamCallbackFlags statusFlags,
+               void *userData)
+{
+    Q_UNUSED(inputBuffer)
+    Q_ASSERT(outputBuffer);
+    Q_ASSERT(framesPerBuffer);
+    Q_UNUSED(timeInfo)
+    Q_UNUSED(statusFlags)
+    Q_ASSERT(userData);
+
+    auto begin = static_cast<frame_t*>(outputBuffer);
+
+    return static_cast<MainWindow*>(userData)->writeSamples(begin, begin+framesPerBuffer);
+}
+} // namespace

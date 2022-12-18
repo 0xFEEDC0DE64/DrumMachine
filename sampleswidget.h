@@ -5,14 +5,13 @@
 #include <functional>
 
 #include <QWidget>
-#include <QNetworkAccessManager>
-#include <QNetworkDiskCache>
 
 #include "audioformat.h"
 #include "presets.h"
 
 namespace Ui { class SamplesWidget; }
 namespace midi { class MidiMessage; }
+class QNetworkAccessManager;
 class SampleWidget;
 class DrumMachineSettings;
 
@@ -32,8 +31,10 @@ public:
 
     void writeSamples(frame_t *begin, frame_t *end);
 
+    void injectNetworkAccessManager(QNetworkAccessManager &networkAccessManager);
     void injectDecodingThread(QThread &thread);
 
+    void unsendColors();
     void sendColors();
 
 signals:
@@ -51,9 +52,6 @@ private:
     std::array<std::reference_wrapper<SampleWidget>, 24> getWidgets();
 
     const std::unique_ptr<Ui::SamplesWidget> m_ui;
-
-    QNetworkDiskCache m_cache;
-    QNetworkAccessManager m_networkAccessManager;
 
     presets::Preset m_preset;
 };

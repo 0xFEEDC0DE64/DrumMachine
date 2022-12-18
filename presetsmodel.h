@@ -11,8 +11,15 @@ class PresetsModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
+    PresetsModel(QObject *parent = nullptr);
     PresetsModel(const std::map<QString, presets::Preset> &presets, QObject *parent = nullptr);
+    PresetsModel(std::vector<presets::Preset> &&presets, QObject *parent = nullptr);
+    PresetsModel(const std::vector<presets::Preset> &presets, QObject *parent = nullptr);
     ~PresetsModel() override;
+
+    void setPresets(const std::map<QString, presets::Preset> &presets);
+    void setPresets(std::vector<presets::Preset> &&presets);
+    void setPresets(const std::vector<presets::Preset> &presets);
 
     const presets::Preset &getPreset(const QModelIndex &index) const;
     const presets::Preset &getPreset(int row) const;

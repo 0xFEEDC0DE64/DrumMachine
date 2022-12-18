@@ -3,17 +3,15 @@
 #include <memory>
 
 #include <QMainWindow>
-#include <QSortFilterProxyModel>
 #include <QThread>
+#include <QNetworkAccessManager>
+#include <QNetworkDiskCache>
 
 #include "portaudio.h"
 
 #include "audioformat.h"
-#include "presetsmodel.h"
-#include "filesmodel.h"
 #include "midiinwrapper.h"
 #include "midioutwrapper.h"
-#include "synthisizer.h"
 #include "drummachinesettings.h"
 
 namespace Ui { class MainWindow; }
@@ -25,25 +23,24 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(const presets::PresetsConfig &presetsConfig, QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
-    void selectFirstPreset();
-
-    void writeSamples(frame_t *begin, frame_t *end);
+    int writeSamples(frame_t *begin, frame_t *end);
 
 private slots:
     void openAudioDevice();
     void messageReceived(const midi::MidiMessage &message);
-    void currentRowChanged(const QModelIndex &current);
     void sendMidi(const midi::MidiMessage &midiMsg);
+    void currentChanged(int index);
 
 private:
     void updateMidiInDevices();
     void updateMidiOutDevices();
     void updateAudioDevices();
     void loadSettings();
-    void sendColors();
+    void unsendColors(int index);
+    void sendColors(int index);
 
     const std::unique_ptr<Ui::MainWindow> m_ui;
 
@@ -54,12 +51,10 @@ private:
     MidiInWrapper m_midiIn;
     MidiOutWrapper m_midiOut;
 
+    QNetworkAccessManager m_networkAccessManager;
+    QNetworkDiskCache m_cache;
+
     QThread m_decoderThread;
 
-    Synthisizer m_synthisizer;
-
-    PresetsModel m_presetsModel;
-    QSortFilterProxyModel m_presetsProxyModel;
-
-    FilesModel m_filesModel;
+    int m_lastIndex;
 };

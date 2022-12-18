@@ -183,6 +183,19 @@ void SampleWidget::learn(quint8 channel, quint8 note)
         learnPressed();
 }
 
+void SampleWidget::unsendColor()
+{
+    midi::MidiMessage midiMsg;
+
+    midiMsg.channel = m_ui->channelSpinBox->value();
+    midiMsg.cmd = midi::Command::NoteOn;
+    midiMsg.flag = true;
+    midiMsg.note = m_ui->noteSpinBox->value();
+    midiMsg.velocity = 0;
+
+    emit sendMidi(midiMsg);
+}
+
 void SampleWidget::sendColor()
 {
     midi::MidiMessage midiMsg;

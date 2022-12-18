@@ -42,6 +42,6 @@ private:
 
     QTimer m_timer;
 
-    int m_pos;
+    int m_pos{};
     std::array<QLabel*, 24> m_sampleLabels;
 };

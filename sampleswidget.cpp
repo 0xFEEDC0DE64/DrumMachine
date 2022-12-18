@@ -13,9 +13,6 @@ SamplesWidget::SamplesWidget(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
-    m_cache.setCacheDirectory("cache");
-    m_networkAccessManager.setCache(&m_cache);
-
     connect(m_ui->checkBox, &QCheckBox::toggled, this, &SamplesWidget::updateWidgets);
 
     connect(m_ui->pushButtonStopAll, &QAbstractButton::pressed, this, &SamplesWidget::stopAll);
@@ -24,7 +21,6 @@ SamplesWidget::SamplesWidget(QWidget *parent) :
     for (SampleWidget &widget : getWidgets())
     {
         widget.setPadNr(padNr++);
-        widget.injectNetworkAccessManager(m_networkAccessManager);
         connect(&widget, &SampleWidget::chokeTriggered, this, &SamplesWidget::chokeTriggered);
         connect(&widget, &SampleWidget::sendMidi, this, &SamplesWidget::sendMidi);
     }
@@ -78,10 +74,22 @@ void SamplesWidget::writeSamples(frame_t *begin, frame_t *end)
         widget.writeSamples(begin, end);
 }
 
+void SamplesWidget::injectNetworkAccessManager(QNetworkAccessManager &networkAccessManager)
+{
+    for (SampleWidget &widget : getWidgets())
+        widget.injectNetworkAccessManager(networkAccessManager);
+}
+
 void SamplesWidget::injectDecodingThread(QThread &thread)
 {
     for (SampleWidget &widget : getWidgets())
         widget.injectDecodingThread(thread);
+}
+
+void SamplesWidget::unsendColors()
+{
+    for (SampleWidget &widget : getWidgets())
+        widget.unsendColor();
 }
 
 void SamplesWidget::sendColors()

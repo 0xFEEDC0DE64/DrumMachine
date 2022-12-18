@@ -7,9 +7,11 @@
 #include <memory>
 
 #include "audioformat.h"
+#include "midicontainers.h"
 #include "treetotableproxymodel.h"
 
 namespace Ui { class DjWidget; }
+class DrumMachineSettings;
 
 class DjWidget : public QWidget
 {
@@ -20,8 +22,16 @@ public:
     ~DjWidget() override;
 
     void injectDecodingThread(QThread &thread);
-
     void writeSamples(frame_t *begin, frame_t *end);
+    void loadSettings(DrumMachineSettings &settings);
+    void unsendColors();
+    void sendColors();
+
+signals:
+    void sendMidi(const midi::MidiMessage &midiMsg);
+
+public slots:
+    void messageReceived(const midi::MidiMessage &message);
 
 private slots:
     void directorySelected();

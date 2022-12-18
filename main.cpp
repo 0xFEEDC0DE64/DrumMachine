@@ -1,17 +1,10 @@
 #include <QApplication>
 #include <QSslSocket>
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QEventLoop>
-#include <QSplashScreen>
-#include <QMessageBox>
-#include <QNetworkDiskCache>
 #include <QDebug>
+#include <QMessageBox>
 
 #include "portaudio.h"
 
-#include "jsonconverters.h"
 #include "mainwindow.h"
 
 namespace {
@@ -58,7 +51,6 @@ int main(int argc, char *argv[])
     }
 
     auto helper0 = makeCleanupHelper([](){
-        qDebug() << "helper0";
         if (PaError err = Pa_Terminate(); err != paNoError)
             fprintf(stderr, "Could not terminate PortAudio!\n");
     });
@@ -73,39 +65,6 @@ int main(int argc, char *argv[])
                        "] "
                        "%{function}(): "
                        "%{message}");
-
-    presets::PresetsConfig presetsConfig;
-
-    {
-        QSplashScreen splashScreen{QPixmap{":/drummachine/splashscreen.png"}};
-        splashScreen.showMessage(QCoreApplication::translate("main", "Loading list of presets..."));
-        splashScreen.show();
-
-        QEventLoop eventLoop;
-
-        QNetworkAccessManager manager;
-
-        QNetworkDiskCache cache;
-        cache.setCacheDirectory("cache");
-
-        manager.setCache(&cache);
-
-        QNetworkRequest request{QUrl{"https://brunner.ninja/komposthaufen/dpm/presets_config_v12.json"}};
-        request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache);
-        request.setAttribute(QNetworkRequest::CacheSaveControlAttribute, true);
-
-        const auto reply = std::unique_ptr<QNetworkReply>(manager.get(request));
-        QObject::connect(reply.get(), &QNetworkReply::finished, &eventLoop, &QEventLoop::quit);
-        eventLoop.exec();
-
-        if (reply->error() != QNetworkReply::NoError)
-        {
-            QMessageBox::warning(nullptr, QCoreApplication::translate("main", "Could not load presets!"), QCoreApplication::translate("main", "Could not load presets!") + "\n\n" + reply->errorString());
-            return 1;
-        }
-
-        presetsConfig = json_converters::parsePresetsConfig(json_converters::loadJson(reply->readAll()));
-    }
 
 #if !defined(Q_OS_WIN)
     QPalette darkPalette;
@@ -127,9 +86,8 @@ int main(int argc, char *argv[])
     app.setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da; border: 1px solid white; }");
 #endif
 
-    MainWindow mainWindow{presetsConfig};
-    mainWindow.showMaximized();
-    mainWindow.selectFirstPreset();
+    MainWindow mainWindow;
+    mainWindow.show();
 
     return app.exec();
 }

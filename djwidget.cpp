@@ -75,6 +75,22 @@ void DjWidget::writeSamples(frame_t *begin, frame_t *end)
     }
 }
 
+void DjWidget::loadSettings(DrumMachineSettings &settings)
+{
+}
+
+void DjWidget::unsendColors()
+{
+}
+
+void DjWidget::sendColors()
+{
+}
+
+void DjWidget::messageReceived(const midi::MidiMessage &message)
+{
+}
+
 void DjWidget::directorySelected()
 {
     const auto selected = m_ui->treeViewDirectories->currentIndex();

@@ -32,6 +32,11 @@ enum {
     NumberOfColumns
 };
 
+PresetsModel::PresetsModel(QObject *parent) :
+    QAbstractTableModel{parent}
+{
+}
+
 PresetsModel::PresetsModel(const std::map<QString, presets::Preset> &presets, QObject *parent) :
     QAbstractTableModel{parent}
 {
@@ -40,7 +45,43 @@ PresetsModel::PresetsModel(const std::map<QString, presets::Preset> &presets, QO
         m_presets.emplace_back(pair.second);
 }
 
+PresetsModel::PresetsModel(std::vector<presets::Preset> &&presets, QObject *parent) :
+    QAbstractTableModel{parent}
+{
+    m_presets = std::move(presets);
+}
+
+PresetsModel::PresetsModel(const std::vector<presets::Preset> &presets, QObject *parent) :
+    QAbstractTableModel{parent}
+{
+    m_presets = presets;
+}
+
 PresetsModel::~PresetsModel() = default;
+
+void PresetsModel::setPresets(const std::map<QString, presets::Preset> &presets)
+{
+    beginResetModel();
+    m_presets.clear();
+    m_presets.reserve(std::size(presets));
+    for (const auto &pair : presets)
+        m_presets.emplace_back(pair.second);
+    endResetModel();
+}
+
+void PresetsModel::setPresets(std::vector<presets::Preset> &&presets)
+{
+    beginResetModel();
+    m_presets = std::move(presets);
+    endResetModel();
+}
+
+void PresetsModel::setPresets(const std::vector<presets::Preset> &presets)
+{
+    beginResetModel();
+    m_presets = presets;
+    endResetModel();
+}
 
 const presets::Preset &PresetsModel::getPreset(const QModelIndex &index) const
 {

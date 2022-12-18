@@ -6,10 +6,6 @@
 
 constexpr double pi = std::acos(-1);
 
-void Synthisizer::loadSettings(const DrumMachineSettings &settings)
-{
-}
-
 void Synthisizer::writeSamples(frame_t *begin, frame_t *end)
 {
     const auto frequency = m_frequency;

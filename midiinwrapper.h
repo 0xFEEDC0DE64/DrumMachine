@@ -13,9 +13,9 @@ class MidiInWrapper : public QObject
 
 public:
     MidiInWrapper(RtMidi::Api api = RtMidi::UNSPECIFIED,
-                const QString &clientName = "RtMidi Input Client",
-                unsigned int queueSizeLimit = 100,
-                QObject *parent = nullptr);
+                  const QString &clientName = "RtMidi Input Client",
+                  unsigned int queueSizeLimit = 100,
+                  QObject *parent = nullptr);
 
     void openPort(unsigned int portNumber, const QString &portName);
     void openVirtualPort(const QString &portName);

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>140</width>
+    <height>157</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -63,8 +63,14 @@
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QPushButton" name="pushButton">
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="text">
-        <string>PushButton</string>
+        <string>▶</string>
        </property>
       </widget>
      </item>
@@ -119,9 +125,6 @@
        <property name="frameShadow">
         <enum>QFrame::Sunken</enum>
        </property>
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
       </widget>
      </item>
      <item>
@@ -132,9 +135,6 @@
        <property name="frameShadow">
         <enum>QFrame::Sunken</enum>
        </property>
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
       </widget>
      </item>
      <item>
@@ -144,9 +144,6 @@
        </property>
        <property name="frameShadow">
         <enum>QFrame::Sunken</enum>
-       </property>
-       <property name="text">
-        <string>TextLabel</string>
        </property>
       </widget>
      </item>

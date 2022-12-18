@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="widget">
-   <layout class="QVBoxLayout" stretch="0,1">
+   <layout class="QVBoxLayout" stretch="0,0,0">
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -92,6 +92,43 @@
        </spacer>
       </item>
       <item>
+       <widget class="QComboBox" name="comboBoxAudioDevice"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonRefreshAudioDevices">
+        <property name="maximumSize">
+         <size>
+          <width>32</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>↻</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="spinBoxBufferSize">
+        <property name="maximum">
+         <number>65535</number>
+        </property>
+        <property name="value">
+         <number>32</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonAudioDevice">
+        <property name="text">
+         <string>Open</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
        <widget class="QLabel" name="labelMidiIn">
         <property name="text">
          <string>Midi in:</string>
@@ -119,20 +156,6 @@
         <property name="text">
          <string>Open</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBoxMidiType">
-        <item>
-         <property name="text">
-          <string>Samples</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Synthisizer</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item>
@@ -178,139 +201,24 @@
         </property>
        </widget>
       </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBoxAudioDevice"/>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButtonRefreshAudioDevices">
-        <property name="maximumSize">
-         <size>
-          <width>32</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>↻</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QSpinBox" name="spinBoxBufferSize">
-        <property name="maximum">
-         <number>65535</number>
-        </property>
-        <property name="value">
-         <number>32</number>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButtonAudioDevice">
-        <property name="text">
-         <string>Open</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
     <item>
-     <widget class="QSplitter" name="splitter">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <widget class="QSplitter" name="splitter_2">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <widget class="QWidget" name="layoutWidget">
-        <layout class="QVBoxLayout">
-         <item>
-          <layout class="QHBoxLayout">
-           <item>
-            <widget class="QLineEdit" name="lineEdit">
-             <property name="clearButtonEnabled">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer>
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QPushButton" name="selectRandomPushButton">
-             <property name="text">
-              <string>Select random</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QSplitter" name="splitter">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <widget class="QTreeView" name="presetsView">
-            <property name="rootIsDecorated">
-             <bool>false</bool>
-            </property>
-            <property name="sortingEnabled">
-             <bool>true</bool>
-            </property>
-           </widget>
-           <widget class="QTabWidget" name="tabWidget">
-            <widget class="PresetDetailWidget" name="presetDetailWidget">
-             <attribute name="title">
-              <string>Properties</string>
-             </attribute>
-            </widget>
-            <widget class="QTreeView" name="filesView">
-             <property name="rootIsDecorated">
-              <bool>false</bool>
-             </property>
-             <attribute name="title">
-              <string>Samples</string>
-             </attribute>
-            </widget>
-           </widget>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="DjWidget" name="djWidget" native="true"/>
+     <widget class="QTabWidget" name="tabWidget">
+      <widget class="DrumPadWidget" name="drumPadWidget">
+       <attribute name="title">
+        <string>DrumPad</string>
+       </attribute>
       </widget>
-      <widget class="QWidget" name="layoutWidget">
-       <layout class="QVBoxLayout" stretch="1,0">
-        <item>
-         <widget class="SequencerWidget" name="sequencerWidget" native="true"/>
-        </item>
-        <item>
-         <widget class="SamplesWidget" name="samplesWidget" native="true"/>
-        </item>
-       </layout>
+      <widget class="DjWidget" name="djWidget">
+       <attribute name="title">
+        <string>DJ</string>
+       </attribute>
+      </widget>
+      <widget class="SynthisizerWidget" name="synthisizerWidget">
+       <attribute name="title">
+        <string>Synthisizer</string>
+       </attribute>
       </widget>
      </widget>
     </item>
@@ -330,27 +238,21 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>SamplesWidget</class>
-   <extends>QWidget</extends>
-   <header>sampleswidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>PresetDetailWidget</class>
-   <extends>QScrollArea</extends>
-   <header>presetdetailwidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>SequencerWidget</class>
-   <extends>QWidget</extends>
-   <header>sequencerwidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>DjWidget</class>
    <extends>QWidget</extends>
    <header>djwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DrumPadWidget</class>
+   <extends>QWidget</extends>
+   <header>drumpadwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SynthisizerWidget</class>
+   <extends>QWidget</extends>
+   <header>synthisizerwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

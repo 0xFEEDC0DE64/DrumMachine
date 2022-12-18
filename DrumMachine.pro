@@ -16,6 +16,7 @@ SOURCES += \
     audioplayer.cpp \
     djwidget.cpp \
     drummachinesettings.cpp \
+    drumpadwidget.cpp \
     filesmodel.cpp \
     graphrenderer.cpp \
     jsonconverters.cpp \
@@ -33,6 +34,7 @@ SOURCES += \
     scratchwidget.cpp \
     sequencerwidget.cpp \
     synthisizer.cpp \
+    synthisizerwidget.cpp \
     trackdeck.cpp \
     treetotableproxymodel.cpp
 
@@ -42,6 +44,7 @@ HEADERS += \
     audioplayer.h \
     djwidget.h \
     drummachinesettings.h \
+    drumpadwidget.h \
     filesmodel.h \
     graphrenderer.h \
     jsonconverters.h \
@@ -58,16 +61,19 @@ HEADERS += \
     scratchwidget.h \
     sequencerwidget.h \
     synthisizer.h \
+    synthisizerwidget.h \
     trackdeck.h \
     treetotableproxymodel.h
 
 FORMS += \
     djwidget.ui \
+    drumpadwidget.ui \
     mainwindow.ui \
     presetdetailwidget.ui \
     sampleswidget.ui \
     samplewidget.ui \
     sequencerwidget.ui \
+    synthisizerwidget.ui \
     trackdeck.ui
 
 RESOURCES += \
