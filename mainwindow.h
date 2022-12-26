@@ -30,14 +30,16 @@ public:
 
 private slots:
     void openAudioDevice();
+    void openMidiInDevice();
+    void openMidiOutDevice();
     void messageReceived(const midi::MidiMessage &message);
     void sendMidi(const midi::MidiMessage &midiMsg);
     void currentChanged(int index);
 
 private:
+    void updateAudioDevices();
     void updateMidiInDevices();
     void updateMidiOutDevices();
-    void updateAudioDevices();
     void loadSettings();
     void unsendColors(int index);
     void sendColors(int index);

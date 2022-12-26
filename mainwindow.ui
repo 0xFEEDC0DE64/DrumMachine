@@ -30,9 +30,9 @@
     <item>
      <layout class="QHBoxLayout">
       <item>
-       <widget class="QLabel" name="labelUltraDj">
+       <widget class="QLabel" name="labelDrumMachine">
         <property name="text">
-         <string>&lt;b&gt;UltraDj&lt;/b&gt;</string>
+         <string>&lt;b&gt;DrumMachine&lt;/b&gt;</string>
         </property>
        </widget>
       </item>

@@ -53,56 +53,40 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->drumPadWidget->injectDecodingThread(m_decoderThread);
     m_ui->djWidget->injectDecodingThread(m_decoderThread);
 
-    updateMidiInDevices();
+    updateAudioDevices();
+    connect(m_ui->pushButtonRefreshAudioDevices, &QAbstractButton::pressed, this, &MainWindow::updateAudioDevices);
+    if (const auto &lastAudioDevice = m_settings.lastAudioDevice(); !lastAudioDevice.isEmpty())
+    {
+        if (const auto index = m_ui->comboBoxAudioDevice->findText(lastAudioDevice); index >= 0)
+            m_ui->comboBoxAudioDevice->setCurrentIndex(index);
+        else
+            goto paDefault;
+    }
+    else
+    {
+paDefault:
+        m_ui->comboBoxAudioDevice->setCurrentIndex(Pa_GetDefaultOutputDevice());
+    }
+    m_ui->spinBoxBufferSize->setValue(m_settings.framesPerBuffer());
+    connect(m_ui->pushButtonAudioDevice, &QAbstractButton::pressed, this, &MainWindow::openAudioDevice);
+
+    updateMidiInDevices();    
+    connect(m_ui->pushButtonRefreshMidiIn, &QAbstractButton::pressed, this, &MainWindow::updateMidiInDevices);
+    if (const auto &lastMidiInDevice = m_settings.lastMidiInDevice(); !lastMidiInDevice.isEmpty())
+    {
+        if (const auto index = m_ui->comboBoxMidiIn->findText(lastMidiInDevice); index >= 0)
+            m_ui->comboBoxMidiIn->setCurrentIndex(index);
+    }
+    connect(m_ui->pushButtonMidiIn, &QAbstractButton::pressed, this, &MainWindow::openMidiInDevice);
 
     updateMidiOutDevices();
-
-    connect(m_ui->pushButtonRefreshMidiIn, &QAbstractButton::pressed, this, &MainWindow::updateMidiInDevices);
-
     connect(m_ui->pushButtonRefreshMidiOut, &QAbstractButton::pressed, this, &MainWindow::updateMidiOutDevices);
-
-    connect(m_ui->pushButtonMidiIn, &QAbstractButton::pressed, this, [this](){
-        if (m_midiIn.isPortOpen())
-            m_midiIn.closePort();
-        else
-        {
-            const auto index = m_ui->comboBoxMidiIn->currentIndex();
-            if (index != -1)
-                m_midiIn.openPort(index, "Input");
-        }
-
-        m_ui->comboBoxMidiIn->setDisabled(m_midiIn.isPortOpen());
-        m_ui->pushButtonMidiIn->setText(m_midiIn.isPortOpen() ? tr("Close") : tr("Open"));
-    });
-
-    connect(m_ui->pushButtonMidiOut, &QAbstractButton::pressed, this, [this](){
-        if (m_midiOut.isPortOpen())
-        {
-            qDebug() << "closing port";
-            unsendColors(m_ui->tabWidget->currentIndex());
-            m_midiOut.closePort();
-        }
-        else
-        {
-            const auto index = m_ui->comboBoxMidiOut->currentIndex();
-            if (index != -1)
-            {
-                m_midiOut.openPort(index, "Output");
-                sendColors(m_ui->tabWidget->currentIndex());
-            }
-        }
-
-        m_ui->comboBoxMidiOut->setDisabled(m_midiOut.isPortOpen());
-        m_ui->pushButtonMidiOut->setText(m_midiOut.isPortOpen() ? tr("Close") : tr("Open"));
-    });
-
-    updateAudioDevices();
-
-    connect(m_ui->pushButtonRefreshAudioDevices, &QAbstractButton::pressed, this, &MainWindow::updateAudioDevices);
-
-    m_ui->comboBoxAudioDevice->setCurrentIndex(Pa_GetDefaultOutputDevice());
-
-    connect(m_ui->pushButtonAudioDevice, &QAbstractButton::pressed, this, &MainWindow::openAudioDevice);
+    if (const auto &lastMidiOutDevice = m_settings.lastMidiOutDevice(); !lastMidiOutDevice.isEmpty())
+    {
+        if (const auto index = m_ui->comboBoxMidiOut->findText(lastMidiOutDevice); index >= 0)
+            m_ui->comboBoxMidiOut->setCurrentIndex(index);
+    }
+    connect(m_ui->pushButtonMidiOut, &QAbstractButton::pressed, this, &MainWindow::openMidiOutDevice);
 
     loadSettings();
 
@@ -191,7 +175,49 @@ void MainWindow::openAudioDevice()
         m_ui->comboBoxAudioDevice->setEnabled(false);
         m_ui->spinBoxBufferSize->setEnabled(false);
         m_ui->pushButtonAudioDevice->setText(tr("Close"));
+
+        m_settings.setLastAudioDevice(m_ui->comboBoxAudioDevice->currentText());
+        m_settings.setFramesPerBuffer(m_ui->spinBoxBufferSize->value());
     }
+}
+
+void MainWindow::openMidiInDevice()
+{
+    if (m_midiIn.isPortOpen())
+        m_midiIn.closePort();
+    else
+    {
+        const auto index = m_ui->comboBoxMidiIn->currentIndex();
+        if (index != -1)
+            m_midiIn.openPort(index, "Input");
+        m_settings.setLastMidiInDevice(m_ui->comboBoxMidiIn->currentText());
+    }
+
+    m_ui->comboBoxMidiIn->setDisabled(m_midiIn.isPortOpen());
+    m_ui->pushButtonMidiIn->setText(m_midiIn.isPortOpen() ? tr("Close") : tr("Open"));
+}
+
+void MainWindow::openMidiOutDevice()
+{
+    if (m_midiOut.isPortOpen())
+    {
+        qDebug() << "closing port";
+        unsendColors(m_ui->tabWidget->currentIndex());
+        m_midiOut.closePort();
+    }
+    else
+    {
+        const auto index = m_ui->comboBoxMidiOut->currentIndex();
+        if (index != -1)
+        {
+            m_midiOut.openPort(index, "Output");
+            m_settings.setLastMidiOutDevice(m_ui->comboBoxMidiOut->currentText());
+            sendColors(m_ui->tabWidget->currentIndex());
+        }
+    }
+
+    m_ui->comboBoxMidiOut->setDisabled(m_midiOut.isPortOpen());
+    m_ui->pushButtonMidiOut->setText(m_midiOut.isPortOpen() ? tr("Close") : tr("Open"));
 }
 
 void MainWindow::messageReceived(const midi::MidiMessage &message)
@@ -221,6 +247,19 @@ void MainWindow::currentChanged(int index)
     sendColors(index);
 }
 
+void MainWindow::updateAudioDevices()
+{
+    m_ui->comboBoxAudioDevice->clear();
+
+    const auto count = Pa_GetDeviceCount();
+
+    for (PaDeviceIndex i = 0; i < count; i++)
+    {
+        const auto info = Pa_GetDeviceInfo(i);
+        m_ui->comboBoxAudioDevice->addItem(info->name);
+    }
+}
+
 void MainWindow::updateMidiInDevices()
 {
     m_ui->comboBoxMidiIn->clear();
@@ -239,19 +278,6 @@ void MainWindow::updateMidiOutDevices()
         m_ui->comboBoxMidiOut->addItem(name);
 
     m_ui->pushButtonMidiOut->setEnabled(m_ui->comboBoxMidiOut->count() > 0);
-}
-
-void MainWindow::updateAudioDevices()
-{
-    m_ui->comboBoxAudioDevice->clear();
-
-    const auto count = Pa_GetDeviceCount();
-
-    for (PaDeviceIndex i = 0; i < count; i++)
-    {
-        const auto info = Pa_GetDeviceInfo(i);
-        m_ui->comboBoxAudioDevice->addItem(info->name);
-    }
 }
 
 void MainWindow::loadSettings()
