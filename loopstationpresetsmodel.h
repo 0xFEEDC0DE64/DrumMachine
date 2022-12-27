@@ -4,7 +4,7 @@
 
 #include <QAbstractTableModel>
 
-namespace loopstation_presets { class Preset; }
+namespace loopstation_presets { struct Preset; }
 
 class LoopStationPresetsModel : public QAbstractTableModel
 {

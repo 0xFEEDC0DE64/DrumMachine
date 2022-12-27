@@ -6,7 +6,7 @@
 
 #include "drumpadpresets.h"
 
-namespace drumpad_presets { class Preset; class File; }
+namespace drumpad_presets { struct Preset; struct File; }
 
 class DrumPadFilesModel : public QAbstractTableModel
 {

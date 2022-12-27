@@ -38,7 +38,8 @@ LoopStationWidget::~LoopStationWidget() = default;
 
 void LoopStationWidget::writeSamples(frame_t *begin, frame_t *end)
 {
-
+    Q_UNUSED(begin)
+    Q_UNUSED(end)
 }
 
 void LoopStationWidget::injectNetworkAccessManager(QNetworkAccessManager &networkAccessManager)
@@ -49,7 +50,7 @@ void LoopStationWidget::injectNetworkAccessManager(QNetworkAccessManager &networ
 
 void LoopStationWidget::injectDecodingThread(QThread &thread)
 {
-
+    Q_UNUSED(thread)
 }
 
 void LoopStationWidget::loadSettings(DrumMachineSettings &settings)
@@ -69,7 +70,7 @@ void LoopStationWidget::sendColors()
 
 void LoopStationWidget::midiReceived(const midi::MidiMessage &message)
 {
-
+    Q_UNUSED(message);
 }
 
 void LoopStationWidget::currentRowChanged(const QModelIndex &current)

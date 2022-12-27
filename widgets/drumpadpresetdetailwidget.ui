@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PresetDetailWidget</class>
- <widget class="QScrollArea" name="PresetDetailWidget">
+ <class>DrumPadPresetDetailWidget</class>
+ <widget class="QScrollArea" name="DrumPadPresetDetailWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>320</width>
-    <height>633</height>
+    <width>389</width>
+    <height>774</height>
    </rect>
   </property>
   <property name="widgetResizable">
@@ -18,8 +18,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>318</width>
-     <height>631</height>
+     <width>387</width>
+     <height>772</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -231,34 +231,109 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="lineEditId"/>
+     <widget class="QLineEdit" name="lineEditId">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="lineEditName"/>
+     <widget class="QLineEdit" name="lineEditName">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QLineEdit" name="lineEditAuthor"/>
+     <widget class="QLineEdit" name="lineEditAuthor">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item row="3" column="1">
-     <widget class="QLineEdit" name="lineEditOrderBy"/>
+     <widget class="QLineEdit" name="lineEditOrderBy">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item row="4" column="1">
-     <widget class="QLineEdit" name="lineEditVersion"/>
+     <widget class="QLineEdit" name="lineEditVersion">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item row="5" column="1">
-     <widget class="QSpinBox" name="spinBoxTempo"/>
+     <widget class="QSpinBox" name="spinBoxTempo">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="minimum">
+       <number>-2147483647</number>
+      </property>
+      <property name="maximum">
+       <number>2147483647</number>
+      </property>
+     </widget>
     </item>
     <item row="6" column="1">
-     <widget class="QLineEdit" name="lineEditIcon"/>
+     <widget class="QLineEdit" name="lineEditIcon">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item row="7" column="1">
-     <widget class="QSpinBox" name="spinBoxPrice"/>
+     <widget class="QSpinBox" name="spinBoxPrice">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="minimum">
+       <number>-2147483647</number>
+      </property>
+      <property name="maximum">
+       <number>2147483647</number>
+      </property>
+     </widget>
     </item>
     <item row="8" column="1">
-     <widget class="QSpinBox" name="spinBoxPriceForSession"/>
+     <widget class="QSpinBox" name="spinBoxPriceForSession">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="minimum">
+       <number>-2147483647</number>
+      </property>
+      <property name="maximum">
+       <number>2147483647</number>
+      </property>
+     </widget>
     </item>
     <item row="9" column="1">
      <widget class="QCheckBox" name="checkBoxHasInfo">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
        <string>CheckBox</string>
       </property>
@@ -266,37 +341,145 @@
     </item>
     <item row="11" column="1">
      <widget class="QCheckBox" name="checkBoxDeleted">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
        <string>CheckBox</string>
       </property>
      </widget>
     </item>
     <item row="12" column="1">
-     <widget class="QSpinBox" name="spinBoxDifficulty"/>
+     <widget class="QSpinBox" name="spinBoxDifficulty">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="minimum">
+       <number>-2147483647</number>
+      </property>
+      <property name="maximum">
+       <number>2147483647</number>
+      </property>
+     </widget>
     </item>
     <item row="13" column="1">
-     <widget class="QSpinBox" name="spinBoxSample"/>
+     <widget class="QSpinBox" name="spinBoxSample">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="minimum">
+       <number>-2147483647</number>
+      </property>
+      <property name="maximum">
+       <number>2147483647</number>
+      </property>
+     </widget>
     </item>
     <item row="14" column="1">
-     <widget class="QLineEdit" name="lineEditAudioPreview1Name"/>
+     <widget class="QLineEdit" name="lineEditAudioPreview1Name">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item row="15" column="1">
-     <widget class="QLineEdit" name="lineEditAudioPreview1URL"/>
+     <widget class="QLineEdit" name="lineEditAudioPreview1URL">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item row="16" column="1">
-     <widget class="QLineEdit" name="lineEditAudioPreview2Name"/>
+     <widget class="QLineEdit" name="lineEditAudioPreview2Name">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item row="17" column="1">
-     <widget class="QLineEdit" name="lineEditAudioPreview2URL"/>
+     <widget class="QLineEdit" name="lineEditAudioPreview2URL">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item row="18" column="1">
-     <widget class="QLineEdit" name="lineEditImagePreview1"/>
+     <widget class="QLineEdit" name="lineEditImagePreview1">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item row="19" column="1">
-     <widget class="QLineEdit" name="lineEditVideoPreview"/>
+     <widget class="QLineEdit" name="lineEditVideoPreview">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item row="20" column="1">
-     <widget class="QLineEdit" name="lineEditVideoTutorial"/>
+     <widget class="QLineEdit" name="lineEditVideoTutorial">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="22" column="0">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="21" column="0">
+     <widget class="QLabel" name="labelTimestamp">
+      <property name="text">
+       <string>Timestamp:</string>
+      </property>
+      <property name="buddy">
+       <cstring>dateTimeEditTimestamp</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="21" column="1">
+     <widget class="QDateTimeEdit" name="dateTimeEditTimestamp">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1">
+     <widget class="QListView" name="listViewTags"/>
     </item>
    </layout>
   </widget>

@@ -87,7 +87,7 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="PresetDetailWidget" name="presetDetailWidget">
+      <widget class="DrumPadPresetDetailWidget" name="presetDetailWidget">
        <attribute name="title">
         <string>Properties</string>
        </attribute>
@@ -120,9 +120,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>PresetDetailWidget</class>
+   <class>DrumPadPresetDetailWidget</class>
    <extends>QScrollArea</extends>
-   <header>widgets/presetdetailwidget.h</header>
+   <header>widgets/drumpadpresetdetailwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

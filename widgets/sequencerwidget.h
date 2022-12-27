@@ -9,7 +9,7 @@
 
 class QLabel;
 namespace Ui { class SequencerWidget; }
-namespace drumpad_presets { class Preset; class Sequence; }
+namespace drumpad_presets { struct Preset; struct Sequence; }
 class DrumMachineSettings;
 namespace midi { struct MidiMessage; }
 

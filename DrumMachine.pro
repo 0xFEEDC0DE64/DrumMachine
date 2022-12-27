@@ -20,6 +20,7 @@ SOURCES += \
     drumpadjsonconverters.cpp \
     drumpadpresets.cpp \
     drumpadpresetsmodel.cpp \
+    drumpadpresettagsmodel.cpp \
     graphrenderer.cpp \
     jsonconverters.cpp \
     loopstationjsonconverters.cpp \
@@ -32,13 +33,13 @@ SOURCES += \
     synthisizer.cpp \
     treetotableproxymodel.cpp \
     widgets/djwidget.cpp \
+    widgets/drumpadpresetdetailwidget.cpp \
     widgets/drumpadsampleswidget.cpp \
     widgets/drumpadsamplewidget.cpp \
     widgets/drumpadwidget.cpp \
     widgets/loopstationwidget.cpp \
     widgets/mainwindow.cpp \
     widgets/midibutton.cpp \
-    widgets/presetdetailwidget.cpp \
     widgets/previewwidget.cpp \
     widgets/scratchwidget.cpp \
     widgets/sequencerwidget.cpp \
@@ -55,6 +56,7 @@ HEADERS += \
     drumpadjsonconverters.h \
     drumpadpresets.h \
     drumpadpresetsmodel.h \
+    drumpadpresettagsmodel.h \
     graphrenderer.h \
     jsonconverters.h \
     loopstationjsonconverters.h \
@@ -66,13 +68,13 @@ HEADERS += \
     synthisizer.h \
     treetotableproxymodel.h \
     widgets/djwidget.h \
+    widgets/drumpadpresetdetailwidget.h \
     widgets/drumpadsampleswidget.h \
     widgets/drumpadsamplewidget.h \
     widgets/drumpadwidget.h \
     widgets/loopstationwidget.h \
     widgets/mainwindow.h \
     widgets/midibutton.h \
-    widgets/presetdetailwidget.h \
     widgets/previewwidget.h \
     widgets/scratchwidget.h \
     widgets/sequencerwidget.h \
@@ -82,12 +84,12 @@ HEADERS += \
 
 FORMS += \
     widgets/djwidget.ui \
+    widgets/drumpadpresetdetailwidget.ui \
     widgets/drumpadsampleswidget.ui \
     widgets/drumpadsamplewidget.ui \
     widgets/drumpadwidget.ui \
     widgets/loopstationwidget.ui \
     widgets/mainwindow.ui \
-    widgets/presetdetailwidget.ui \
     widgets/sequencerwidget.ui \
     widgets/settingsdialog.ui \
     widgets/synthisizerwidget.ui \

@@ -4,7 +4,7 @@
 
 #include <QAbstractTableModel>
 
-namespace drumpad_presets { class Preset; }
+namespace drumpad_presets { struct Preset; }
 
 class DrumPadPresetsModel : public QAbstractTableModel
 {
