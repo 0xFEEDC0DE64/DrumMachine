@@ -1,6 +1,6 @@
 QT = core multimedia gui widgets network
 
-CONFIG += c++17
+CONFIG += c++20
 
 release: QMAKE_CXXFLAGS_RELEASE -= -O1
 release: QMAKE_CXXFLAGS_RELEASE -= -O2
@@ -75,6 +75,3 @@ FORMS += \
     sequencerwidget.ui \
     synthisizerwidget.ui \
     trackdeck.ui
-
-RESOURCES += \
-    resources.qrc

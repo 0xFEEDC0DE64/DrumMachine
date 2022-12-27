@@ -34,15 +34,26 @@ auto makeCleanupHelper(T &&callback)
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+    qSetMessagePattern("%{time dd.MM.yyyy HH:mm:ss.zzz} "
+                       "["
+                       "%{if-debug}D%{endif}"
+                       "%{if-info}I%{endif}"
+                       "%{if-warning}W%{endif}"
+                       "%{if-critical}C%{endif}"
+                       "%{if-fatal}F%{endif}"
+                       "] "
+                       "%{function}(): "
+                       "%{message}");
+
+    QApplication app{argc, argv};
     QCoreApplication::setOrganizationDomain("brunner.ninja");
     QCoreApplication::setOrganizationName("brunner.ninja");
     QCoreApplication::setApplicationName("miditest");
     QCoreApplication::setApplicationVersion("1.0");
 
-    qDebug() << "supportsSsl" << QSslSocket::supportsSsl();
-    qDebug() << "sslLibraryVersionString" << QSslSocket::sslLibraryVersionString();
-    qDebug() << "sslLibraryBuildVersionString" << QSslSocket::sslLibraryBuildVersionString();
+    qDebug() << "supportsSsl:" << QSslSocket::supportsSsl()
+             << "sslLibraryVersionString:" << QSslSocket::sslLibraryVersionString()
+             << "sslLibraryBuildVersionString:" << QSslSocket::sslLibraryBuildVersionString();
 
     if (PaError err = Pa_Initialize(); err != paNoError)
     {
@@ -54,17 +65,6 @@ int main(int argc, char *argv[])
         if (PaError err = Pa_Terminate(); err != paNoError)
             fprintf(stderr, "Could not terminate PortAudio!\n");
     });
-
-    qSetMessagePattern("%{time dd.MM.yyyy HH:mm:ss.zzz} "
-                       "["
-                       "%{if-debug}D%{endif}"
-                       "%{if-info}I%{endif}"
-                       "%{if-warning}W%{endif}"
-                       "%{if-critical}C%{endif}"
-                       "%{if-fatal}F%{endif}"
-                       "] "
-                       "%{function}(): "
-                       "%{message}");
 
 #if !defined(Q_OS_WIN)
     QPalette darkPalette;
