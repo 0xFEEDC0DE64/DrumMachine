@@ -27,6 +27,8 @@ public:
     QString lastMidiOutDevice() const;
     void setLastMidiOutDevice(const QString &lastMidiOutDevice);
 
+
+
     QString drumpadLastPresetId() const;
     void setDrumpadLastPresetId(const QString &lastPresetId);
 
@@ -64,4 +66,9 @@ public:
     void setDrumpadChannel(quint8 pad, quint8 channel);
     quint8 drumpadNote(quint8 pad) const;
     void setDrumpadNote(quint8 pad, quint8 note);
+
+
+
+    QString loopstationLastPresetId() const;
+    void setLoopstationLastPresetId(const QString &lastPresetId);
 };

@@ -1,8 +1,11 @@
 #pragma once
 
 #include <QSplitter>
+#include <QSortFilterProxyModel>
 
 #include <memory>
+
+#include "loopstationpresetsmodel.h"
 
 namespace Ui { class LoopStationWidget; }
 namespace midi { struct MidiMessage; }
@@ -33,6 +36,7 @@ public slots:
     void midiReceived(const midi::MidiMessage &message);
 
 private slots:
+    void currentRowChanged(const QModelIndex &current);
     void loadPresets();
     void requestFinished();
     void selectFirstPreset();
@@ -40,7 +44,14 @@ private slots:
     void selectNextPreset();
 
 private:
+    void selectIndex(const QModelIndex &index);
+
     const std::unique_ptr<Ui::LoopStationWidget> m_ui;
+
+    DrumMachineSettings *m_settings{};
+
+    LoopStationPresetsModel m_presetsModel;
+    QSortFilterProxyModel m_presetsProxyModel;
 
     QNetworkAccessManager *m_networkAccessManager{};
 

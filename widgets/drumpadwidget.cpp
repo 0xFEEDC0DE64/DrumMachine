@@ -132,7 +132,13 @@ void DrumPadWidget::midiReceived(const midi::MidiMessage &message)
 void DrumPadWidget::currentRowChanged(const QModelIndex &current)
 {
     if (!current.isValid())
+    {
+        if (m_settings)
+            m_settings->setDrumpadLastPresetId(QString{});
+        else
+            qWarning() << "no settings available";
         return;
+    }
 
     const auto &preset = m_presetsModel.getPreset(m_presetsProxyModel.mapToSource(current));
 

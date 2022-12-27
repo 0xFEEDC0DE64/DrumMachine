@@ -1,43 +1,33 @@
-#include "drumpadpresetsmodel.h"
+#include "loopstationpresetsmodel.h"
 
 #include <iterator>
 
 #include <QFont>
 #include <QColor>
 
-#include "drumpadpresets.h"
+#include "loopstationpresets.h"
 
 enum {
     ColumnId,
-    ColumnName,
+    ColumnTitle,
     ColumnAuthor,
+    ColumnBpm,
+    ColumnCoverUrl,
+    ColumnLoopLength,
     ColumnOrderBy,
-    ColumnVersion,
-    ColumnTempo,
-    ColumnIcon,
-    ColumnPrice,
-    ColumnPriceForSession,
-    ColumnHasInfo,
+    ColumnPremium,
     ColumnTags,
+    ColumnAudioPreviewUrl,
     ColumnDELETED,
-    ColumnDifficulty,
-    ColumnSample,
-    ColumnAudioPreview1Name,
-    ColumnAudioPreview1URL,
-    ColumnAudioPreview2Name,
-    ColumnAudioPreview2URL,
-    ColumnImagePreview1,
-    ColumnVideoPreview,
-    ColumnVideoTutorial,
     NumberOfColumns
 };
 
-DrumPadPresetsModel::DrumPadPresetsModel(QObject *parent) :
+LoopStationPresetsModel::LoopStationPresetsModel(QObject *parent) :
     QAbstractTableModel{parent}
 {
 }
 
-DrumPadPresetsModel::DrumPadPresetsModel(const std::map<QString, drumpad_presets::Preset> &presets, QObject *parent) :
+LoopStationPresetsModel::LoopStationPresetsModel(const std::map<QString, loopstation_presets::Preset> &presets, QObject *parent) :
     QAbstractTableModel{parent}
 {
     m_presets.reserve(std::size(presets));
@@ -45,21 +35,21 @@ DrumPadPresetsModel::DrumPadPresetsModel(const std::map<QString, drumpad_presets
         m_presets.emplace_back(pair.second);
 }
 
-DrumPadPresetsModel::DrumPadPresetsModel(std::vector<drumpad_presets::Preset> &&presets, QObject *parent) :
+LoopStationPresetsModel::LoopStationPresetsModel(std::vector<loopstation_presets::Preset> &&presets, QObject *parent) :
     QAbstractTableModel{parent}
 {
     m_presets = std::move(presets);
 }
 
-DrumPadPresetsModel::DrumPadPresetsModel(const std::vector<drumpad_presets::Preset> &presets, QObject *parent) :
+LoopStationPresetsModel::LoopStationPresetsModel(const std::vector<loopstation_presets::Preset> &presets, QObject *parent) :
     QAbstractTableModel{parent}
 {
     m_presets = presets;
 }
 
-DrumPadPresetsModel::~DrumPadPresetsModel() = default;
+LoopStationPresetsModel::~LoopStationPresetsModel() = default;
 
-void DrumPadPresetsModel::setPresets(const std::map<QString, drumpad_presets::Preset> &presets)
+void LoopStationPresetsModel::setPresets(const std::map<QString, loopstation_presets::Preset> &presets)
 {
     beginResetModel();
     m_presets.clear();
@@ -69,32 +59,32 @@ void DrumPadPresetsModel::setPresets(const std::map<QString, drumpad_presets::Pr
     endResetModel();
 }
 
-void DrumPadPresetsModel::setPresets(std::vector<drumpad_presets::Preset> &&presets)
+void LoopStationPresetsModel::setPresets(std::vector<loopstation_presets::Preset> &&presets)
 {
     beginResetModel();
     m_presets = std::move(presets);
     endResetModel();
 }
 
-void DrumPadPresetsModel::setPresets(const std::vector<drumpad_presets::Preset> &presets)
+void LoopStationPresetsModel::setPresets(const std::vector<loopstation_presets::Preset> &presets)
 {
     beginResetModel();
     m_presets = presets;
     endResetModel();
 }
 
-const drumpad_presets::Preset &DrumPadPresetsModel::getPreset(const QModelIndex &index) const
+const loopstation_presets::Preset &LoopStationPresetsModel::getPreset(const QModelIndex &index) const
 {
     return getPreset(index.row());
 }
 
-const drumpad_presets::Preset &DrumPadPresetsModel::getPreset(int row) const
+const loopstation_presets::Preset &LoopStationPresetsModel::getPreset(int row) const
 {
     Q_ASSERT(row >= 0 && row < int(std::size(m_presets)));
     return m_presets.at(row);
 }
 
-QModelIndex DrumPadPresetsModel::findPresetById(const QString &id) const
+QModelIndex LoopStationPresetsModel::findPresetById(const QString &id) const
 {
     for (auto iter = std::cbegin(m_presets); iter != std::cend(m_presets); iter++)
     {
@@ -107,21 +97,21 @@ QModelIndex DrumPadPresetsModel::findPresetById(const QString &id) const
     return {};
 }
 
-int DrumPadPresetsModel::rowCount(const QModelIndex &parent) const
+int LoopStationPresetsModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
 
     return std::size(m_presets);
 }
 
-int DrumPadPresetsModel::columnCount(const QModelIndex &parent) const
+int LoopStationPresetsModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
 
     return NumberOfColumns;
 }
 
-QVariant DrumPadPresetsModel::data(const QModelIndex &index, int role) const
+QVariant LoopStationPresetsModel::data(const QModelIndex &index, int role) const
 {
     if (role != Qt::DisplayRole && role != Qt::EditRole && role != Qt::FontRole && role != Qt::ForegroundRole)
         return {};
@@ -205,32 +195,22 @@ QVariant DrumPadPresetsModel::data(const QModelIndex &index, int role) const
 
         return handleData(preset.id);
     }
-    case ColumnName: return handleData(preset.name);
+    case ColumnTitle: return handleData(preset.title);
     case ColumnAuthor: return handleData(preset.author);
+    case ColumnBpm: return handleData(preset.bpm);
+    case ColumnCoverUrl: return handleData(preset.coverUrl);
+    case ColumnLoopLength: return handleData(preset.loopLength);
     case ColumnOrderBy: return handleData(preset.orderBy);
-    case ColumnVersion: return handleData(preset.version);
-    case ColumnTempo: return handleData(preset.tempo);
-    case ColumnIcon: return handleData(preset.icon);
-    case ColumnPrice: return handleData(preset.price);
-    case ColumnPriceForSession: return handleData(preset.priceForSession);
-    case ColumnHasInfo: return handleData(preset.hasInfo);
+    case ColumnPremium: return handleData(preset.premium);
     case ColumnTags: return handleStringVectorData(preset.tags);
+    case ColumnAudioPreviewUrl: return handleData(preset.audioPreviewUrl);
     case ColumnDELETED: return handleData(preset.DELETED);
-    case ColumnDifficulty: return handleData(preset.difficulty);
-    case ColumnSample: return handleData(preset.sample);
-    case ColumnAudioPreview1Name: return handleData(preset.audioPreview1Name);
-    case ColumnAudioPreview1URL: return handleData(preset.audioPreview1URL);
-    case ColumnAudioPreview2Name: return handleData(preset.audioPreview2Name);
-    case ColumnAudioPreview2URL: return handleData(preset.audioPreview2URL);
-    case ColumnImagePreview1: return handleData(preset.imagePreview1);
-    case ColumnVideoPreview: return handleData(preset.videoPreview);
-    case ColumnVideoTutorial: return handleData(preset.videoTutorial);
     }
 
     Q_UNREACHABLE();
 }
 
-QVariant DrumPadPresetsModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant LoopStationPresetsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return {};
@@ -246,26 +226,16 @@ QVariant DrumPadPresetsModel::headerData(int section, Qt::Orientation orientatio
     switch (section)
     {
     case ColumnId: return tr("id");
-    case ColumnName: return tr("name");
+    case ColumnTitle: return tr("title");
     case ColumnAuthor: return tr("author");
+    case ColumnBpm: return tr("bpm");
+    case ColumnCoverUrl: return tr("coverUrl");
+    case ColumnLoopLength: return tr("loopLength");
     case ColumnOrderBy: return tr("orderBy");
-    case ColumnVersion: return tr("version");
-    case ColumnTempo: return tr("tempo");
-    case ColumnIcon: return tr("icon");
-    case ColumnPrice: return tr("price");
-    case ColumnPriceForSession: return tr("priceForSession");
-    case ColumnHasInfo: return tr("hasInfo");
+    case ColumnPremium: return tr("premium");
     case ColumnTags: return tr("tags");
+    case ColumnAudioPreviewUrl: return tr("audioPreviewUrl");
     case ColumnDELETED: return tr("DELETED");
-    case ColumnDifficulty: return tr("difficulty");
-    case ColumnSample: return tr("sample");
-    case ColumnAudioPreview1Name: return tr("audioPreview1Name");
-    case ColumnAudioPreview1URL: return tr("audioPreview1URL");
-    case ColumnAudioPreview2Name: return tr("audioPreview2Name");
-    case ColumnAudioPreview2URL: return tr("audioPreview2URL");
-    case ColumnImagePreview1: return tr("imagePreview1");
-    case ColumnVideoPreview: return tr("videoPreview");
-    case ColumnVideoTutorial: return tr("videoTutorial");
     }
 
     Q_UNREACHABLE();

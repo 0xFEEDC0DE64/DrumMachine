@@ -23,6 +23,7 @@ SOURCES += \
     jsonconverters.cpp \
     loopstationjsonconverters.cpp \
     loopstationpresets.cpp \
+    loopstationpresetsmodel.cpp \
     main.cpp \
     midicontainers.cpp \
     midiinwrapper.cpp \
@@ -57,6 +58,7 @@ HEADERS += \
     jsonconverters.h \
     loopstationjsonconverters.h \
     loopstationpresets.h \
+    loopstationpresetsmodel.h \
     midicontainers.h \
     midiinwrapper.h \
     midioutwrapper.h \

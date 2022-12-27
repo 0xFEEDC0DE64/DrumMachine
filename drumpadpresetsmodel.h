@@ -12,14 +12,14 @@ class DrumPadPresetsModel : public QAbstractTableModel
 
 public:
     DrumPadPresetsModel(QObject *parent = nullptr);
-    DrumPadPresetsModel(const std::map<QString, drumpad_presets::Preset> &drumpad_presets, QObject *parent = nullptr);
-    DrumPadPresetsModel(std::vector<drumpad_presets::Preset> &&drumpad_presets, QObject *parent = nullptr);
-    DrumPadPresetsModel(const std::vector<drumpad_presets::Preset> &drumpad_presets, QObject *parent = nullptr);
+    DrumPadPresetsModel(const std::map<QString, drumpad_presets::Preset> &presets, QObject *parent = nullptr);
+    DrumPadPresetsModel(std::vector<drumpad_presets::Preset> &&presets, QObject *parent = nullptr);
+    DrumPadPresetsModel(const std::vector<drumpad_presets::Preset> &presets, QObject *parent = nullptr);
     ~DrumPadPresetsModel() override;
 
-    void setPresets(const std::map<QString, drumpad_presets::Preset> &drumpad_presets);
-    void setPresets(std::vector<drumpad_presets::Preset> &&drumpad_presets);
-    void setPresets(const std::vector<drumpad_presets::Preset> &drumpad_presets);
+    void setPresets(const std::map<QString, drumpad_presets::Preset> &presets);
+    void setPresets(std::vector<drumpad_presets::Preset> &&presets);
+    void setPresets(const std::vector<drumpad_presets::Preset> &presets);
 
     const drumpad_presets::Preset &getPreset(const QModelIndex &index) const;
     const drumpad_presets::Preset &getPreset(int row) const;
@@ -32,5 +32,5 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
 private:
-    std::vector<drumpad_presets::Preset> m_drumpad_presets;
+    std::vector<drumpad_presets::Preset> m_presets;
 };

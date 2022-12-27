@@ -222,3 +222,13 @@ void DrumMachineSettings::setDrumpadNote(quint8 pad, quint8 note)
 {
     setValue(QString{"drumpad/pad%0_note"}.arg(pad), note);
 }
+
+QString DrumMachineSettings::loopstationLastPresetId() const
+{
+    return value("loopstation/lastPresetId").toString();
+}
+
+void DrumMachineSettings::setLoopstationLastPresetId(const QString &lastPresetId)
+{
+    setValue("loopstation/lastPresetId", lastPresetId);
+}

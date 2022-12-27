@@ -21,6 +21,17 @@ LoopStationWidget::LoopStationWidget(QWidget *parent) :
     connect(m_ui->pushButtonUp, &QAbstractButton::pressed, this, &LoopStationWidget::selectPrevPreset);
     connect(m_ui->pushButtonDown, &QAbstractButton::pressed, this, &LoopStationWidget::selectNextPreset);
     connect(m_ui->pushButtonRefresh, &QAbstractButton::pressed, this, &LoopStationWidget::loadPresets);
+
+    m_presetsProxyModel.setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_presetsProxyModel.setSortRole(Qt::EditRole);
+    m_presetsProxyModel.setSourceModel(&m_presetsModel);
+    m_ui->presetsView->setModel(&m_presetsProxyModel);
+
+    m_presetsProxyModel.setFilterKeyColumn(1);
+
+    connect(m_ui->lineEdit, &QLineEdit::textChanged, &m_presetsProxyModel, &QSortFilterProxyModel::setFilterFixedString);
+
+    connect(m_ui->presetsView->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &LoopStationWidget::currentRowChanged);
 }
 
 LoopStationWidget::~LoopStationWidget() = default;
@@ -43,7 +54,7 @@ void LoopStationWidget::injectDecodingThread(QThread &thread)
 
 void LoopStationWidget::loadSettings(DrumMachineSettings &settings)
 {
-
+    m_settings = &settings;
 }
 
 void LoopStationWidget::unsendColors()
@@ -59,6 +70,25 @@ void LoopStationWidget::sendColors()
 void LoopStationWidget::midiReceived(const midi::MidiMessage &message)
 {
 
+}
+
+void LoopStationWidget::currentRowChanged(const QModelIndex &current)
+{
+    if (!current.isValid())
+    {
+        if (m_settings)
+            m_settings->setLoopstationLastPresetId(QString{});
+        else
+            qWarning() << "no settings available";
+        return;
+    }
+
+    const auto &preset = m_presetsModel.getPreset(m_presetsProxyModel.mapToSource(current));
+
+    if (m_settings)
+        m_settings->setLoopstationLastPresetId(preset.id ? *preset.id : QString{});
+    else
+        qWarning() << "no settings available";
 }
 
 void LoopStationWidget::loadPresets()
@@ -101,7 +131,28 @@ void LoopStationWidget::requestFinished()
         if (!result.presets)
             throw std::runtime_error("presets missing in response");
 
-        // TODO
+        m_presetsModel.setPresets(std::move(*std::move(result).presets));
+
+        if (m_settings)
+        {
+            if (const auto &lastPresetId = m_settings->loopstationLastPresetId(); !lastPresetId.isEmpty())
+            {
+                if (const auto &index = m_presetsModel.findPresetById(lastPresetId); index.isValid())
+                    selectIndex(m_presetsProxyModel.mapFromSource(index));
+                else
+                {
+                    qWarning() << "invalid last preset id" << lastPresetId;
+                    goto noLastId;
+                }
+            }
+            else
+                goto noLastId;
+        }
+        else
+        {
+noLastId:
+            selectFirstPreset();
+        }
     }
     catch (const std::exception &e)
     {
@@ -122,4 +173,18 @@ void LoopStationWidget::selectPrevPreset()
 void LoopStationWidget::selectNextPreset()
 {
 
+}
+
+void LoopStationWidget::selectIndex(const QModelIndex &index)
+{
+    if (!index.isValid())
+    {
+        qWarning() << "invalid index";
+        return;
+    }
+
+    m_ui->presetsView->scrollTo(index);
+//    m_ui->presetsView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    m_ui->presetsView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    currentRowChanged(index);
 }
