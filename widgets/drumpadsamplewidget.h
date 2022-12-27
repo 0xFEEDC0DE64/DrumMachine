@@ -7,7 +7,7 @@
 #include "drumpadpresets.h"
 #include "audioplayer.h"
 
-namespace Ui { class SampleWidget; }
+namespace Ui { class DrumPadSampleWidget; }
 class QNetworkAccessManager;
 class QNetworkReply;
 class QAudioBuffer;
@@ -16,13 +16,13 @@ class DrumMachineSettings;
 namespace midi { struct MidiMessage; }
 struct frame_t;
 
-class SampleWidget : public QFrame
+class DrumPadSampleWidget : public QFrame
 {
     Q_OBJECT
 
 public:
-    explicit SampleWidget(QWidget *parent = nullptr);
-    ~SampleWidget() override;
+    explicit DrumPadSampleWidget(QWidget *parent = nullptr);
+    ~DrumPadSampleWidget() override;
 
     quint8 padNr() const { return m_padNr; }
     void setPadNr(quint8 padNr) { m_padNr = padNr; }
@@ -75,7 +75,7 @@ private slots:
 private:
     void startRequest();
 
-    const std::unique_ptr<Ui::SampleWidget> m_ui;
+    const std::unique_ptr<Ui::DrumPadSampleWidget> m_ui;
 
     DrumMachineSettings *m_settings{};
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SamplesWidget</class>
- <widget class="QWidget" name="SamplesWidget">
+ <class>DrumPadSamplesWidget</class>
+ <widget class="QWidget" name="DrumPadSamplesWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,22 +12,22 @@
   </property>
   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0" columnstretch="0,0,0,0,0,0,0,0,0">
    <item row="3" column="3">
-    <widget class="SampleWidget" name="sampleWidget_9" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_9" native="true"/>
    </item>
    <item row="4" column="3">
-    <widget class="SampleWidget" name="sampleWidget_12" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_12" native="true"/>
    </item>
    <item row="1" column="5">
-    <widget class="SampleWidget" name="sampleWidget_13" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_13" native="true"/>
    </item>
    <item row="1" column="7">
-    <widget class="SampleWidget" name="sampleWidget_15" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_15" native="true"/>
    </item>
    <item row="2" column="7">
-    <widget class="SampleWidget" name="sampleWidget_18" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_18" native="true"/>
    </item>
    <item row="4" column="6">
-    <widget class="SampleWidget" name="sampleWidget_23" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_23" native="true"/>
    </item>
    <item row="0" column="0" colspan="9">
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -74,10 +74,10 @@
     </layout>
    </item>
    <item row="3" column="2">
-    <widget class="SampleWidget" name="sampleWidget_8" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_8" native="true"/>
    </item>
    <item row="4" column="7">
-    <widget class="SampleWidget" name="sampleWidget_24" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_24" native="true"/>
    </item>
    <item row="1" column="0">
     <spacer name="horizontalSpacer_2">
@@ -93,13 +93,13 @@
     </spacer>
    </item>
    <item row="1" column="1">
-    <widget class="SampleWidget" name="sampleWidget_1" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_1" native="true"/>
    </item>
    <item row="3" column="5">
-    <widget class="SampleWidget" name="sampleWidget_19" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_19" native="true"/>
    </item>
    <item row="3" column="7">
-    <widget class="SampleWidget" name="sampleWidget_21" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_21" native="true"/>
    </item>
    <item row="1" column="8">
     <spacer name="horizontalSpacer_3">
@@ -115,16 +115,16 @@
     </spacer>
    </item>
    <item row="2" column="2">
-    <widget class="SampleWidget" name="sampleWidget_5" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_5" native="true"/>
    </item>
    <item row="1" column="2">
-    <widget class="SampleWidget" name="sampleWidget_2" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_2" native="true"/>
    </item>
    <item row="2" column="6">
-    <widget class="SampleWidget" name="sampleWidget_17" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_17" native="true"/>
    </item>
    <item row="3" column="6">
-    <widget class="SampleWidget" name="sampleWidget_20" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_20" native="true"/>
    </item>
    <item row="1" column="4">
     <spacer name="horizontalSpacer">
@@ -140,39 +140,39 @@
     </spacer>
    </item>
    <item row="2" column="5">
-    <widget class="SampleWidget" name="sampleWidget_16" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_16" native="true"/>
    </item>
    <item row="2" column="1">
-    <widget class="SampleWidget" name="sampleWidget_4" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_4" native="true"/>
    </item>
    <item row="4" column="5">
-    <widget class="SampleWidget" name="sampleWidget_22" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_22" native="true"/>
    </item>
    <item row="4" column="2">
-    <widget class="SampleWidget" name="sampleWidget_11" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_11" native="true"/>
    </item>
    <item row="1" column="3">
-    <widget class="SampleWidget" name="sampleWidget_3" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_3" native="true"/>
    </item>
    <item row="1" column="6">
-    <widget class="SampleWidget" name="sampleWidget_14" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_14" native="true"/>
    </item>
    <item row="4" column="1">
-    <widget class="SampleWidget" name="sampleWidget_10" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_10" native="true"/>
    </item>
    <item row="2" column="3">
-    <widget class="SampleWidget" name="sampleWidget_6" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_6" native="true"/>
    </item>
    <item row="3" column="1">
-    <widget class="SampleWidget" name="sampleWidget_7" native="true"/>
+    <widget class="DrumPadSampleWidget" name="sampleWidget_7" native="true"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>SampleWidget</class>
+   <class>DrumPadSampleWidget</class>
    <extends>QWidget</extends>
-   <header>widgets/samplewidget.h</header>
+   <header>widgets/drumpadsamplewidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -8,20 +8,20 @@
 
 #include "drumpadpresets.h"
 
-namespace Ui { class SamplesWidget; }
+namespace Ui { class DrumPadSamplesWidget; }
 namespace midi { struct MidiMessage; }
 class QNetworkAccessManager;
-class SampleWidget;
+class DrumPadSampleWidget;
 class DrumMachineSettings;
 struct frame_t;
 
-class SamplesWidget : public QWidget
+class DrumPadSamplesWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit SamplesWidget(QWidget *parent = nullptr);
-    ~SamplesWidget() override;
+    explicit DrumPadSamplesWidget(QWidget *parent = nullptr);
+    ~DrumPadSamplesWidget() override;
 
     void loadSettings(DrumMachineSettings &settings);
 
@@ -49,9 +49,9 @@ private slots:
     void stopAll();
 
 private:
-    std::array<std::reference_wrapper<SampleWidget>, 24> getWidgets();
+    std::array<std::reference_wrapper<DrumPadSampleWidget>, 24> getWidgets();
 
-    const std::unique_ptr<Ui::SamplesWidget> m_ui;
+    const std::unique_ptr<Ui::DrumPadSamplesWidget> m_ui;
 
     drumpad_presets::Preset m_preset;
 };

@@ -31,14 +31,14 @@ SOURCES += \
     synthisizer.cpp \
     treetotableproxymodel.cpp \
     widgets/djwidget.cpp \
+    widgets/drumpadsampleswidget.cpp \
+    widgets/drumpadsamplewidget.cpp \
     widgets/drumpadwidget.cpp \
     widgets/loopstationwidget.cpp \
     widgets/mainwindow.cpp \
     widgets/midibutton.cpp \
     widgets/presetdetailwidget.cpp \
     widgets/previewwidget.cpp \
-    widgets/sampleswidget.cpp \
-    widgets/samplewidget.cpp \
     widgets/scratchwidget.cpp \
     widgets/sequencerwidget.cpp \
     widgets/settingsdialog.cpp \
@@ -65,14 +65,14 @@ HEADERS += \
     synthisizer.h \
     treetotableproxymodel.h \
     widgets/djwidget.h \
+    widgets/drumpadsampleswidget.h \
+    widgets/drumpadsamplewidget.h \
     widgets/drumpadwidget.h \
     widgets/loopstationwidget.h \
     widgets/mainwindow.h \
     widgets/midibutton.h \
     widgets/presetdetailwidget.h \
     widgets/previewwidget.h \
-    widgets/sampleswidget.h \
-    widgets/samplewidget.h \
     widgets/scratchwidget.h \
     widgets/sequencerwidget.h \
     widgets/settingsdialog.h \
@@ -81,12 +81,12 @@ HEADERS += \
 
 FORMS += \
     widgets/djwidget.ui \
+    widgets/drumpadsampleswidget.ui \
+    widgets/drumpadsamplewidget.ui \
     widgets/drumpadwidget.ui \
     widgets/loopstationwidget.ui \
     widgets/mainwindow.ui \
     widgets/presetdetailwidget.ui \
-    widgets/sampleswidget.ui \
-    widgets/samplewidget.ui \
     widgets/sequencerwidget.ui \
     widgets/settingsdialog.ui \
     widgets/synthisizerwidget.ui \

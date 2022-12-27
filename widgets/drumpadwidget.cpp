@@ -23,9 +23,9 @@ DrumPadWidget::DrumPadWidget(QWidget *parent) :
     connect(m_ui->pushButtonRefresh, &QAbstractButton::pressed, this, &DrumPadWidget::loadPresets);
 
     connect(m_ui->sequencerWidget, &SequencerWidget::sendMidi, this, &DrumPadWidget::sendMidi);
-    connect(m_ui->samplesWidget, &SamplesWidget::sendMidi, this, &DrumPadWidget::sendMidi);
+    connect(m_ui->samplesWidget, &DrumPadSamplesWidget::sendMidi, this, &DrumPadWidget::sendMidi);
 
-    connect(m_ui->sequencerWidget, &SequencerWidget::triggerSample, m_ui->samplesWidget, &SamplesWidget::sequencerTriggerSample);
+    connect(m_ui->sequencerWidget, &SequencerWidget::triggerSample, m_ui->samplesWidget, &DrumPadSamplesWidget::sequencerTriggerSample);
 
     m_presetsProxyModel.setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_presetsProxyModel.setSortRole(Qt::EditRole);

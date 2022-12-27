@@ -1,5 +1,5 @@
-#include "sampleswidget.h"
-#include "ui_sampleswidget.h"
+#include "drumpadsampleswidget.h"
+#include "ui_drumpadsampleswidget.h"
 
 #include <iterator>
 
@@ -8,41 +8,41 @@
 #include "audioformat.h"
 #include "midicontainers.h"
 
-SamplesWidget::SamplesWidget(QWidget *parent) :
+DrumPadSamplesWidget::DrumPadSamplesWidget(QWidget *parent) :
     QWidget{parent},
-    m_ui{std::make_unique<Ui::SamplesWidget>()}
+    m_ui{std::make_unique<Ui::DrumPadSamplesWidget>()}
 {
     m_ui->setupUi(this);
 
-    connect(m_ui->checkBox, &QCheckBox::toggled, this, &SamplesWidget::updateWidgets);
+    connect(m_ui->checkBox, &QCheckBox::toggled, this, &DrumPadSamplesWidget::updateWidgets);
 
-    connect(m_ui->pushButtonStopAll, &QAbstractButton::pressed, this, &SamplesWidget::stopAll);
+    connect(m_ui->pushButtonStopAll, &QAbstractButton::pressed, this, &DrumPadSamplesWidget::stopAll);
 
     quint8 padNr{};
-    for (SampleWidget &widget : getWidgets())
+    for (DrumPadSampleWidget &widget : getWidgets())
     {
         widget.setPadNr(padNr++);
-        connect(&widget, &SampleWidget::chokeTriggered, this, &SamplesWidget::chokeTriggered);
-        connect(&widget, &SampleWidget::sendMidi, this, &SamplesWidget::sendMidi);
+        connect(&widget, &DrumPadSampleWidget::chokeTriggered, this, &DrumPadSamplesWidget::chokeTriggered);
+        connect(&widget, &DrumPadSampleWidget::sendMidi, this, &DrumPadSamplesWidget::sendMidi);
     }
 }
 
-SamplesWidget::~SamplesWidget() = default;
+DrumPadSamplesWidget::~DrumPadSamplesWidget() = default;
 
-void SamplesWidget::loadSettings(DrumMachineSettings &settings)
+void DrumPadSamplesWidget::loadSettings(DrumMachineSettings &settings)
 {
-    for (SampleWidget &widget : getWidgets())
+    for (DrumPadSampleWidget &widget : getWidgets())
         widget.loadSettings(settings);
 }
 
-void SamplesWidget::setPreset(const drumpad_presets::Preset &preset)
+void DrumPadSamplesWidget::setPreset(const drumpad_presets::Preset &preset)
 {
     m_preset = preset;
 
     updateWidgets();
 }
 
-void SamplesWidget::midiReceived(const midi::MidiMessage &message)
+void DrumPadSamplesWidget::midiReceived(const midi::MidiMessage &message)
 {
     if (message == midi::MidiMessage{.channel=0,.cmd=midi::Command::ControlChange,.flag=true,.note=64,.velocity=127})
     {
@@ -53,7 +53,7 @@ void SamplesWidget::midiReceived(const midi::MidiMessage &message)
     if (message.cmd != midi::Command::NoteOn && message.cmd != midi::Command::NoteOff)
         return;
 
-    for (SampleWidget &widget : getWidgets())
+    for (DrumPadSampleWidget &widget : getWidgets())
     {
         if (widget.isLearning())
         {
@@ -69,37 +69,37 @@ void SamplesWidget::midiReceived(const midi::MidiMessage &message)
     }
 }
 
-void SamplesWidget::writeSamples(frame_t *begin, frame_t *end)
+void DrumPadSamplesWidget::writeSamples(frame_t *begin, frame_t *end)
 {
-    for (SampleWidget &widget : getWidgets())
+    for (DrumPadSampleWidget &widget : getWidgets())
         widget.writeSamples(begin, end);
 }
 
-void SamplesWidget::injectNetworkAccessManager(QNetworkAccessManager &networkAccessManager)
+void DrumPadSamplesWidget::injectNetworkAccessManager(QNetworkAccessManager &networkAccessManager)
 {
-    for (SampleWidget &widget : getWidgets())
+    for (DrumPadSampleWidget &widget : getWidgets())
         widget.injectNetworkAccessManager(networkAccessManager);
 }
 
-void SamplesWidget::injectDecodingThread(QThread &thread)
+void DrumPadSamplesWidget::injectDecodingThread(QThread &thread)
 {
-    for (SampleWidget &widget : getWidgets())
+    for (DrumPadSampleWidget &widget : getWidgets())
         widget.injectDecodingThread(thread);
 }
 
-void SamplesWidget::unsendColors()
+void DrumPadSamplesWidget::unsendColors()
 {
-    for (SampleWidget &widget : getWidgets())
+    for (DrumPadSampleWidget &widget : getWidgets())
         widget.unsendColor();
 }
 
-void SamplesWidget::sendColors()
+void DrumPadSamplesWidget::sendColors()
 {
-    for (SampleWidget &widget : getWidgets())
+    for (DrumPadSampleWidget &widget : getWidgets())
         widget.sendColor();
 }
 
-void SamplesWidget::sequencerTriggerSample(int index)
+void DrumPadSamplesWidget::sequencerTriggerSample(int index)
 {
     const auto widgets = getWidgets();
     if (index < 0 || index >= int(std::size(widgets)))
@@ -110,9 +110,9 @@ void SamplesWidget::sequencerTriggerSample(int index)
     widgets[index].get().pressed(127);
 }
 
-void SamplesWidget::chokeTriggered(int choke)
+void DrumPadSamplesWidget::chokeTriggered(int choke)
 {
-    for (SampleWidget &widget : getWidgets())
+    for (DrumPadSampleWidget &widget : getWidgets())
     {
         if (&widget == sender())
             continue;
@@ -122,7 +122,7 @@ void SamplesWidget::chokeTriggered(int choke)
     }
 }
 
-void SamplesWidget::updateWidgets()
+void DrumPadSamplesWidget::updateWidgets()
 {
     const auto widgets = getWidgets();
 
@@ -139,13 +139,13 @@ void SamplesWidget::updateWidgets()
         widgetsIter->get().setFile(*m_preset.id, *filesIter);
 }
 
-void SamplesWidget::stopAll()
+void DrumPadSamplesWidget::stopAll()
 {
-    for (SampleWidget &widget : getWidgets())
+    for (DrumPadSampleWidget &widget : getWidgets())
         widget.forceStop();
 }
 
-std::array<std::reference_wrapper<SampleWidget>, 24> SamplesWidget::getWidgets()
+std::array<std::reference_wrapper<DrumPadSampleWidget>, 24> DrumPadSamplesWidget::getWidgets()
 {
     return {
         std::ref(*m_ui->sampleWidget_1),

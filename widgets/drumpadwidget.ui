@@ -109,14 +109,14 @@
     <enum>Qt::Vertical</enum>
    </property>
    <widget class="SequencerWidget" name="sequencerWidget" native="true"/>
-   <widget class="SamplesWidget" name="samplesWidget" native="true"/>
+   <widget class="DrumPadSamplesWidget" name="samplesWidget" native="true"/>
   </widget>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>SamplesWidget</class>
+   <class>DrumPadSamplesWidget</class>
    <extends>QWidget</extends>
-   <header>widgets/sampleswidget.h</header>
+   <header>widgets/drumpadsampleswidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

@@ -1,5 +1,5 @@
-#include "samplewidget.h"
-#include "ui_samplewidget.h"
+#include "drumpadsamplewidget.h"
+#include "ui_drumpadsamplewidget.h"
 
 #include <QAbstractEventDispatcher>
 #include <QSoundEffect>
@@ -19,27 +19,27 @@ QString toString(int value) { return QString::number(value); }
 QString toString(bool value) { return value?"true":"false"; }
 }
 
-SampleWidget::SampleWidget(QWidget *parent) :
+DrumPadSampleWidget::DrumPadSampleWidget(QWidget *parent) :
     QFrame{parent},
-    m_ui{std::make_unique<Ui::SampleWidget>()}
+    m_ui{std::make_unique<Ui::DrumPadSampleWidget>()}
 {
     m_ui->setupUi(this);
 
     connect(m_ui->dialSpeed, &QAbstractSlider::valueChanged, &m_player, [&player=m_player](int value){ player.setSpeed(float(value)/100.f); });
     connect(m_ui->dialVolume, &QAbstractSlider::valueChanged, &m_player, [&player=m_player](int value){ player.setVolume(float(value)/100.f); });
 
-    connect(&m_player, &AudioPlayer::playingChanged, this, &SampleWidget::updateStatus);
+    connect(&m_player, &AudioPlayer::playingChanged, this, &DrumPadSampleWidget::updateStatus);
 
     connect(m_ui->pushButton, &QAbstractButton::pressed, this, [this](){ pressed(127); });
-    connect(m_ui->pushButton, &QAbstractButton::released, this, &SampleWidget::released);
-    connect(m_ui->toolButtonLearn, &QAbstractButton::pressed, this, &SampleWidget::learnPressed);
+    connect(m_ui->pushButton, &QAbstractButton::released, this, &DrumPadSampleWidget::released);
+    connect(m_ui->toolButtonLearn, &QAbstractButton::pressed, this, &DrumPadSampleWidget::learnPressed);
 
     updateStatus();
 }
 
-SampleWidget::~SampleWidget() = default;
+DrumPadSampleWidget::~DrumPadSampleWidget() = default;
 
-void SampleWidget::loadSettings(DrumMachineSettings &settings)
+void DrumPadSampleWidget::loadSettings(DrumMachineSettings &settings)
 {
     m_ui->channelSpinBox->setValue(settings.drumpadChannel(m_padNr));
     m_ui->noteSpinBox->setValue(settings.drumpadNote(m_padNr));
@@ -47,7 +47,7 @@ void SampleWidget::loadSettings(DrumMachineSettings &settings)
     m_settings = &settings;
 }
 
-void SampleWidget::setFile(const QString &presetId, const drumpad_presets::File &file)
+void DrumPadSampleWidget::setFile(const QString &presetId, const drumpad_presets::File &file)
 {
     m_presetId = presetId;
     m_file = file;
@@ -80,12 +80,12 @@ void SampleWidget::setFile(const QString &presetId, const drumpad_presets::File 
     setupLabel(file.choke, m_ui->chokeLabel);
 }
 
-quint8 SampleWidget::channel() const
+quint8 DrumPadSampleWidget::channel() const
 {
     return m_ui->channelSpinBox->value();
 }
 
-void SampleWidget::setChannel(quint8 channel)
+void DrumPadSampleWidget::setChannel(quint8 channel)
 {
     m_ui->channelSpinBox->setValue(channel);
 
@@ -95,12 +95,12 @@ void SampleWidget::setChannel(quint8 channel)
         qWarning() << "no settings available";
 }
 
-quint8 SampleWidget::note() const
+quint8 DrumPadSampleWidget::note() const
 {
     return m_ui->noteSpinBox->value();
 }
 
-void SampleWidget::setNote(quint8 note)
+void DrumPadSampleWidget::setNote(quint8 note)
 {
     m_ui->noteSpinBox->setValue(note);
 
@@ -110,34 +110,34 @@ void SampleWidget::setNote(quint8 note)
         qWarning() << "no settings available";
 }
 
-int SampleWidget::speed() const
+int DrumPadSampleWidget::speed() const
 {
     return m_ui->dialSpeed->value();
 }
 
-void SampleWidget::setSpeed(int speed)
+void DrumPadSampleWidget::setSpeed(int speed)
 {
     m_ui->dialSpeed->setValue(speed);
 }
 
-int SampleWidget::volume() const
+int DrumPadSampleWidget::volume() const
 {
     return m_ui->dialVolume->value();
 }
 
-void SampleWidget::setVolume(int volume)
+void DrumPadSampleWidget::setVolume(int volume)
 {
     m_ui->dialVolume->setValue(volume);
 }
 
-std::optional<int> SampleWidget::choke() const
+std::optional<int> DrumPadSampleWidget::choke() const
 {
     if (!m_file)
         return {};
     return m_file->choke;
 }
 
-void SampleWidget::pressed(quint8 velocity)
+void DrumPadSampleWidget::pressed(quint8 velocity)
 {
     Q_UNUSED(velocity)
 
@@ -147,39 +147,39 @@ void SampleWidget::pressed(quint8 velocity)
         emit chokeTriggered(*m_file->choke);
 }
 
-void SampleWidget::released()
+void DrumPadSampleWidget::released()
 {
 }
 
-void SampleWidget::forceStop()
+void DrumPadSampleWidget::forceStop()
 {
     m_player.setPlaying(false);
 }
 
-void SampleWidget::injectNetworkAccessManager(QNetworkAccessManager &networkAccessManager)
+void DrumPadSampleWidget::injectNetworkAccessManager(QNetworkAccessManager &networkAccessManager)
 {
     m_networkAccessManager = &networkAccessManager;
     if (m_file)
         startRequest();
 }
 
-void SampleWidget::injectDecodingThread(QThread &thread)
+void DrumPadSampleWidget::injectDecodingThread(QThread &thread)
 {
     QMetaObject::invokeMethod(QAbstractEventDispatcher::instance(&thread), [this](){
         m_decoder = std::make_unique<AudioDecoder>();
-        connect(this, &SampleWidget::startDecoding, m_decoder.get(), &AudioDecoder::startDecodingDevice);
-        connect(m_decoder.get(), &AudioDecoder::decodingFinished, this, &SampleWidget::decodingFinished);
+        connect(this, &DrumPadSampleWidget::startDecoding, m_decoder.get(), &AudioDecoder::startDecodingDevice);
+        connect(m_decoder.get(), &AudioDecoder::decodingFinished, this, &DrumPadSampleWidget::decodingFinished);
         if (m_reply && m_reply->isFinished() && m_reply->error() == QNetworkReply::NoError)
             m_decoder->startDecodingDevice(m_reply);
     });
 }
 
-void SampleWidget::writeSamples(frame_t *begin, frame_t *end)
+void DrumPadSampleWidget::writeSamples(frame_t *begin, frame_t *end)
 {
     m_player.writeSamples(begin, end);
 }
 
-void SampleWidget::learn(quint8 channel, quint8 note)
+void DrumPadSampleWidget::learn(quint8 channel, quint8 note)
 {
     setChannel(channel);
     setNote(note);
@@ -187,7 +187,7 @@ void SampleWidget::learn(quint8 channel, quint8 note)
         learnPressed();
 }
 
-void SampleWidget::unsendColor()
+void DrumPadSampleWidget::unsendColor()
 {
     m_sendColors = false;
     midi::MidiMessage midiMsg;
@@ -201,7 +201,7 @@ void SampleWidget::unsendColor()
     emit sendMidi(midiMsg);
 }
 
-void SampleWidget::sendColor()
+void DrumPadSampleWidget::sendColor()
 {
     m_sendColors = true;
     midi::MidiMessage midiMsg;
@@ -236,7 +236,7 @@ void SampleWidget::sendColor()
     emit sendMidi(midiMsg);
 }
 
-void SampleWidget::updateStatus()
+void DrumPadSampleWidget::updateStatus()
 {
     QPalette pal;
 
@@ -289,7 +289,7 @@ void SampleWidget::updateStatus()
         m_ui->statusLabel->setText(m_player.playing() ? tr("Playing") : tr("Ready"));
 }
 
-void SampleWidget::requestFinished()
+void DrumPadSampleWidget::requestFinished()
 {
     if (m_reply->error() == QNetworkReply::NoError)
     {
@@ -298,7 +298,7 @@ void SampleWidget::requestFinished()
     updateStatus();
 }
 
-void SampleWidget::decodingFinished(const QAudioBuffer &buffer)
+void DrumPadSampleWidget::decodingFinished(const QAudioBuffer &buffer)
 {
     m_reply = nullptr;
     m_player.setBuffer(buffer);
@@ -307,7 +307,7 @@ void SampleWidget::decodingFinished(const QAudioBuffer &buffer)
     updateStatus();
 }
 
-void SampleWidget::learnPressed()
+void DrumPadSampleWidget::learnPressed()
 {
     auto palette = m_ui->toolButtonLearn->palette();
 
@@ -328,7 +328,7 @@ void SampleWidget::learnPressed()
     m_learning = !m_learning;
 }
 
-void SampleWidget::startRequest()
+void DrumPadSampleWidget::startRequest()
 {
     if (m_networkAccessManager && m_file->filename)
     {
@@ -336,7 +336,7 @@ void SampleWidget::startRequest()
         request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache);
         request.setAttribute(QNetworkRequest::CacheSaveControlAttribute, true);
         m_reply = std::shared_ptr<QNetworkReply>{m_networkAccessManager->get(request)};
-        connect(m_reply.get(), &QNetworkReply::finished, this, &SampleWidget::requestFinished);
+        connect(m_reply.get(), &QNetworkReply::finished, this, &DrumPadSampleWidget::requestFinished);
     }
 
     updateStatus();

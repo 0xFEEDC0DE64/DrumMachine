@@ -9,7 +9,6 @@
 #include "drumpadfilesmodel.h"
 
 namespace Ui { class DrumPadWidget; }
-class SamplesWidget;
 class SequencerWidget;
 class QModelIndex;
 class QNetworkAccessManager;
