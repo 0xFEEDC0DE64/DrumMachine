@@ -2,9 +2,10 @@ QT = core multimedia gui widgets network
 
 CONFIG += c++20
 
-#release: QMAKE_CXXFLAGS_RELEASE -= -O1
-#release: QMAKE_CXXFLAGS_RELEASE -= -O2
-#release: QMAKE_CXXFLAGS_RELEASE += -O3 -ffast-math -march=native -mtune=native
+QMAKE_CXXFLAGS += -Werror=all
+release: QMAKE_CXXFLAGS_RELEASE -= -O1
+release: QMAKE_CXXFLAGS_RELEASE -= -O2
+release: QMAKE_CXXFLAGS_RELEASE += -O3 -ffast-math -march=native -mtune=native
 
 LIBS += -lrtmidi -lportaudio
 
