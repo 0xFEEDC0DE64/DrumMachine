@@ -41,7 +41,7 @@ void SamplesWidget::setPreset(const presets::Preset &preset)
     updateWidgets();
 }
 
-void SamplesWidget::messageReceived(const midi::MidiMessage &message)
+void SamplesWidget::midiReceived(const midi::MidiMessage &message)
 {
     if (message == midi::MidiMessage{.channel=0,.cmd=midi::Command::ControlChange,.flag=true,.note=64,.velocity=127})
     {

@@ -6,7 +6,9 @@
 #include <QNetworkAccessManager>
 #include <QMessageBox>
 
+#include "midicontainers.h"
 #include "jsonconverters.h"
+#include "drummachinesettings.h"
 
 DrumPadWidget::DrumPadWidget(QWidget *parent) :
     QSplitter{parent},
@@ -14,6 +16,10 @@ DrumPadWidget::DrumPadWidget(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
+    connect(m_ui->pushButtonUp, &QAbstractButton::pressed, this, &DrumPadWidget::selectPrevPreset);
+    connect(m_ui->pushButtonDown, &QAbstractButton::pressed, this, &DrumPadWidget::selectNextPreset);
+
+    connect(m_ui->sequencerWidget, &SequencerWidget::sendMidi, this, &DrumPadWidget::sendMidi);
     connect(m_ui->samplesWidget, &SamplesWidget::sendMidi, this, &DrumPadWidget::sendMidi);
 
     connect(m_ui->sequencerWidget, &SequencerWidget::triggerSample, m_ui->samplesWidget, &SamplesWidget::sequencerTriggerSample);
@@ -36,19 +42,6 @@ DrumPadWidget::DrumPadWidget(QWidget *parent) :
 
 DrumPadWidget::~DrumPadWidget() = default;
 
-void DrumPadWidget::selectFirstPreset()
-{
-    if (!m_presetsProxyModel.rowCount())
-        return;
-
-    const auto index = m_presetsProxyModel.index(0, 0);
-    if (index.isValid())
-    {
-        m_ui->presetsView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-        currentRowChanged(index);
-    }
-}
-
 void DrumPadWidget::writeSamples(frame_t *begin, frame_t *end)
 {
     m_ui->samplesWidget->writeSamples(begin, end);
@@ -68,22 +61,71 @@ void DrumPadWidget::injectDecodingThread(QThread &thread)
 
 void DrumPadWidget::loadSettings(DrumMachineSettings &settings)
 {
+    m_settings = &settings;
+
+    m_ui->pushButtonUp->setChannel(m_settings->drumpadChannelPrevPreset());
+    m_ui->pushButtonUp->setNote(m_settings->drumpadNotePrevPreset());
+    m_ui->pushButtonDown->setChannel(m_settings->drumpadChannelNextPreset());
+    m_ui->pushButtonDown->setNote(m_settings->drumpadNoteNextPreset());
+
+    connect(m_ui->pushButtonUp, &MidiButton::channelChanged, m_settings, &DrumMachineSettings::setDrumpadChannelPrevPreset);
+    connect(m_ui->pushButtonUp, &MidiButton::noteChanged, m_settings, &DrumMachineSettings::setDrumpadNotePrevPreset);
+    connect(m_ui->pushButtonDown, &MidiButton::channelChanged, m_settings, &DrumMachineSettings::setDrumpadChannelNextPreset);
+    connect(m_ui->pushButtonDown, &MidiButton::noteChanged, m_settings, &DrumMachineSettings::setDrumpadNoteNextPreset);
+
+    m_ui->sequencerWidget->loadSettings(settings);
     m_ui->samplesWidget->loadSettings(settings);
 }
 
 void DrumPadWidget::unsendColors()
 {
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonUp->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonUp->note(),
+        .velocity = 0
+    });
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonDown->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonDown->note(),
+        .velocity = 0
+    });
+
+    m_ui->sequencerWidget->unsendColors();
     m_ui->samplesWidget->unsendColors();
 }
 
 void DrumPadWidget::sendColors()
 {
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonUp->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonUp->note(),
+        .velocity = 127
+    });
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonDown->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonDown->note(),
+        .velocity = 127
+    });
+
+    m_ui->sequencerWidget->sendColors();
     m_ui->samplesWidget->sendColors();
 }
 
-void DrumPadWidget::messageReceived(const midi::MidiMessage &message)
+void DrumPadWidget::midiReceived(const midi::MidiMessage &message)
 {
-    m_ui->samplesWidget->messageReceived(message);
+    m_ui->pushButtonUp->midiReceived(message);
+    m_ui->pushButtonDown->midiReceived(message);
+
+    m_ui->sequencerWidget->midiReceived(message);
+    m_ui->samplesWidget->midiReceived(message);
 }
 
 void DrumPadWidget::currentRowChanged(const QModelIndex &current)
@@ -92,6 +134,11 @@ void DrumPadWidget::currentRowChanged(const QModelIndex &current)
         return;
 
     const auto &preset = m_presetsModel.getPreset(m_presetsProxyModel.mapToSource(current));
+
+    if (m_settings)
+        m_settings->setDrumpadLastPresetId(preset.id ? *preset.id : QString{});
+    else
+        qWarning() << "no settings available";
 
     m_ui->presetDetailWidget->setPreset(preset);
     m_filesModel.setPreset(preset);
@@ -141,10 +188,83 @@ void DrumPadWidget::requestFinished()
 
         m_presetsModel.setPresets(std::move(*std::move(result).presets));
 
-        selectFirstPreset();
+        if (m_settings)
+        {
+            if (const auto &lastPresetId = m_settings->drumpadLastPresetId(); !lastPresetId.isEmpty())
+            {
+                if (const auto &index = m_presetsModel.findPresetById(lastPresetId); index.isValid())
+                    selectIndex(m_presetsProxyModel.mapFromSource(index));
+                else
+                {
+                    qWarning() << "invalid last preset id" << lastPresetId;
+                    goto noLastId;
+                }
+            }
+            else
+                goto noLastId;
+        }
+        else
+        {
+noLastId:
+            selectFirstPreset();
+        }
     }
     catch (const std::exception &e)
     {
         QMessageBox::warning(this, tr("error"), tr("error") + "\n\n" + QString::fromStdString(e.what()));
     }
+}
+
+void DrumPadWidget::selectFirstPreset()
+{
+    if (!m_presetsProxyModel.rowCount())
+        return;
+
+    selectIndex(m_presetsProxyModel.index(0, 0));
+}
+
+void DrumPadWidget::selectPrevPreset()
+{
+    if (!m_presetsProxyModel.rowCount())
+        return;
+
+    const auto index = m_ui->presetsView->selectionModel()->currentIndex();
+    if (!index.isValid())
+    {
+        qWarning() << "invalid index";
+        return;
+    }
+
+    if (index.row() > 0)
+        selectIndex(m_presetsProxyModel.index(index.row() - 1, 0));
+}
+
+void DrumPadWidget::selectNextPreset()
+{
+    if (!m_presetsProxyModel.rowCount())
+        return;
+
+    const auto index = m_ui->presetsView->selectionModel()->currentIndex();
+    if (!index.isValid())
+    {
+        qWarning() << "invalid index";
+        return;
+    }
+
+    if (index.row() + 1 < m_presetsProxyModel.rowCount())
+        selectIndex(m_presetsProxyModel.index(index.row() + 1, 0));
+}
+
+void DrumPadWidget::selectIndex(const QModelIndex &index)
+{
+    if (!index.isValid())
+    {
+        qWarning() << "invalid index";
+        return;
+    }
+
+    m_ui->presetsView->scrollTo(index);
+//    m_ui->presetsView->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    m_ui->presetsView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    currentRowChanged(index);
 }

@@ -1,7 +1,6 @@
 #include "djwidget.h"
 #include "ui_djwidget.h"
 
-#include <QDebug>
 #include <QStandardPaths>
 
 DjWidget::DjWidget(QWidget *parent) :
@@ -87,7 +86,7 @@ void DjWidget::sendColors()
 {
 }
 
-void DjWidget::messageReceived(const midi::MidiMessage &message)
+void DjWidget::midiReceived(const midi::MidiMessage &message)
 {
 }
 

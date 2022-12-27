@@ -24,6 +24,7 @@ void SynthisizerWidget::writeSamples(frame_t *begin, frame_t *end)
 
 void SynthisizerWidget::loadSettings(DrumMachineSettings &settings)
 {
+    Q_UNUSED(settings)
 }
 
 void SynthisizerWidget::unsendColors()
@@ -34,7 +35,7 @@ void SynthisizerWidget::sendColors()
 {
 }
 
-void SynthisizerWidget::messageReceived(const midi::MidiMessage &message)
+void SynthisizerWidget::midiReceived(const midi::MidiMessage &message)
 {
     if (message.cmd == midi::Command::NoteOff || (message.cmd == midi::Command::NoteOn && message.velocity == 0))
     {

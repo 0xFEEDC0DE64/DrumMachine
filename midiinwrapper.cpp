@@ -4,6 +4,8 @@
 #include <QMetaType>
 #include <QDebug>
 
+#include "midicontainers.h"
+
 MidiInWrapper::MidiInWrapper(RtMidi::Api api, const QString& clientName, unsigned int queueSizeLimit, QObject *parent) :
     QObject{parent},
     midiIn{api, clientName.toStdString(), queueSizeLimit}
@@ -72,5 +74,5 @@ void MidiInWrapper::mycallback(double deltatime, std::vector<unsigned char> *mes
     }
 
     const midi::MidiMessage &midiMessage = reinterpret_cast<const midi::MidiMessage &>(message->at(0));
-    wrapper->messageReceived(midiMessage);
+    wrapper->midiReceived(midiMessage);
 }

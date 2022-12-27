@@ -6,6 +6,8 @@
 #include <QDebug>
 
 #include "presets.h"
+#include "drummachinesettings.h"
+#include "midicontainers.h"
 
 SequencerWidget::SequencerWidget(QWidget *parent) :
     QWidget{parent},
@@ -14,11 +16,16 @@ SequencerWidget::SequencerWidget(QWidget *parent) :
     m_ui->setupUi(this);
 
     connect(m_ui->spinBoxTempo, qOverload<int>(&QSpinBox::valueChanged), this, &SequencerWidget::tempoChanged);
-    connect(m_ui->comboBoxSequence, qOverload<int>(&QComboBox::currentIndexChanged), this, &SequencerWidget::sequenceSelected);
-    connect(m_ui->horizontalSlider, &QSlider::valueChanged, this, [=](int value){ m_pos = value; updateStatusLabel(); });
 
+    connect(m_ui->comboBoxSequence, qOverload<int>(&QComboBox::currentIndexChanged), this, &SequencerWidget::sequenceSelected);
+
+    connect(m_ui->pushButtonUp, &QAbstractButton::pressed, this, &SequencerWidget::selectPrevSequence);
+    connect(m_ui->pushButtonDown, &QAbstractButton::pressed, this, &SequencerWidget::selectNextSequence);
     connect(m_ui->pushButtonPlayPause, &QAbstractButton::pressed, this, &SequencerWidget::playPause);
     connect(m_ui->pushButtonStop, &QAbstractButton::pressed, this, &SequencerWidget::stop);
+
+    connect(m_ui->horizontalSlider, &QSlider::valueChanged, this, [=](int value){ m_pos = value; updateStatusLabel(); });
+
 
     connect(&m_timer, &QTimer::timeout, this, &SequencerWidget::timeout);
 
@@ -26,6 +33,95 @@ SequencerWidget::SequencerWidget(QWidget *parent) :
 }
 
 SequencerWidget::~SequencerWidget() = default;
+
+void SequencerWidget::loadSettings(DrumMachineSettings &settings)
+{
+    m_ui->pushButtonUp->setChannel(settings.drumpadChannelPrevSequence());
+    m_ui->pushButtonUp->setNote(settings.drumpadNotePrevSequence());
+    m_ui->pushButtonDown->setChannel(settings.drumpadChannelNextSequence());
+    m_ui->pushButtonDown->setNote(settings.drumpadNoteNextSequence());
+    m_ui->pushButtonPlayPause->setChannel(settings.drumpadChannelPlayPause());
+    m_ui->pushButtonPlayPause->setNote(settings.drumpadNotePlayPause());
+    m_ui->pushButtonStop->setChannel(settings.drumpadChannelStop());
+    m_ui->pushButtonStop->setNote(settings.drumpadNoteStop());
+
+    connect(m_ui->pushButtonUp, &MidiButton::channelChanged, &settings, &DrumMachineSettings::setDrumpadChannelPrevSequence);
+    connect(m_ui->pushButtonUp, &MidiButton::noteChanged, &settings, &DrumMachineSettings::setDrumpadNotePrevSequence);
+    connect(m_ui->pushButtonDown, &MidiButton::channelChanged, &settings, &DrumMachineSettings::setDrumpadChannelNextSequence);
+    connect(m_ui->pushButtonDown, &MidiButton::noteChanged, &settings, &DrumMachineSettings::setDrumpadNoteNextSequence);
+    connect(m_ui->pushButtonPlayPause, &MidiButton::channelChanged, &settings, &DrumMachineSettings::setDrumpadChannelPlayPause);
+    connect(m_ui->pushButtonPlayPause, &MidiButton::noteChanged, &settings, &DrumMachineSettings::setDrumpadNotePlayPause);
+    connect(m_ui->pushButtonStop, &MidiButton::channelChanged, &settings, &DrumMachineSettings::setDrumpadChannelStop);
+    connect(m_ui->pushButtonStop, &MidiButton::noteChanged, &settings, &DrumMachineSettings::setDrumpadNoteStop);
+}
+
+void SequencerWidget::unsendColors()
+{
+    m_sendColors = false;
+
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonUp->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonUp->note(),
+        .velocity = 0
+    });
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonDown->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonDown->note(),
+        .velocity = 0
+    });
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonPlayPause->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonPlayPause->note(),
+        .velocity = 0
+    });
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonStop->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonStop->note(),
+        .velocity = 0
+    });
+}
+
+void SequencerWidget::sendColors()
+{
+    m_sendColors = true;
+
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonUp->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonUp->note(),
+        .velocity = 127
+    });
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonDown->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonDown->note(),
+        .velocity = 127
+    });
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonPlayPause->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonPlayPause->note(),
+        .velocity = 60
+    });
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonStop->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonStop->note(),
+        .velocity = 3
+    });
+}
 
 void SequencerWidget::setPreset(const presets::Preset &preset)
 {
@@ -64,6 +160,14 @@ void SequencerWidget::setPreset(const presets::Preset &preset)
     }
 
     sequenceSelected();
+}
+
+void SequencerWidget::midiReceived(const midi::MidiMessage &message)
+{
+    m_ui->pushButtonUp->midiReceived(message);
+    m_ui->pushButtonDown->midiReceived(message);
+    m_ui->pushButtonPlayPause->midiReceived(message);
+    m_ui->pushButtonStop->midiReceived(message);
 }
 
 void SequencerWidget::playPause()
@@ -150,4 +254,16 @@ void SequencerWidget::timeout()
 void SequencerWidget::updateStatusLabel()
 {
     m_ui->labelStatus->setText(QString{"%0 / %1"}.arg(m_pos+1).arg(m_selectedSequence && m_selectedSequence->sequencerSize ? *m_selectedSequence->sequencerSize-1 : -1));
+}
+
+void SequencerWidget::selectPrevSequence()
+{
+    if (const auto index = m_ui->comboBoxSequence->currentIndex(); index > 0)
+        m_ui->comboBoxSequence->setCurrentIndex(index - 1);
+}
+
+void SequencerWidget::selectNextSequence()
+{
+    if (const auto index = m_ui->comboBoxSequence->currentIndex(); index + 1 < m_ui->comboBoxSequence->count())
+        m_ui->comboBoxSequence->setCurrentIndex(index + 1);
 }

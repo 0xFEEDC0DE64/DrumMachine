@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0,1">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0,0,0,1">
      <item>
       <widget class="QSpinBox" name="spinBoxTempo">
        <property name="suffix">
@@ -30,7 +30,33 @@
       <widget class="QComboBox" name="comboBoxSequence"/>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButtonPlayPause">
+      <widget class="MidiButton" name="pushButtonUp">
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>⬆</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="MidiButton" name="pushButtonDown">
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>⬇</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="MidiButton" name="pushButtonPlayPause">
        <property name="maximumSize">
         <size>
          <width>32</width>
@@ -43,7 +69,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButtonStop">
+      <widget class="MidiButton" name="pushButtonStop">
        <property name="maximumSize">
         <size>
          <width>32</width>
@@ -82,26 +108,26 @@
         <x>0</x>
         <y>0</y>
         <width>878</width>
-        <height>921</height>
+        <height>828</height>
        </rect>
       </property>
-      <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,1">
+      <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,1,0">
        <item row="38" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample18">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="34" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample16">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="19" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -111,14 +137,14 @@
         </widget>
        </item>
        <item row="10" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample4">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="7" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -128,14 +154,14 @@
         </widget>
        </item>
        <item row="14" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample6">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="5" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -145,7 +171,7 @@
         </widget>
        </item>
        <item row="15" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -155,7 +181,7 @@
         </widget>
        </item>
        <item row="41" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -165,14 +191,14 @@
         </widget>
        </item>
        <item row="44" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample21">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="47" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -182,7 +208,7 @@
         </widget>
        </item>
        <item row="29" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -192,21 +218,21 @@
         </widget>
        </item>
        <item row="32" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample15">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="12" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample5">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="27" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -216,14 +242,14 @@
         </widget>
        </item>
        <item row="48" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample23">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="11" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -233,28 +259,28 @@
         </widget>
        </item>
        <item row="28" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample13">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="18" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample8">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="16" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample7">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="13" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -264,7 +290,7 @@
         </widget>
        </item>
        <item row="25" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -274,35 +300,35 @@
         </widget>
        </item>
        <item row="40" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample19">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="6" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample2">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="30" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample14">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="26" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample12">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="43" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -312,14 +338,14 @@
         </widget>
        </item>
        <item row="42" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample20">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="3" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -329,7 +355,7 @@
         </widget>
        </item>
        <item row="39" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -339,7 +365,7 @@
         </widget>
        </item>
        <item row="21" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -349,7 +375,7 @@
         </widget>
        </item>
        <item row="31" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -359,7 +385,7 @@
         </widget>
        </item>
        <item row="23" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -369,7 +395,7 @@
         </widget>
        </item>
        <item row="37" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -379,14 +405,14 @@
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample1">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="35" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -396,7 +422,7 @@
         </widget>
        </item>
        <item row="9" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -406,14 +432,14 @@
         </widget>
        </item>
        <item row="20" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample9">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="17" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -423,14 +449,14 @@
         </widget>
        </item>
        <item row="36" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample17">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="0" column="1" rowspan="49" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::VLine</enum>
          </property>
@@ -440,21 +466,21 @@
         </widget>
        </item>
        <item row="8" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample3">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample0">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="33" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -464,14 +490,14 @@
         </widget>
        </item>
        <item row="22" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample10">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -481,14 +507,14 @@
         </widget>
        </item>
        <item row="46" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample22">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="45" column="0" colspan="3">
-        <widget class="QFrame">
+        <widget class="QFrame" name="frame">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -498,14 +524,14 @@
         </widget>
        </item>
        <item row="24" column="0">
-        <widget class="QLabel">
+        <widget class="QLabel" name="labelSample11">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item row="0" column="2">
-        <widget class="QLabel">
+        <widget class="QLabel" name="label">
          <property name="text">
           <string>TextLabel</string>
          </property>
@@ -517,6 +543,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MidiButton</class>
+   <extends>QPushButton</extends>
+   <header>widgets/midibutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

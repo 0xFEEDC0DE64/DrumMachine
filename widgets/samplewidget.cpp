@@ -7,7 +7,6 @@
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
 #include <QMetaEnum>
-#include <QDebug>
 
 #include "audiodecoder.h"
 #include "drummachinesettings.h"
@@ -41,8 +40,8 @@ SampleWidget::~SampleWidget() = default;
 
 void SampleWidget::loadSettings(DrumMachineSettings &settings)
 {
-    m_ui->channelSpinBox->setValue(settings.padChannel(m_padNr));
-    m_ui->noteSpinBox->setValue(settings.padNote(m_padNr));
+    m_ui->channelSpinBox->setValue(settings.drumpadChannel(m_padNr));
+    m_ui->noteSpinBox->setValue(settings.drumpadNote(m_padNr));
 
     m_settings = &settings;
 }
@@ -90,7 +89,9 @@ void SampleWidget::setChannel(quint8 channel)
     m_ui->channelSpinBox->setValue(channel);
 
     if (m_settings)
-        m_settings->setPadChannel(m_padNr, channel);
+        m_settings->setDrumpadChannel(m_padNr, channel);
+    else
+        qWarning() << "no settings available";
 }
 
 quint8 SampleWidget::note() const
@@ -103,7 +104,9 @@ void SampleWidget::setNote(quint8 note)
     m_ui->noteSpinBox->setValue(note);
 
     if (m_settings)
-        m_settings->setPadNote(m_padNr, note);
+        m_settings->setDrumpadNote(m_padNr, note);
+    else
+        qWarning() << "no settings available";
 }
 
 int SampleWidget::speed() const
@@ -322,7 +325,6 @@ void SampleWidget::learnPressed()
     m_ui->toolButtonLearn->setPalette(palette);
 
     m_learning = !m_learning;
-    qDebug() << m_learning;
 }
 
 void SampleWidget::startRequest()

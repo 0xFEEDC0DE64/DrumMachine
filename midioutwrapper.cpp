@@ -2,6 +2,8 @@
 
 #include <QDebug>
 
+#include "midicontainers.h"
+
 MidiOutWrapper::MidiOutWrapper(RtMidi::Api api, const QString &clientName) :
     midiOut{api, clientName.toStdString()}
 {

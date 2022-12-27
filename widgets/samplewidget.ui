@@ -62,7 +62,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="MidiButton" name="pushButton">
        <property name="maximumSize">
         <size>
          <width>32</width>
@@ -151,6 +151,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MidiButton</class>
+   <extends>QPushButton</extends>
+   <header>widgets/midibutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

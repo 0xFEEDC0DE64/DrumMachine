@@ -9,11 +9,8 @@
 #include <QAudioDeviceInfo>
 #include <QDebug>
 
-#include "presets.h"
 #include "midiinwrapper.h"
 #include "midicontainers.h"
-#include "sampleswidget.h"
-#include "sequencerwidget.h"
 
 namespace {
 void DummyDeleter(PaStream *stream);
@@ -42,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_ui->drumPadWidget->injectNetworkAccessManager(m_networkAccessManager);
 
-    connect(&m_midiIn, &MidiInWrapper::messageReceived, this, &MainWindow::messageReceived);
+    connect(&m_midiIn, &MidiInWrapper::midiReceived, this, &MainWindow::midiReceived);
 
     {
         QEventLoop eventLoop;
@@ -223,18 +220,18 @@ void MainWindow::openMidiOutDevice()
     m_ui->pushButtonMidiOut->setText(m_midiOut.isPortOpen() ? tr("Close") : tr("Open"));
 }
 
-void MainWindow::messageReceived(const midi::MidiMessage &message)
+void MainWindow::midiReceived(const midi::MidiMessage &message)
 {
     m_ui->statusbar->showMessage(tr("Received midi message: flag: %0 cmd: %1 channel: %2 note: %3 velocity: %4")
                                  .arg(message.flag?"true":"false", QMetaEnum::fromType<midi::Command>().valueToKey(int(message.cmd)))
                                  .arg(message.channel).arg(message.note).arg(message.velocity), 1000);
 
     if (m_ui->tabWidget->currentIndex() == 0)
-        m_ui->drumPadWidget->messageReceived(message);
+        m_ui->drumPadWidget->midiReceived(message);
     else if (m_ui->tabWidget->currentIndex() == 1)
-        m_ui->djWidget->messageReceived(message);
+        m_ui->djWidget->midiReceived(message);
     else if (m_ui->tabWidget->currentIndex() == 2)
-        m_ui->synthisizerWidget->messageReceived(message);
+        m_ui->synthisizerWidget->midiReceived(message);
 }
 
 void MainWindow::sendMidi(const midi::MidiMessage &midiMsg)
@@ -316,7 +313,6 @@ void MainWindow::sendColors(int index)
     int k{0};
     for (int j = 0; j < 128; j+= 16)
     {
-        qDebug() << k;
         for (auto i = 0; i < 8; i++)
         {
             midi::MidiMessage midiMsg;
@@ -349,6 +345,7 @@ void PaStreamStopperAndCloser(PaStream *stream)
 
 void paStreamFinished(void* userData)
 {
+    Q_UNUSED(userData)
     printf("Stream Completed\n");
 }
 

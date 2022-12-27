@@ -94,6 +94,19 @@ const presets::Preset &PresetsModel::getPreset(int row) const
     return m_presets.at(row);
 }
 
+QModelIndex PresetsModel::findPresetById(const QString &id) const
+{
+    for (auto iter = std::cbegin(m_presets); iter != std::cend(m_presets); iter++)
+    {
+        if (iter->id != id)
+            continue;
+
+        return createIndex(std::distance(std::cbegin(m_presets), iter), 0);
+    }
+
+    return {};
+}
+
 int PresetsModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)

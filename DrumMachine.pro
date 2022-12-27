@@ -29,6 +29,7 @@ SOURCES += \
     widgets/djwidget.cpp \
     widgets/drumpadwidget.cpp \
     widgets/mainwindow.cpp \
+    widgets/midibutton.cpp \
     widgets/presetdetailwidget.cpp \
     widgets/previewwidget.cpp \
     widgets/sampleswidget.cpp \
@@ -56,6 +57,7 @@ HEADERS += \
     widgets/djwidget.h \
     widgets/drumpadwidget.h \
     widgets/mainwindow.h \
+    widgets/midibutton.h \
     widgets/presetdetailwidget.h \
     widgets/previewwidget.h \
     widgets/sampleswidget.h \

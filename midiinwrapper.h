@@ -5,7 +5,7 @@
 
 #include "rtmidi/RtMidi.h"
 
-#include "midicontainers.h"
+namespace midi { struct MidiMessage; }
 
 class MidiInWrapper : public QObject
 {
@@ -25,7 +25,7 @@ public:
     QStringList portNames();
 
 signals:
-    void messageReceived(const midi::MidiMessage &message);
+    void midiReceived(const midi::MidiMessage &message);
 
 private:
     static void mycallback(double deltatime, std::vector<unsigned char> *message, void *userData);

@@ -8,6 +8,7 @@
 
 namespace Ui { class SynthisizerWidget; }
 class DrumMachineSettings;
+namespace midi { struct MidiMessage; }
 
 class SynthisizerWidget : public QWidget
 {
@@ -26,7 +27,7 @@ signals:
     void sendMidi(const midi::MidiMessage &midiMsg);
 
 public slots:
-    void messageReceived(const midi::MidiMessage &message);
+    void midiReceived(const midi::MidiMessage &message);
 
 private:
     const std::unique_ptr<Ui::SynthisizerWidget> m_ui;

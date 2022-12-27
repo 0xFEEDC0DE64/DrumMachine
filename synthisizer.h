@@ -4,8 +4,6 @@
 
 #include "audioformat.h"
 
-namespace midi { class MidiMessage; }
-
 class DrumMachineSettings;
 
 class Synthisizer : public QObject
@@ -18,9 +16,6 @@ public:
     void setFrequency(int16_t frequency) { m_frequency = frequency; }
 
     void writeSamples(frame_t *begin, frame_t *end);
-
-signals:
-    void sendMidi(const midi::MidiMessage &midiMsg);
 
 private:
     float m_volume{1.f};

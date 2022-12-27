@@ -40,22 +40,152 @@ void DrumMachineSettings::setLastMidiOutDevice(const QString &lastMidiOutDevice)
     setValue("lastMidiOutDevice", lastMidiOutDevice);
 }
 
-quint8 DrumMachineSettings::padChannel(quint8 pad) const
+QString DrumMachineSettings::drumpadLastPresetId() const
 {
-    return value(QString{"pad%0/channel"}.arg(pad)).toUInt();
+    return value("drumpad/lastPresetId").toString();
 }
 
-void DrumMachineSettings::setPadChannel(quint8 pad, quint8 channel)
+void DrumMachineSettings::setDrumpadLastPresetId(const QString &lastPresetId)
 {
-    setValue(QString{"pad%0/channel"}.arg(pad), channel);
+    setValue("drumpad/lastPresetId", lastPresetId);
 }
 
-quint8 DrumMachineSettings::padNote(quint8 pad) const
+quint8 DrumMachineSettings::drumpadChannelPrevPreset() const
 {
-    return value(QString{"pad%0/note"}.arg(pad)).toUInt();
+    return value("drumpad/prevPreset_channel", 99).toUInt();
 }
 
-void DrumMachineSettings::setPadNote(quint8 pad, quint8 note)
+void DrumMachineSettings::setDrumpadChannelPrevPreset(quint8 channel)
 {
-    setValue(QString{"pad%0/note"}.arg(pad), note);
+    setValue("drumpad/prevPreset_channel", channel);
+}
+
+quint8 DrumMachineSettings::drumpadNotePrevPreset() const
+{
+    return value("drumpad/prevPreset_note", 99).toUInt();
+}
+
+void DrumMachineSettings::setDrumpadNotePrevPreset(quint8 note)
+{
+    setValue("drumpad/prevPreset_note", note);
+}
+
+quint8 DrumMachineSettings::drumpadChannelNextPreset() const
+{
+    return value("drumpad/nextPreset_channel", 99).toUInt();
+}
+
+void DrumMachineSettings::setDrumpadChannelNextPreset(quint8 channel)
+{
+    setValue("drumpad/nextPreset_channel", channel);
+}
+
+quint8 DrumMachineSettings::drumpadNoteNextPreset() const
+{
+    return value("drumpad/nextPreset_note", 99).toUInt();
+}
+
+void DrumMachineSettings::setDrumpadNoteNextPreset(quint8 note)
+{
+    setValue("drumpad/nextPreset_note", note);
+}
+
+quint8 DrumMachineSettings::drumpadChannelPrevSequence() const
+{
+    return value("drumpad/prevSequence_channel", 99).toUInt();
+}
+
+void DrumMachineSettings::setDrumpadChannelPrevSequence(quint8 channel)
+{
+    setValue("drumpad/prevSequence_channel", channel);
+}
+
+quint8 DrumMachineSettings::drumpadNotePrevSequence() const
+{
+    return value("drumpad/prevSequence_note", 99).toUInt();
+}
+
+void DrumMachineSettings::setDrumpadNotePrevSequence(quint8 note)
+{
+    setValue("drumpad/prevSequence_note", note);
+}
+
+quint8 DrumMachineSettings::drumpadChannelNextSequence() const
+{
+    return value("drumpad/nextSequence_channel", 99).toUInt();
+}
+
+void DrumMachineSettings::setDrumpadChannelNextSequence(quint8 channel)
+{
+    setValue("drumpad/nextSequence_channel", channel);
+}
+
+quint8 DrumMachineSettings::drumpadNoteNextSequence() const
+{
+    return value("drumpad/nextSequence_note", 99).toUInt();
+}
+
+void DrumMachineSettings::setDrumpadNoteNextSequence(quint8 note)
+{
+    setValue("drumpad/nextSequence_note", note);
+}
+
+quint8 DrumMachineSettings::drumpadChannelPlayPause() const
+{
+    return value("drumpad/playPause_channel", 99).toUInt();
+}
+
+void DrumMachineSettings::setDrumpadChannelPlayPause(quint8 channel)
+{
+    setValue("drumpad/playPause_channel", channel);
+}
+
+quint8 DrumMachineSettings::drumpadNotePlayPause() const
+{
+    return value("drumpad/playPause_note", 99).toUInt();
+}
+
+void DrumMachineSettings::setDrumpadNotePlayPause(quint8 note)
+{
+    setValue("drumpad/playPause_note", note);
+}
+
+quint8 DrumMachineSettings::drumpadChannelStop() const
+{
+    return value("drumpad/stop_channel", 99).toUInt();
+}
+
+void DrumMachineSettings::setDrumpadChannelStop(quint8 channel)
+{
+    setValue("drumpad/stop_channel", channel);
+}
+
+quint8 DrumMachineSettings::drumpadNoteStop() const
+{
+    return value("drumpad/stop_note", 99).toUInt();
+}
+
+void DrumMachineSettings::setDrumpadNoteStop(quint8 note)
+{
+    setValue("drumpad/stop_note", note);
+}
+
+quint8 DrumMachineSettings::drumpadChannel(quint8 pad) const
+{
+    return value(QString{"drumpad/pad%0_channel"}.arg(pad), 99).toUInt();
+}
+
+void DrumMachineSettings::setDrumpadChannel(quint8 pad, quint8 channel)
+{
+    setValue(QString{"drumpad/pad%0_channel"}.arg(pad), channel);
+}
+
+quint8 DrumMachineSettings::drumpadNote(quint8 pad) const
+{
+    return value(QString{"drumpad/pad%0_note"}.arg(pad), 99).toUInt();
+}
+
+void DrumMachineSettings::setDrumpadNote(quint8 pad, quint8 note)
+{
+    setValue(QString{"drumpad/pad%0_note"}.arg(pad), note);
 }

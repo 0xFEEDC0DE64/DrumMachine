@@ -7,7 +7,6 @@
 #include "audioformat.h"
 #include "presets.h"
 #include "audioplayer.h"
-#include "midicontainers.h"
 
 namespace Ui { class SampleWidget; }
 class QNetworkAccessManager;
@@ -15,6 +14,7 @@ class QNetworkReply;
 class QAudioBuffer;
 class AudioDecoder;
 class DrumMachineSettings;
+namespace midi { struct MidiMessage; }
 
 class SampleWidget : public QFrame
 {

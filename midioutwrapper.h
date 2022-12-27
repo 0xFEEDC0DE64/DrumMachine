@@ -1,8 +1,10 @@
 #pragma once
 
+#include <QString>
+
 #include "rtmidi/RtMidi.h"
 
-#include "midicontainers.h"
+namespace midi { struct MidiMessage; }
 
 class MidiOutWrapper
 {

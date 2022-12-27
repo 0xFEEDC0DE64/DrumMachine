@@ -31,7 +31,7 @@ signals:
     void sendMidi(const midi::MidiMessage &midiMsg);
 
 public slots:
-    void messageReceived(const midi::MidiMessage &message);
+    void midiReceived(const midi::MidiMessage &message);
 
 private slots:
     void directorySelected();

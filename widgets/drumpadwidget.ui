@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>DrumPadWidget</class>
- <widget class="QSplitter">
+ <widget class="QSplitter" name="DrumPadWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -15,6 +15,9 @@
   </property>
   <widget class="QWidget" name="layoutWidget">
    <layout class="QVBoxLayout">
+    <property name="topMargin">
+     <number>9</number>
+    </property>
     <item>
      <layout class="QVBoxLayout">
       <item>
@@ -23,6 +26,32 @@
          <widget class="QLineEdit" name="lineEdit">
           <property name="clearButtonEnabled">
            <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="MidiButton" name="pushButtonUp">
+          <property name="maximumSize">
+           <size>
+            <width>32</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>⬆</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="MidiButton" name="pushButtonDown">
+          <property name="maximumSize">
+           <size>
+            <width>32</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>⬇</string>
           </property>
          </widget>
         </item>
@@ -56,7 +85,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="PresetDetailWidget" name="presetDetailWidget">
        <attribute name="title">
@@ -75,12 +104,12 @@
     </item>
    </layout>
   </widget>
-  <widget class="QSplitter">
-  <property name="orientation">
-   <enum>Qt::Vertical</enum>
-  </property>
-   <widget class="SequencerWidget" name="sequencerWidget" />
-   <widget class="SamplesWidget" name="samplesWidget" />
+  <widget class="QSplitter" name="splitter">
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+   <widget class="SequencerWidget" name="sequencerWidget" native="true"/>
+   <widget class="SamplesWidget" name="samplesWidget" native="true"/>
   </widget>
  </widget>
  <customwidgets>
@@ -101,6 +130,11 @@
    <extends>QWidget</extends>
    <header>widgets/sequencerwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MidiButton</class>
+   <extends>QPushButton</extends>
+   <header>widgets/midibutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

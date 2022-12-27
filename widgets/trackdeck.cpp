@@ -10,7 +10,6 @@
 #include <QUrl>
 #include <QFileInfo>
 #include <QButtonGroup>
-#include <QDebug>
 
 #include "audiodecoder.h"
 

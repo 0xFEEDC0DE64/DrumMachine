@@ -10,7 +10,7 @@
 #include "presets.h"
 
 namespace Ui { class SamplesWidget; }
-namespace midi { class MidiMessage; }
+namespace midi { struct MidiMessage; }
 class QNetworkAccessManager;
 class SampleWidget;
 class DrumMachineSettings;
@@ -27,7 +27,7 @@ public:
 
     void setPreset(const presets::Preset &preset);
 
-    void messageReceived(const midi::MidiMessage &message);
+    void midiReceived(const midi::MidiMessage &message);
 
     void writeSamples(frame_t *begin, frame_t *end);
 
