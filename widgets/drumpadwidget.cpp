@@ -9,6 +9,7 @@
 #include "audioformat.h"
 #include "midicontainers.h"
 #include "jsonconverters.h"
+#include "drumpadjsonconverters.h"
 #include "drummachinesettings.h"
 
 DrumPadWidget::DrumPadWidget(QWidget *parent) :
@@ -19,6 +20,7 @@ DrumPadWidget::DrumPadWidget(QWidget *parent) :
 
     connect(m_ui->pushButtonUp, &QAbstractButton::pressed, this, &DrumPadWidget::selectPrevPreset);
     connect(m_ui->pushButtonDown, &QAbstractButton::pressed, this, &DrumPadWidget::selectNextPreset);
+    connect(m_ui->pushButtonRefresh, &QAbstractButton::pressed, this, &DrumPadWidget::loadPresets);
 
     connect(m_ui->sequencerWidget, &SequencerWidget::sendMidi, this, &DrumPadWidget::sendMidi);
     connect(m_ui->samplesWidget, &SamplesWidget::sendMidi, this, &DrumPadWidget::sendMidi);
@@ -37,8 +39,6 @@ DrumPadWidget::DrumPadWidget(QWidget *parent) :
     m_ui->filesView->setModel(&m_filesModel);
 
     connect(m_ui->presetsView->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &DrumPadWidget::currentRowChanged);
-
-    connect(m_ui->pushButtonRefresh, &QAbstractButton::pressed, this, &DrumPadWidget::loadPresets);
 }
 
 DrumPadWidget::~DrumPadWidget() = default;
@@ -182,7 +182,7 @@ void DrumPadWidget::requestFinished()
 
     try
     {
-        auto result = json_converters::parseDrumPadPresetsConfig(json_converters::loadJson(reply->readAll()));
+        auto result = json_converters::drumpad::parsePresetsConfig(json_converters::loadJson(reply->readAll()));
 
         if (!result.presets)
             throw std::runtime_error("presets missing in response");

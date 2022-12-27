@@ -8,8 +8,8 @@
 #include <QString>
 #include <QDateTime>
 
-namespace drumpad_presets
-{
+namespace drumpad_presets {
+
 struct Filter
 {
     std::optional<std::vector<QString>> tags;
@@ -84,4 +84,5 @@ struct PresetsConfig
     std::optional<std::vector<Category>> categories;
     std::optional<std::map<QString, Preset>> presets;
 };
-}
+
+} // namespace drumpad_presets

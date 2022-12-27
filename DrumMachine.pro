@@ -16,10 +16,13 @@ SOURCES += \
     audioplayer.cpp \
     drummachinesettings.cpp \
     drumpadfilesmodel.cpp \
+    drumpadjsonconverters.cpp \
     drumpadpresets.cpp \
     drumpadpresetsmodel.cpp \
     graphrenderer.cpp \
     jsonconverters.cpp \
+    loopstationjsonconverters.cpp \
+    loopstationpresets.cpp \
     main.cpp \
     midicontainers.cpp \
     midiinwrapper.cpp \
@@ -46,10 +49,13 @@ HEADERS += \
     audioplayer.h \
     drummachinesettings.h \
     drumpadfilesmodel.h \
+    drumpadjsonconverters.h \
     drumpadpresets.h \
     drumpadpresetsmodel.h \
     graphrenderer.h \
     jsonconverters.h \
+    loopstationjsonconverters.h \
+    loopstationpresets.h \
     midicontainers.h \
     midiinwrapper.h \
     midioutwrapper.h \

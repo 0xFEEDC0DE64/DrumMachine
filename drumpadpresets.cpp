@@ -1,7 +1,6 @@
 #include "drumpadpresets.h"
 
-namespace drumpad_presets
-{
+namespace drumpad_presets {
 
 bool File::operator==(const File &other) const
 {
@@ -12,4 +11,4 @@ bool File::operator==(const File &other) const
            choke == other.choke;
 }
 
-}
+} // namespace drumpad_presets

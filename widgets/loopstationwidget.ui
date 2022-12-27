@@ -1,29 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>LoopStationWidget</class>
- <widget class="QWidget" name="LoopStationWidget">
+ <widget class="QSplitter" name="LoopStationWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>1014</width>
+    <height>442</height>
    </rect>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>50</y>
-     <width>261</width>
-     <height>18</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Hier könnte ihre LoopStation stehen.</string>
-   </property>
+  <property name="orientation">
+   <enum>Qt::Horizontal</enum>
+  </property>
+  <widget class="QWidget" name="verticalLayoutWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0,0,0">
+      <item>
+       <widget class="QLineEdit" name="lineEdit">
+        <property name="clearButtonEnabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="MidiButton" name="pushButtonUp">
+        <property name="maximumSize">
+         <size>
+          <width>32</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>⬆</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="MidiButton" name="pushButtonDown">
+        <property name="maximumSize">
+         <size>
+          <width>32</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>⬇</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="MidiButton" name="pushButtonRefresh">
+        <property name="maximumSize">
+         <size>
+          <width>32</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>↻</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QTreeView" name="treeView"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="widget" native="true">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>261</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Hier könnte ihre LoopStation stehen.</string>
+    </property>
+   </widget>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MidiButton</class>
+   <extends>QPushButton</extends>
+   <header>widgets/midibutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

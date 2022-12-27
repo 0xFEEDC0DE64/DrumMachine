@@ -21,7 +21,7 @@
     <item>
      <layout class="QVBoxLayout">
       <item>
-       <layout class="QHBoxLayout">
+       <layout class="QHBoxLayout" stretch="1,0,0,0">
         <item>
          <widget class="QLineEdit" name="lineEdit">
           <property name="clearButtonEnabled">
