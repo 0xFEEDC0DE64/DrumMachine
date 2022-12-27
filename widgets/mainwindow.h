@@ -28,6 +28,7 @@ public:
     int writeSamples(frame_t *begin, frame_t *end);
 
 private slots:
+    void showSettings();
     void openAudioDevice();
     void openMidiInDevice();
     void openMidiOutDevice();

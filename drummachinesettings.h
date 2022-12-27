@@ -7,6 +7,14 @@ class DrumMachineSettings : public QSettings
 public:
     using QSettings::QSettings;
 
+    QString defaultCacheDir() const;
+    QString cacheDir() const;
+    void setCacheDir(const QString &cacheDir);
+
+    qint64 defaultMaximumCacheSize() const;
+    qint64 maximumCacheSize() const;
+    void setMaximumCacheSize(qint64 maximumCacheSize);
+
     QString lastAudioDevice() const;
     void setLastAudioDevice(const QString &lastAudioDevice);
 

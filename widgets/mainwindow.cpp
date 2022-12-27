@@ -11,6 +11,7 @@
 
 #include "audioformat.h"
 #include "midicontainers.h"
+#include "settingsdialog.h"
 
 namespace {
 void DummyDeleter(PaStream *stream);
@@ -33,8 +34,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
-    m_cache.setCacheDirectory("cache");
-    m_cache.setMaximumCacheSize(2ull * 1024 * 1024 * 1024);
+    m_cache.setCacheDirectory(m_settings.cacheDir());
+    m_cache.setMaximumCacheSize(m_settings.maximumCacheSize());
+
     m_networkAccessManager.setCache(&m_cache);
 
     m_ui->drumPadWidget->injectNetworkAccessManager(m_networkAccessManager);
@@ -52,6 +54,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->drumPadWidget->injectDecodingThread(m_decoderThread);
     m_ui->loopStationWidget->injectDecodingThread(m_decoderThread);
     m_ui->djWidget->injectDecodingThread(m_decoderThread);
+
+    connect(m_ui->pushButtonSettings, &QAbstractButton::pressed, this, &MainWindow::showSettings);
 
     updateAudioDevices();
     connect(m_ui->pushButtonRefreshAudioDevices, &QAbstractButton::pressed, this, &MainWindow::updateAudioDevices);
@@ -124,6 +128,16 @@ int MainWindow::writeSamples(frame_t *begin, frame_t *end)
     });
 
     return paContinue;
+}
+
+void MainWindow::showSettings()
+{
+    SettingsDialog dialog{m_settings, m_cache.cacheSize(), this};
+    if (dialog.exec() == QDialog::Accepted)
+    {
+        m_cache.setCacheDirectory(m_settings.cacheDir());
+        m_cache.setMaximumCacheSize(m_settings.maximumCacheSize());
+    }
 }
 
 void MainWindow::openAudioDevice()

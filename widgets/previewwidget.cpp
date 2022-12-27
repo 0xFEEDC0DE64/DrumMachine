@@ -82,6 +82,8 @@ void PreviewWidget::mouseMoveEvent(QMouseEvent *event)
 
 void PreviewWidget::clicked(int x, int y)
 {
+    Q_UNUSED(y)
+
     if (!m_buffer.isValid())
         return;
 

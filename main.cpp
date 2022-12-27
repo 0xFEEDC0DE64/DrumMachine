@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     QApplication app{argc, argv};
     QCoreApplication::setOrganizationDomain("brunner.ninja");
     QCoreApplication::setOrganizationName("brunner.ninja");
-    QCoreApplication::setApplicationName("miditest");
+    QCoreApplication::setApplicationName("DrumMachine");
     QCoreApplication::setApplicationVersion("1.0");
 
     qDebug() << "supportsSsl:" << QSslSocket::supportsSsl()

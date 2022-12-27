@@ -40,6 +40,7 @@ SOURCES += \
     widgets/samplewidget.cpp \
     widgets/scratchwidget.cpp \
     widgets/sequencerwidget.cpp \
+    widgets/settingsdialog.cpp \
     widgets/synthisizerwidget.cpp \
     widgets/trackdeck.cpp
 
@@ -72,6 +73,7 @@ HEADERS += \
     widgets/samplewidget.h \
     widgets/scratchwidget.h \
     widgets/sequencerwidget.h \
+    widgets/settingsdialog.h \
     widgets/synthisizerwidget.h \
     widgets/trackdeck.h
 
@@ -84,5 +86,6 @@ FORMS += \
     widgets/sampleswidget.ui \
     widgets/samplewidget.ui \
     widgets/sequencerwidget.ui \
+    widgets/settingsdialog.ui \
     widgets/synthisizerwidget.ui \
     widgets/trackdeck.ui

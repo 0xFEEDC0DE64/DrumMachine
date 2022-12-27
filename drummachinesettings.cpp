@@ -1,5 +1,38 @@
 #include "drummachinesettings.h"
 
+#include <QStandardPaths>
+#include <QDebug>
+
+QString DrumMachineSettings::defaultCacheDir() const
+{
+    return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+}
+
+QString DrumMachineSettings::cacheDir() const
+{
+    return value("cacheDir", defaultCacheDir()).toString();
+}
+
+void DrumMachineSettings::setCacheDir(const QString &cacheDir)
+{
+    setValue("cacheDir", cacheDir);
+}
+
+qint64 DrumMachineSettings::defaultMaximumCacheSize() const
+{
+    return 2ull * 1024 * 1024 * 1024;
+}
+
+qint64 DrumMachineSettings::maximumCacheSize() const
+{
+    return value("maximumCacheSize", defaultMaximumCacheSize()).value<qint64>();
+}
+
+void DrumMachineSettings::setMaximumCacheSize(qint64 maximumCacheSize)
+{
+    setValue("maximumCacheSize", maximumCacheSize);
+}
+
 QString DrumMachineSettings::lastAudioDevice() const
 {
     return value("lastAudioDevice").toString();

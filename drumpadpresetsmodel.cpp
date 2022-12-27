@@ -90,7 +90,7 @@ const drumpad_presets::Preset &DrumPadPresetsModel::getPreset(const QModelIndex 
 
 const drumpad_presets::Preset &DrumPadPresetsModel::getPreset(int row) const
 {
-    Q_ASSERT(row >= 0 && row < std::size(m_drumpad_presets));
+    Q_ASSERT(row >= 0 && row < int(std::size(m_drumpad_presets)));
     return m_drumpad_presets.at(row);
 }
 
@@ -132,7 +132,7 @@ QVariant DrumPadPresetsModel::data(const QModelIndex &index, int role) const
         return {};
     if (index.row() < 0)
         return {};
-    if (index.row() >= std::size(m_drumpad_presets))
+    if (index.row() >= int(std::size(m_drumpad_presets)))
         return {};
 
     const auto &preset = getPreset(index);

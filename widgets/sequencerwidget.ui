@@ -103,7 +103,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
+        <y>-272</y>
         <width>878</width>
         <height>828</height>
        </rect>
@@ -124,7 +124,7 @@
         </widget>
        </item>
        <item row="19" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal10">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -141,7 +141,7 @@
         </widget>
        </item>
        <item row="7" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal4">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -158,7 +158,7 @@
         </widget>
        </item>
        <item row="5" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal2">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -168,7 +168,7 @@
         </widget>
        </item>
        <item row="15" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal8">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -178,7 +178,7 @@
         </widget>
        </item>
        <item row="41" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal21">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -195,7 +195,7 @@
         </widget>
        </item>
        <item row="47" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal24">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -205,7 +205,7 @@
         </widget>
        </item>
        <item row="29" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal15">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -229,7 +229,7 @@
         </widget>
        </item>
        <item row="27" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal14">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -246,7 +246,7 @@
         </widget>
        </item>
        <item row="11" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal6">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -277,7 +277,7 @@
         </widget>
        </item>
        <item row="13" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal7">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -287,7 +287,7 @@
         </widget>
        </item>
        <item row="25" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal13">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -325,7 +325,7 @@
         </widget>
        </item>
        <item row="43" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal22">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -342,7 +342,7 @@
         </widget>
        </item>
        <item row="3" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal1">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -352,7 +352,7 @@
         </widget>
        </item>
        <item row="39" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal20">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -362,7 +362,7 @@
         </widget>
        </item>
        <item row="21" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal11">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -372,7 +372,7 @@
         </widget>
        </item>
        <item row="31" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal16">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -382,7 +382,7 @@
         </widget>
        </item>
        <item row="23" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal12">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -392,7 +392,7 @@
         </widget>
        </item>
        <item row="37" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal19">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -409,7 +409,7 @@
         </widget>
        </item>
        <item row="35" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal18">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -419,7 +419,7 @@
         </widget>
        </item>
        <item row="9" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal5">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -436,7 +436,7 @@
         </widget>
        </item>
        <item row="17" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal9">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -453,7 +453,7 @@
         </widget>
        </item>
        <item row="0" column="1" rowspan="49" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameVertical">
          <property name="frameShape">
           <enum>QFrame::VLine</enum>
          </property>
@@ -477,7 +477,7 @@
         </widget>
        </item>
        <item row="33" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal17">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -494,7 +494,7 @@
         </widget>
        </item>
        <item row="1" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal0">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>
@@ -511,7 +511,7 @@
         </widget>
        </item>
        <item row="45" column="0" colspan="3">
-        <widget class="QFrame" name="frame">
+        <widget class="QFrame" name="frameHorizontal23">
          <property name="frameShape">
           <enum>QFrame::HLine</enum>
          </property>

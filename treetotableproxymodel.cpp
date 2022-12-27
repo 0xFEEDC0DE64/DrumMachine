@@ -307,20 +307,36 @@ void TreeToTableProxyModel::sourceColumnsRemoved(const QModelIndex &parent, int 
 
 void TreeToTableProxyModel::sourceRowsAboutToBeMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationRow)
 {
-
+    Q_UNUSED(sourceParent)
+    Q_UNUSED(sourceStart)
+    Q_UNUSED(sourceEnd)
+    Q_UNUSED(destinationParent)
+    Q_UNUSED(destinationRow)
 }
 
 void TreeToTableProxyModel::sourceRowsMoved(const QModelIndex &parent, int start, int end, const QModelIndex &destination, int row)
 {
-
+    Q_UNUSED(parent)
+    Q_UNUSED(start)
+    Q_UNUSED(end)
+    Q_UNUSED(destination)
+    Q_UNUSED(row)
 }
 
 void TreeToTableProxyModel::sourceColumnsAboutToBeMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationColumn)
 {
-
+    Q_UNUSED(sourceParent)
+    Q_UNUSED(sourceStart)
+    Q_UNUSED(sourceEnd)
+    Q_UNUSED(destinationParent)
+    Q_UNUSED(destinationColumn)
 }
 
 void TreeToTableProxyModel::sourceColumnsMoved(const QModelIndex &parent, int start, int end, const QModelIndex &destination, int column)
 {
-
+    Q_UNUSED(parent)
+    Q_UNUSED(start)
+    Q_UNUSED(end)
+    Q_UNUSED(destination)
+    Q_UNUSED(column)
 }

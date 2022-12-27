@@ -19,6 +19,8 @@ ScratchWidget::ScratchWidget(QWidget *parent) :
 
 void ScratchWidget::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event)
+
     QPainter painter;
     painter.begin(this);
 

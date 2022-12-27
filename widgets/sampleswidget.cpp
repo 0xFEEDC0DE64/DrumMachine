@@ -102,7 +102,7 @@ void SamplesWidget::sendColors()
 void SamplesWidget::sequencerTriggerSample(int index)
 {
     const auto widgets = getWidgets();
-    if (index < 0 || index >= std::size(widgets))
+    if (index < 0 || index >= int(std::size(widgets)))
     {
         qDebug() << "index out of range" << index;
         return;

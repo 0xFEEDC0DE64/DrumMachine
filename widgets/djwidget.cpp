@@ -79,6 +79,7 @@ void DjWidget::writeSamples(frame_t *begin, frame_t *end)
 
 void DjWidget::loadSettings(DrumMachineSettings &settings)
 {
+    Q_UNUSED(settings)
 }
 
 void DjWidget::unsendColors()
@@ -91,6 +92,7 @@ void DjWidget::sendColors()
 
 void DjWidget::midiReceived(const midi::MidiMessage &message)
 {
+    Q_UNUSED(message)
 }
 
 void DjWidget::directorySelected()
