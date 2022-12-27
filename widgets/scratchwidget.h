@@ -6,8 +6,6 @@
 #include <QDateTime>
 #include <QTimer>
 
-#include "audioformat.h"
-
 class ScratchWidget : public QWidget
 {
     Q_OBJECT
@@ -49,7 +47,7 @@ private:
     QCache<int, QPixmap> m_graphCache;
 
     int m_beatWidth{100};
-    int m_framesPerBeat{frameRate/4};
+    int m_framesPerBeat;
 
     bool m_scratching{};
     bool m_dragging{};

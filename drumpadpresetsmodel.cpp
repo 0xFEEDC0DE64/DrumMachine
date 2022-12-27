@@ -1,11 +1,11 @@
-#include "presetsmodel.h"
+#include "drumpadpresetsmodel.h"
 
 #include <iterator>
 
 #include <QFont>
 #include <QColor>
 
-#include "presets.h"
+#include "drumpadpresets.h"
 
 enum {
     ColumnId,
@@ -32,96 +32,96 @@ enum {
     NumberOfColumns
 };
 
-PresetsModel::PresetsModel(QObject *parent) :
+DrumPadPresetsModel::DrumPadPresetsModel(QObject *parent) :
     QAbstractTableModel{parent}
 {
 }
 
-PresetsModel::PresetsModel(const std::map<QString, presets::Preset> &presets, QObject *parent) :
+DrumPadPresetsModel::DrumPadPresetsModel(const std::map<QString, drumpad_presets::Preset> &drumpad_presets, QObject *parent) :
     QAbstractTableModel{parent}
 {
-    m_presets.reserve(std::size(presets));
-    for (const auto &pair : presets)
-        m_presets.emplace_back(pair.second);
+    m_drumpad_presets.reserve(std::size(drumpad_presets));
+    for (const auto &pair : drumpad_presets)
+        m_drumpad_presets.emplace_back(pair.second);
 }
 
-PresetsModel::PresetsModel(std::vector<presets::Preset> &&presets, QObject *parent) :
+DrumPadPresetsModel::DrumPadPresetsModel(std::vector<drumpad_presets::Preset> &&drumpad_presets, QObject *parent) :
     QAbstractTableModel{parent}
 {
-    m_presets = std::move(presets);
+    m_drumpad_presets = std::move(drumpad_presets);
 }
 
-PresetsModel::PresetsModel(const std::vector<presets::Preset> &presets, QObject *parent) :
+DrumPadPresetsModel::DrumPadPresetsModel(const std::vector<drumpad_presets::Preset> &drumpad_presets, QObject *parent) :
     QAbstractTableModel{parent}
 {
-    m_presets = presets;
+    m_drumpad_presets = drumpad_presets;
 }
 
-PresetsModel::~PresetsModel() = default;
+DrumPadPresetsModel::~DrumPadPresetsModel() = default;
 
-void PresetsModel::setPresets(const std::map<QString, presets::Preset> &presets)
+void DrumPadPresetsModel::setPresets(const std::map<QString, drumpad_presets::Preset> &drumpad_presets)
 {
     beginResetModel();
-    m_presets.clear();
-    m_presets.reserve(std::size(presets));
-    for (const auto &pair : presets)
-        m_presets.emplace_back(pair.second);
+    m_drumpad_presets.clear();
+    m_drumpad_presets.reserve(std::size(drumpad_presets));
+    for (const auto &pair : drumpad_presets)
+        m_drumpad_presets.emplace_back(pair.second);
     endResetModel();
 }
 
-void PresetsModel::setPresets(std::vector<presets::Preset> &&presets)
+void DrumPadPresetsModel::setPresets(std::vector<drumpad_presets::Preset> &&drumpad_presets)
 {
     beginResetModel();
-    m_presets = std::move(presets);
+    m_drumpad_presets = std::move(drumpad_presets);
     endResetModel();
 }
 
-void PresetsModel::setPresets(const std::vector<presets::Preset> &presets)
+void DrumPadPresetsModel::setPresets(const std::vector<drumpad_presets::Preset> &drumpad_presets)
 {
     beginResetModel();
-    m_presets = presets;
+    m_drumpad_presets = drumpad_presets;
     endResetModel();
 }
 
-const presets::Preset &PresetsModel::getPreset(const QModelIndex &index) const
+const drumpad_presets::Preset &DrumPadPresetsModel::getPreset(const QModelIndex &index) const
 {
     return getPreset(index.row());
 }
 
-const presets::Preset &PresetsModel::getPreset(int row) const
+const drumpad_presets::Preset &DrumPadPresetsModel::getPreset(int row) const
 {
-    Q_ASSERT(row >= 0 && row < std::size(m_presets));
-    return m_presets.at(row);
+    Q_ASSERT(row >= 0 && row < std::size(m_drumpad_presets));
+    return m_drumpad_presets.at(row);
 }
 
-QModelIndex PresetsModel::findPresetById(const QString &id) const
+QModelIndex DrumPadPresetsModel::findPresetById(const QString &id) const
 {
-    for (auto iter = std::cbegin(m_presets); iter != std::cend(m_presets); iter++)
+    for (auto iter = std::cbegin(m_drumpad_presets); iter != std::cend(m_drumpad_presets); iter++)
     {
         if (iter->id != id)
             continue;
 
-        return createIndex(std::distance(std::cbegin(m_presets), iter), 0);
+        return createIndex(std::distance(std::cbegin(m_drumpad_presets), iter), 0);
     }
 
     return {};
 }
 
-int PresetsModel::rowCount(const QModelIndex &parent) const
+int DrumPadPresetsModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
 
-    return std::size(m_presets);
+    return std::size(m_drumpad_presets);
 }
 
-int PresetsModel::columnCount(const QModelIndex &parent) const
+int DrumPadPresetsModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
 
     return NumberOfColumns;
 }
 
-QVariant PresetsModel::data(const QModelIndex &index, int role) const
+QVariant DrumPadPresetsModel::data(const QModelIndex &index, int role) const
 {
     if (role != Qt::DisplayRole && role != Qt::EditRole && role != Qt::FontRole && role != Qt::ForegroundRole)
         return {};
@@ -132,7 +132,7 @@ QVariant PresetsModel::data(const QModelIndex &index, int role) const
         return {};
     if (index.row() < 0)
         return {};
-    if (index.row() >= std::size(m_presets))
+    if (index.row() >= std::size(m_drumpad_presets))
         return {};
 
     const auto &preset = getPreset(index);
@@ -230,7 +230,7 @@ QVariant PresetsModel::data(const QModelIndex &index, int role) const
     Q_UNREACHABLE();
 }
 
-QVariant PresetsModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant DrumPadPresetsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return {};

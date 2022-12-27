@@ -3,6 +3,9 @@
 
 #include <QStandardPaths>
 
+#include "audioformat.h"
+#include "midicontainers.h"
+
 DjWidget::DjWidget(QWidget *parent) :
     QWidget{parent},
     m_ui{std::make_unique<Ui::DjWidget>()}

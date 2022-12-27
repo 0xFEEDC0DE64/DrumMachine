@@ -8,12 +8,12 @@
 #include <QButtonGroup>
 #include <QTimer>
 
-#include "audioformat.h"
 #include "audioplayer.h"
 
 namespace Ui { class TrackDeck; }
 class AudioDecoder;
 class QAudioBuffer;
+struct frame_t;
 
 class TrackDeck : public QWidget
 {

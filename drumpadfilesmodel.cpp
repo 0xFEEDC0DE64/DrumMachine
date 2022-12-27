@@ -1,4 +1,4 @@
-#include "filesmodel.h"
+#include "drumpadfilesmodel.h"
 
 #include <iterator>
 
@@ -14,26 +14,26 @@ enum {
     NumberOfColumns
 };
 
-FilesModel::~FilesModel() = default;
+DrumPadFilesModel::~DrumPadFilesModel() = default;
 
-const presets::File &FilesModel::getFile(const QModelIndex &index) const
+const drumpad_presets::File &DrumPadFilesModel::getFile(const QModelIndex &index) const
 {
     return getFile(index.row());
 }
 
-const presets::File &FilesModel::getFile(int row) const
+const drumpad_presets::File &DrumPadFilesModel::getFile(int row) const
 {
     return m_files->at(row);
 }
 
-void FilesModel::setPreset(const presets::Preset &preset)
+void DrumPadFilesModel::setPreset(const drumpad_presets::Preset &preset)
 {
     beginResetModel();
     m_files = preset.files;
     endResetModel();
 }
 
-int FilesModel::rowCount(const QModelIndex &parent) const
+int DrumPadFilesModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
 
@@ -43,14 +43,14 @@ int FilesModel::rowCount(const QModelIndex &parent) const
     return std::size(*m_files);
 }
 
-int FilesModel::columnCount(const QModelIndex &parent) const
+int DrumPadFilesModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
 
     return NumberOfColumns;
 }
 
-QVariant FilesModel::data(const QModelIndex &index, int role) const
+QVariant DrumPadFilesModel::data(const QModelIndex &index, int role) const
 {
     if (role != Qt::DisplayRole && role != Qt::EditRole && role != Qt::FontRole && role != Qt::ForegroundRole)
         return {};
@@ -63,7 +63,7 @@ QVariant FilesModel::data(const QModelIndex &index, int role) const
         return {};
     if (index.row() < 0)
         return {};
-    if (index.row() >= std::size(*m_files))
+    if (index.row() >= int(std::size(*m_files)))
         return {};
 
     const auto &file = getFile(index);
@@ -103,7 +103,7 @@ QVariant FilesModel::data(const QModelIndex &index, int role) const
     Q_UNREACHABLE();
 }
 
-QVariant FilesModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant DrumPadFilesModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return {};

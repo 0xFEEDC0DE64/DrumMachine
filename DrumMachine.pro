@@ -15,19 +15,20 @@ SOURCES += \
     audioformat.cpp \
     audioplayer.cpp \
     drummachinesettings.cpp \
-    filesmodel.cpp \
+    drumpadfilesmodel.cpp \
+    drumpadpresets.cpp \
+    drumpadpresetsmodel.cpp \
     graphrenderer.cpp \
     jsonconverters.cpp \
     main.cpp \
     midicontainers.cpp \
     midiinwrapper.cpp \
     midioutwrapper.cpp \
-    presets.cpp \
-    presetsmodel.cpp \
     synthisizer.cpp \
     treetotableproxymodel.cpp \
     widgets/djwidget.cpp \
     widgets/drumpadwidget.cpp \
+    widgets/loopstationwidget.cpp \
     widgets/mainwindow.cpp \
     widgets/midibutton.cpp \
     widgets/presetdetailwidget.cpp \
@@ -44,18 +45,19 @@ HEADERS += \
     audioformat.h \
     audioplayer.h \
     drummachinesettings.h \
-    filesmodel.h \
+    drumpadfilesmodel.h \
+    drumpadpresets.h \
+    drumpadpresetsmodel.h \
     graphrenderer.h \
     jsonconverters.h \
     midicontainers.h \
     midiinwrapper.h \
     midioutwrapper.h \
-    presets.h \
-    presetsmodel.h \
     synthisizer.h \
     treetotableproxymodel.h \
     widgets/djwidget.h \
     widgets/drumpadwidget.h \
+    widgets/loopstationwidget.h \
     widgets/mainwindow.h \
     widgets/midibutton.h \
     widgets/presetdetailwidget.h \
@@ -70,6 +72,7 @@ HEADERS += \
 FORMS += \
     widgets/djwidget.ui \
     widgets/drumpadwidget.ui \
+    widgets/loopstationwidget.ui \
     widgets/mainwindow.ui \
     widgets/presetdetailwidget.ui \
     widgets/sampleswidget.ui \

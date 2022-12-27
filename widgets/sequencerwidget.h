@@ -9,7 +9,7 @@
 
 class QLabel;
 namespace Ui { class SequencerWidget; }
-namespace presets { class Preset; class Sequence; }
+namespace drumpad_presets { class Preset; class Sequence; }
 class DrumMachineSettings;
 namespace midi { struct MidiMessage; }
 
@@ -25,7 +25,7 @@ public:
     void unsendColors();
     void sendColors();
 
-    void setPreset(const presets::Preset &preset);
+    void setPreset(const drumpad_presets::Preset &preset);
 
 signals:
     void sendMidi(const midi::MidiMessage &midiMsg);
@@ -50,8 +50,8 @@ private slots:
 private:
     const std::unique_ptr<Ui::SequencerWidget> m_ui;
 
-    std::vector<presets::Sequence> m_sequences;
-    const presets::Sequence *m_selectedSequence{};
+    std::vector<drumpad_presets::Sequence> m_sequences;
+    const drumpad_presets::Sequence *m_selectedSequence{};
 
     QTimer m_timer;
 

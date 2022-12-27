@@ -5,6 +5,7 @@
 
 #include <QDebug>
 
+#include "audioformat.h"
 #include "midicontainers.h"
 
 SamplesWidget::SamplesWidget(QWidget *parent) :
@@ -34,7 +35,7 @@ void SamplesWidget::loadSettings(DrumMachineSettings &settings)
         widget.loadSettings(settings);
 }
 
-void SamplesWidget::setPreset(const presets::Preset &preset)
+void SamplesWidget::setPreset(const drumpad_presets::Preset &preset)
 {
     m_preset = preset;
 

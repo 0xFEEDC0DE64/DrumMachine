@@ -4,8 +4,7 @@
 
 #include <QFrame>
 
-#include "audioformat.h"
-#include "presets.h"
+#include "drumpadpresets.h"
 #include "audioplayer.h"
 
 namespace Ui { class SampleWidget; }
@@ -15,6 +14,7 @@ class QAudioBuffer;
 class AudioDecoder;
 class DrumMachineSettings;
 namespace midi { struct MidiMessage; }
+struct frame_t;
 
 class SampleWidget : public QFrame
 {
@@ -29,7 +29,7 @@ public:
 
     void loadSettings(DrumMachineSettings &settings);
 
-    void setFile(const QString &presetId, const presets::File &file);
+    void setFile(const QString &presetId, const drumpad_presets::File &file);
 
     quint8 channel() const;
     void setChannel(quint8 channel);
@@ -86,7 +86,7 @@ private:
     AudioPlayer m_player;
 
     QString m_presetId;
-    std::optional<presets::File> m_file;
+    std::optional<drumpad_presets::File> m_file;
 
     QNetworkAccessManager *m_networkAccessManager{};
 

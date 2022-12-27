@@ -5,6 +5,10 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QPalette>
+#include <QRect>
+#include <QPoint>
+
+#include "audioformat.h"
 
 QPixmap GraphRenderer::render(const QSize &size, const frame_t *begin, const frame_t *end, const QPalette &palette)
 {

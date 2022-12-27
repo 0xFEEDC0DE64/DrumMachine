@@ -5,10 +5,12 @@
 #include <QMouseEvent>
 #include <QDebug>
 
+#include "audioformat.h"
 #include "graphrenderer.h"
 
 ScratchWidget::ScratchWidget(QWidget *parent) :
-    QWidget{parent}
+    QWidget{parent},
+    m_framesPerBeat{frameRate/4}
 {
     connect(&m_timer, &QTimer::timeout, this, &ScratchWidget::timeout);
     m_timer.setSingleShot(true);

@@ -11,6 +11,7 @@
 #include <QFileInfo>
 #include <QButtonGroup>
 
+#include "audioformat.h"
 #include "audiodecoder.h"
 
 TrackDeck::TrackDeck(QWidget *parent) :

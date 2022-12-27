@@ -4,22 +4,22 @@
 
 #include <QAbstractTableModel>
 
-#include "presets.h"
+#include "drumpadpresets.h"
 
-namespace presets { class Preset; class File; }
+namespace drumpad_presets { class Preset; class File; }
 
-class FilesModel : public QAbstractTableModel
+class DrumPadFilesModel : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
     using QAbstractTableModel::QAbstractTableModel;
-    ~FilesModel() override;
+    ~DrumPadFilesModel() override;
 
-    const presets::File &getFile(const QModelIndex &index) const;
-    const presets::File &getFile(int row) const;
+    const drumpad_presets::File &getFile(const QModelIndex &index) const;
+    const drumpad_presets::File &getFile(int row) const;
 
-    void setPreset(const presets::Preset &preset);
+    void setPreset(const drumpad_presets::Preset &preset);
 
     int rowCount(const QModelIndex &parent) const override;
     int columnCount(const QModelIndex &parent) const override;
@@ -27,5 +27,5 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
 private:
-    std::optional<std::array<presets::File, 24>> m_files;
+    std::optional<std::array<drumpad_presets::File, 24>> m_files;
 };

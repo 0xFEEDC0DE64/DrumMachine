@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include "audioformat.h"
+
 constexpr double pi = std::acos(-1);
 
 void Synthisizer::writeSamples(frame_t *begin, frame_t *end)

@@ -8,6 +8,7 @@
 #include <QNetworkAccessManager>
 #include <QMetaEnum>
 
+#include "audioformat.h"
 #include "audiodecoder.h"
 #include "drummachinesettings.h"
 #include "midicontainers.h"
@@ -46,7 +47,7 @@ void SampleWidget::loadSettings(DrumMachineSettings &settings)
     m_settings = &settings;
 }
 
-void SampleWidget::setFile(const QString &presetId, const presets::File &file)
+void SampleWidget::setFile(const QString &presetId, const drumpad_presets::File &file)
 {
     m_presetId = presetId;
     m_file = file;

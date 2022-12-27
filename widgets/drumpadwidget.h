@@ -5,9 +5,8 @@
 
 #include <memory>
 
-#include "audioformat.h"
-#include "presetsmodel.h"
-#include "filesmodel.h"
+#include "drumpadpresetsmodel.h"
+#include "drumpadfilesmodel.h"
 
 namespace Ui { class DrumPadWidget; }
 class SamplesWidget;
@@ -18,6 +17,7 @@ class QThread;
 class DrumMachineSettings;
 class QNetworkReply;
 namespace midi { struct MidiMessage; }
+struct frame_t;
 
 class DrumPadWidget : public QSplitter
 {
@@ -55,10 +55,10 @@ private:
 
     DrumMachineSettings *m_settings{};
 
-    PresetsModel m_presetsModel;
+    DrumPadPresetsModel m_presetsModel;
     QSortFilterProxyModel m_presetsProxyModel;
 
-    FilesModel m_filesModel;
+    DrumPadFilesModel m_filesModel;
 
     QNetworkAccessManager *m_networkAccessManager{};
 

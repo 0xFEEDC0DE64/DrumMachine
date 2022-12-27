@@ -8,7 +8,7 @@
 #include <QtGlobal>
 #include <QDateTime>
 
-#include "audioformat.h"
+struct frame_t;
 
 class AudioPlayer : public QObject
 {

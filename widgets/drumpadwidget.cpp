@@ -6,6 +6,7 @@
 #include <QNetworkAccessManager>
 #include <QMessageBox>
 
+#include "audioformat.h"
 #include "midicontainers.h"
 #include "jsonconverters.h"
 #include "drummachinesettings.h"
@@ -181,7 +182,7 @@ void DrumPadWidget::requestFinished()
 
     try
     {
-        auto result = json_converters::parsePresetsConfig(json_converters::loadJson(reply->readAll()));
+        auto result = json_converters::parseDrumPadPresetsConfig(json_converters::loadJson(reply->readAll()));
 
         if (!result.presets)
             throw std::runtime_error("presets missing in response");

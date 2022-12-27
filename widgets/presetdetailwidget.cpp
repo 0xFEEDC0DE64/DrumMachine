@@ -10,7 +10,7 @@ PresetDetailWidget::PresetDetailWidget(QWidget *parent) :
 
 PresetDetailWidget::~PresetDetailWidget() = default;
 
-void PresetDetailWidget::setPreset(const presets::Preset &preset)
+void PresetDetailWidget::setPreset(const drumpad_presets::Preset &preset)
 {
     // TODO
 }

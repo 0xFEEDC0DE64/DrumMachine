@@ -6,12 +6,12 @@
 
 #include <memory>
 
-#include "audioformat.h"
-#include "midicontainers.h"
 #include "treetotableproxymodel.h"
 
 namespace Ui { class DjWidget; }
 class DrumMachineSettings;
+struct frame_t;
+namespace midi { struct MidiMessage; }
 
 class DjWidget : public QWidget
 {

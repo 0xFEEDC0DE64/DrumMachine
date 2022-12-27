@@ -6,14 +6,14 @@
 
 #include <QWidget>
 
-#include "audioformat.h"
-#include "presets.h"
+#include "drumpadpresets.h"
 
 namespace Ui { class SamplesWidget; }
 namespace midi { struct MidiMessage; }
 class QNetworkAccessManager;
 class SampleWidget;
 class DrumMachineSettings;
+struct frame_t;
 
 class SamplesWidget : public QWidget
 {
@@ -25,7 +25,7 @@ public:
 
     void loadSettings(DrumMachineSettings &settings);
 
-    void setPreset(const presets::Preset &preset);
+    void setPreset(const drumpad_presets::Preset &preset);
 
     void midiReceived(const midi::MidiMessage &message);
 
@@ -53,5 +53,5 @@ private:
 
     const std::unique_ptr<Ui::SamplesWidget> m_ui;
 
-    presets::Preset m_preset;
+    drumpad_presets::Preset m_preset;
 };

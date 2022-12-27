@@ -10,9 +10,6 @@
     <height>421</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0" columnstretch="0,0,0,0,0,0,0,0,0">
    <item row="3" column="3">
     <widget class="SampleWidget" name="sampleWidget_9" native="true"/>

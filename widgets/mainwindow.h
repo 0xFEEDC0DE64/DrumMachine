@@ -9,14 +9,13 @@
 
 #include "portaudio.h"
 
-#include "audioformat.h"
 #include "midiinwrapper.h"
 #include "midioutwrapper.h"
 #include "drummachinesettings.h"
 
 namespace Ui { class MainWindow; }
-namespace presets { struct PresetsConfig; }
 namespace midi { struct MidiMessage; }
+struct frame_t;
 
 class MainWindow : public QMainWindow
 {

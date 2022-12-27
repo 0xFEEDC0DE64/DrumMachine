@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cmath>
 
+#include "audioformat.h"
+
 AudioPlayer::AudioPlayer(QObject *parent) :
     QObject{parent}
 {

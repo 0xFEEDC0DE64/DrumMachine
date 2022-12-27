@@ -1,6 +1,6 @@
-#include "presets.h"
+#include "drumpadpresets.h"
 
-namespace presets
+namespace drumpad_presets
 {
 
 bool File::operator==(const File &other) const

@@ -5,6 +5,7 @@
 #include <QMouseEvent>
 
 #include "graphrenderer.h"
+#include "audioformat.h"
 
 PreviewWidget::PreviewWidget(QWidget *parent) :
     QWidget(parent)

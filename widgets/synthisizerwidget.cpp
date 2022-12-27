@@ -3,6 +3,7 @@
 
 #include <cmath>
 
+#include "audioformat.h"
 #include "midicontainers.h"
 
 SynthisizerWidget::SynthisizerWidget(QWidget *parent) :

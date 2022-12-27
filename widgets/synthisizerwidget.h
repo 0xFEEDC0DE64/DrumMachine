@@ -4,11 +4,11 @@
 #include <memory>
 
 #include "synthisizer.h"
-#include "audioformat.h"
 
 namespace Ui { class SynthisizerWidget; }
 class DrumMachineSettings;
 namespace midi { struct MidiMessage; }
+struct frame_t;
 
 class SynthisizerWidget : public QWidget
 {

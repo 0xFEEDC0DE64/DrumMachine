@@ -5,7 +5,7 @@
 
 #include <QDebug>
 
-#include "presets.h"
+#include "drumpadpresets.h"
 #include "drummachinesettings.h"
 #include "midicontainers.h"
 
@@ -123,7 +123,7 @@ void SequencerWidget::sendColors()
     });
 }
 
-void SequencerWidget::setPreset(const presets::Preset &preset)
+void SequencerWidget::setPreset(const drumpad_presets::Preset &preset)
 {
     if (preset.tempo)
         m_ui->spinBoxTempo->setValue(*preset.tempo);
@@ -138,7 +138,7 @@ void SequencerWidget::setPreset(const presets::Preset &preset)
     m_sequences.clear();
     m_selectedSequence = nullptr;
 
-    const auto doit = [&](const QString &prefix, const std::optional<std::map<QString, std::vector<presets::Sequence>>> &value)
+    const auto doit = [&](const QString &prefix, const std::optional<std::map<QString, std::vector<drumpad_presets::Sequence>>> &value)
     {
         if (!value)
             return;
@@ -223,7 +223,7 @@ void SequencerWidget::timeout()
     {
         for (const auto &pair : *m_selectedSequence->pads)
         {
-            const auto iter = std::find_if(std::cbegin(pair.second), std::cend(pair.second), [&](const presets::SequencePad &sequencePad){
+            const auto iter = std::find_if(std::cbegin(pair.second), std::cend(pair.second), [&](const drumpad_presets::SequencePad &sequencePad){
                 return sequencePad.start && *sequencePad.start == m_pos;
             });
 

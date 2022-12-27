@@ -210,6 +210,11 @@
         <string>DrumPad</string>
        </attribute>
       </widget>
+      <widget class="LoopStationWidget" name="loopStationWidget">
+       <attribute name="title">
+        <string>LoopStation</string>
+       </attribute>
+      </widget>
       <widget class="DjWidget" name="djWidget">
        <attribute name="title">
         <string>DJ</string>
@@ -253,6 +258,12 @@
    <class>SynthisizerWidget</class>
    <extends>QWidget</extends>
    <header>widgets/synthisizerwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LoopStationWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/loopstationwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

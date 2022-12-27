@@ -83,9 +83,9 @@ std::vector<int> parseIntVectorIgnoreNulls(const QJsonValue &jsonValue)
     return vector;
 }
 
-presets::PresetsConfig parsePresetsConfig(const QJsonObject &jsonObj)
+drumpad_presets::PresetsConfig parseDrumPadPresetsConfig(const QJsonObject &jsonObj)
 {
-    presets::PresetsConfig presetConfig;
+    drumpad_presets::PresetsConfig presetConfig;
 
     for (auto iter = std::cbegin(jsonObj); iter != std::cend(jsonObj); iter++)
     {
@@ -100,12 +100,12 @@ presets::PresetsConfig parsePresetsConfig(const QJsonObject &jsonObj)
     return presetConfig;
 }
 
-std::vector<presets::Category> parseCategoryVector(const QJsonValue &jsonValue)
+std::vector<drumpad_presets::Category> parseCategoryVector(const QJsonValue &jsonValue)
 {
     if (!jsonValue.isArray())
         throw std::runtime_error{"json value for vector of Category is not an array"};
 
-    std::vector<presets::Category> vector;
+    std::vector<drumpad_presets::Category> vector;
 
     for (const auto &jsonValue : jsonValue.toArray())
         vector.emplace_back(parseCategory(jsonValue));
@@ -113,14 +113,14 @@ std::vector<presets::Category> parseCategoryVector(const QJsonValue &jsonValue)
     return vector;
 }
 
-std::map<QString, presets::Preset> parsePresetMap(const QJsonValue &jsonValue)
+std::map<QString, drumpad_presets::Preset> parsePresetMap(const QJsonValue &jsonValue)
 {
     if (!jsonValue.isObject())
         throw std::runtime_error{"json value for Preset map is not an object"};
 
     const auto jsonObj = jsonValue.toObject();
 
-    std::map<QString, presets::Preset> map;
+    std::map<QString, drumpad_presets::Preset> map;
 
     for (auto iter = std::cbegin(jsonObj); iter != std::cend(jsonObj); iter++)
         map[iter.key()] = parsePreset(iter.value());
@@ -128,14 +128,14 @@ std::map<QString, presets::Preset> parsePresetMap(const QJsonValue &jsonValue)
     return map;
 }
 
-presets::Category parseCategory(const QJsonValue &jsonValue)
+drumpad_presets::Category parseCategory(const QJsonValue &jsonValue)
 {
     if (!jsonValue.isObject())
         throw std::runtime_error{"json value for Category is not an object"};
 
     const auto jsonObj = jsonValue.toObject();
 
-    presets::Category category;
+    drumpad_presets::Category category;
 
     for (auto iter = std::cbegin(jsonObj); iter != std::cend(jsonObj); iter++)
     {
@@ -150,14 +150,14 @@ presets::Category parseCategory(const QJsonValue &jsonValue)
     return category;
 }
 
-presets::Filter parseFilter(const QJsonValue &jsonValue)
+drumpad_presets::Filter parseFilter(const QJsonValue &jsonValue)
 {
     if (!jsonValue.isObject())
         throw std::runtime_error{"json value for Filters is not an object"};
 
     const auto jsonObj = jsonValue.toObject();
 
-    presets::Filter filters;
+    drumpad_presets::Filter filters;
 
     for (auto iter = std::cbegin(jsonObj); iter != std::cend(jsonObj); iter++)
     {
@@ -170,14 +170,14 @@ presets::Filter parseFilter(const QJsonValue &jsonValue)
     return filters;
 }
 
-presets::Preset parsePreset(const QJsonValue &jsonValue)
+drumpad_presets::Preset parsePreset(const QJsonValue &jsonValue)
 {
     if (!jsonValue.isObject())
         throw std::runtime_error{"json value for Preset is not an object"};
 
     const auto jsonObj = jsonValue.toObject();
 
-    presets::Preset preset;
+    drumpad_presets::Preset preset;
 
     for (auto iter = std::cbegin(jsonObj); iter != std::cend(jsonObj); iter++)
     {
@@ -241,7 +241,7 @@ presets::Preset parsePreset(const QJsonValue &jsonValue)
     return preset;
 }
 
-std::array<presets::File, 24> parseFileArray(const QJsonValue &jsonValue)
+std::array<drumpad_presets::File, 24> parseFileArray(const QJsonValue &jsonValue)
 {
     if (!jsonValue.isObject())
         throw std::runtime_error{"json value for File array is not an object"};
@@ -251,7 +251,7 @@ std::array<presets::File, 24> parseFileArray(const QJsonValue &jsonValue)
     if (jsonObj.size() != 24)
         throw std::runtime_error{"json value for File array doesn't have exactly 24 entries"};
 
-    std::array<presets::File, 24> array;
+    std::array<drumpad_presets::File, 24> array;
 
     for (auto iter = std::cbegin(jsonObj); iter != std::cend(jsonObj); iter++)
     {
@@ -267,14 +267,14 @@ std::array<presets::File, 24> parseFileArray(const QJsonValue &jsonValue)
     return array;
 }
 
-presets::File parseFile(const QJsonValue &jsonValue)
+drumpad_presets::File parseFile(const QJsonValue &jsonValue)
 {
     if (!jsonValue.isObject())
         throw std::runtime_error{"json value for File is not an object"};
 
     const auto jsonObj = jsonValue.toObject();
 
-    presets::File file;
+    drumpad_presets::File file;
 
     for (auto iter = std::cbegin(jsonObj); iter != std::cend(jsonObj); iter++)
     {
@@ -296,12 +296,12 @@ presets::File parseFile(const QJsonValue &jsonValue)
     return file;
 }
 
-std::vector<presets::Sequence> parseSequenceVector(const QJsonValue &jsonValue)
+std::vector<drumpad_presets::Sequence> parseSequenceVector(const QJsonValue &jsonValue)
 {
     if (!jsonValue.isArray())
         throw std::runtime_error{"json value for vector of Sequence is not an array"};
 
-    std::vector<presets::Sequence> vector;
+    std::vector<drumpad_presets::Sequence> vector;
 
     for (const auto &jsonValue : jsonValue.toArray())
         vector.emplace_back(parseSequence(jsonValue));
@@ -309,14 +309,14 @@ std::vector<presets::Sequence> parseSequenceVector(const QJsonValue &jsonValue)
     return vector;
 }
 
-presets::Sequence parseSequence(const QJsonValue &jsonValue)
+drumpad_presets::Sequence parseSequence(const QJsonValue &jsonValue)
 {
     if (!jsonValue.isObject())
         throw std::runtime_error{"json value for File is not an object"};
 
     const auto jsonObj = jsonValue.toObject();
 
-    presets::Sequence sequence;
+    drumpad_presets::Sequence sequence;
 
     for (auto iter = std::cbegin(jsonObj); iter != std::cend(jsonObj); iter++)
     {
@@ -342,14 +342,14 @@ presets::Sequence parseSequence(const QJsonValue &jsonValue)
     return sequence;
 }
 
-std::map<QString, std::vector<presets::Sequence>> parseSequenceVectorMap(const QJsonValue &jsonValue)
+std::map<QString, std::vector<drumpad_presets::Sequence>> parseSequenceVectorMap(const QJsonValue &jsonValue)
 {
     if (!jsonValue.isObject())
         throw std::runtime_error{"json value for Sequence vector map is not an object"};
 
     const auto jsonObj = jsonValue.toObject();
 
-    std::map<QString, std::vector<presets::Sequence>> map;
+    std::map<QString, std::vector<drumpad_presets::Sequence>> map;
 
     for (auto iter = std::cbegin(jsonObj); iter != std::cend(jsonObj); iter++)
         map[iter.key()] = parseSequenceVector(iter.value());
@@ -357,14 +357,14 @@ std::map<QString, std::vector<presets::Sequence>> parseSequenceVectorMap(const Q
     return map;
 }
 
-presets::SequencePad parseSequencePad(const QJsonValue &jsonValue)
+drumpad_presets::SequencePad parseSequencePad(const QJsonValue &jsonValue)
 {
     if (!jsonValue.isObject())
         throw std::runtime_error{"json value for File is not an object"};
 
     const auto jsonObj = jsonValue.toObject();
 
-    presets::SequencePad sequencePad;
+    drumpad_presets::SequencePad sequencePad;
 
     for (auto iter = std::cbegin(jsonObj); iter != std::cend(jsonObj); iter++)
     {
@@ -381,12 +381,12 @@ presets::SequencePad parseSequencePad(const QJsonValue &jsonValue)
     return sequencePad;
 }
 
-std::vector<presets::SequencePad> parseSequencePadVector(const QJsonValue &jsonValue)
+std::vector<drumpad_presets::SequencePad> parseSequencePadVector(const QJsonValue &jsonValue)
 {
     if (!jsonValue.isArray())
         throw std::runtime_error{"json value for vector of SequencePad is not an array"};
 
-    std::vector<presets::SequencePad> vector;
+    std::vector<drumpad_presets::SequencePad> vector;
 
     for (const auto &jsonValue : jsonValue.toArray())
         vector.emplace_back(parseSequencePad(jsonValue));
@@ -394,14 +394,14 @@ std::vector<presets::SequencePad> parseSequencePadVector(const QJsonValue &jsonV
     return vector;
 }
 
-std::map<QString, std::vector<presets::SequencePad>> parseSequencePadVectorMap(const QJsonValue &jsonValue)
+std::map<QString, std::vector<drumpad_presets::SequencePad>> parseSequencePadVectorMap(const QJsonValue &jsonValue)
 {
     if (!jsonValue.isObject())
         throw std::runtime_error{"json value for SequencePad vector map is not an object"};
 
     const auto jsonObj = jsonValue.toObject();
 
-    std::map<QString, std::vector<presets::SequencePad>> map;
+    std::map<QString, std::vector<drumpad_presets::SequencePad>> map;
 
     for (auto iter = std::cbegin(jsonObj); iter != std::cend(jsonObj); iter++)
         map[iter.key()] = parseSequencePadVector(iter.value());

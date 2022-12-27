@@ -1,11 +1,15 @@
 #pragma once
 
+#include <utility>
+
 class QPixmap;
 class QSize;
 class QPainter;
 class QPalette;
+class QRect;
+class QPoint;
 
-#include "audioformat.h"
+struct frame_t;
 
 namespace GraphRenderer
 {

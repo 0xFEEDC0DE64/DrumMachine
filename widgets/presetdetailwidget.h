@@ -5,7 +5,7 @@
 #include <QScrollArea>
 
 namespace Ui { class PresetDetailWidget; }
-namespace presets { class Preset; }
+namespace drumpad_presets { class Preset; }
 
 class PresetDetailWidget : public QScrollArea
 {
@@ -15,7 +15,7 @@ public:
     explicit PresetDetailWidget(QWidget *parent = nullptr);
     ~PresetDetailWidget() override;
 
-    void setPreset(const presets::Preset &preset);
+    void setPreset(const drumpad_presets::Preset &preset);
 
 private:
     const std::unique_ptr<Ui::PresetDetailWidget> m_ui;

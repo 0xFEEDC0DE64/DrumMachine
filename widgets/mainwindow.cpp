@@ -9,7 +9,7 @@
 #include <QAudioDeviceInfo>
 #include <QDebug>
 
-#include "midiinwrapper.h"
+#include "audioformat.h"
 #include "midicontainers.h"
 
 namespace {
@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_networkAccessManager.setCache(&m_cache);
 
     m_ui->drumPadWidget->injectNetworkAccessManager(m_networkAccessManager);
+    m_ui->loopStationWidget->injectNetworkAccessManager(m_networkAccessManager);
 
     connect(&m_midiIn, &MidiInWrapper::midiReceived, this, &MainWindow::midiReceived);
 
@@ -49,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     m_ui->drumPadWidget->injectDecodingThread(m_decoderThread);
+    m_ui->loopStationWidget->injectDecodingThread(m_decoderThread);
     m_ui->djWidget->injectDecodingThread(m_decoderThread);
 
     updateAudioDevices();
@@ -89,6 +91,7 @@ paDefault:
     loadSettings();
 
     connect(m_ui->drumPadWidget, &DrumPadWidget::sendMidi, this, &MainWindow::sendMidi);
+    connect(m_ui->loopStationWidget, &LoopStationWidget::sendMidi, this, &MainWindow::sendMidi);
     connect(m_ui->djWidget, &DjWidget::sendMidi, this, &MainWindow::sendMidi);
     connect(m_ui->synthisizerWidget, &SynthisizerWidget::sendMidi, this, &MainWindow::sendMidi);
 
@@ -109,6 +112,7 @@ int MainWindow::writeSamples(frame_t *begin, frame_t *end)
     std::fill(begin, end, frame_t{0.,0.});
 
     m_ui->drumPadWidget->writeSamples(begin, end);
+    m_ui->loopStationWidget->writeSamples(begin, end);
     m_ui->djWidget->writeSamples(begin, end);
     m_ui->synthisizerWidget->writeSamples(begin, end);
 
@@ -229,8 +233,10 @@ void MainWindow::midiReceived(const midi::MidiMessage &message)
     if (m_ui->tabWidget->currentIndex() == 0)
         m_ui->drumPadWidget->midiReceived(message);
     else if (m_ui->tabWidget->currentIndex() == 1)
-        m_ui->djWidget->midiReceived(message);
+        m_ui->loopStationWidget->midiReceived(message);
     else if (m_ui->tabWidget->currentIndex() == 2)
+        m_ui->djWidget->midiReceived(message);
+    else if (m_ui->tabWidget->currentIndex() == 3)
         m_ui->synthisizerWidget->midiReceived(message);
 }
 
@@ -283,6 +289,7 @@ void MainWindow::updateMidiOutDevices()
 void MainWindow::loadSettings()
 {
     m_ui->drumPadWidget->loadSettings(m_settings);
+    m_ui->loopStationWidget->loadSettings(m_settings);
     m_ui->djWidget->loadSettings(m_settings);
     m_ui->synthisizerWidget->loadSettings(m_settings);
 }
@@ -292,8 +299,10 @@ void MainWindow::unsendColors(int index)
     if (index == 0)
         m_ui->drumPadWidget->unsendColors();
     else if (index == 1)
-        m_ui->djWidget->unsendColors();
+        m_ui->loopStationWidget->unsendColors();
     else if (index == 2)
+        m_ui->djWidget->unsendColors();
+    else if (index == 3)
         m_ui->synthisizerWidget->unsendColors();
 }
 
@@ -302,8 +311,10 @@ void MainWindow::sendColors(int index)
     if (index == 0)
         m_ui->drumPadWidget->sendColors();
     else if (index == 1)
-        m_ui->djWidget->sendColors();
+        m_ui->loopStationWidget->sendColors();
     else if (index == 2)
+        m_ui->djWidget->sendColors();
+    else if (index == 3)
         m_ui->synthisizerWidget->sendColors();
 
     return;

@@ -8,7 +8,7 @@
 #include <QString>
 #include <QDateTime>
 
-namespace presets
+namespace drumpad_presets
 {
 struct Filter
 {
@@ -73,7 +73,7 @@ struct Preset
     std::optional<QString> imagePreview1;
     std::optional<QString> videoPreview;
     std::optional<QString> videoTutorial;
-    std::optional<std::array<presets::File, 24>> files;
+    std::optional<std::array<drumpad_presets::File, 24>> files;
     std::optional<std::map<QString, std::vector<Sequence>>> beatSchool;
     std::optional<std::map<QString, std::vector<Sequence>>> easyPlay;
     std::optional<QDateTime> timestamp;

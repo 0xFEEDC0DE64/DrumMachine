@@ -2,7 +2,7 @@
 
 #include <QObject>
 
-#include "audioformat.h"
+struct frame_t;
 
 class DrumMachineSettings;
 
