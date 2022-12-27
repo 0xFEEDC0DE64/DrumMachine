@@ -119,8 +119,6 @@ void DrumPadWidget::loadPresets()
 
 void DrumPadWidget::requestFinished()
 {
-    qDebug() << "called";
-
     if (!m_reply)
     {
         qWarning() << "no valid reply";

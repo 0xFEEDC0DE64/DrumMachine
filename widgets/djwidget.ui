@@ -140,7 +140,7 @@
   <customwidget>
    <class>TrackDeck</class>
    <extends>QWidget</extends>
-   <header>trackdeck.h</header>
+   <header>widgets/trackdeck.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

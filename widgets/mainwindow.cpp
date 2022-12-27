@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->setupUi(this);
 
     m_cache.setCacheDirectory("cache");
+    m_cache.setMaximumCacheSize(2ull * 1024 * 1024 * 1024);
     m_networkAccessManager.setCache(&m_cache);
 
     m_ui->drumPadWidget->injectNetworkAccessManager(m_networkAccessManager);
@@ -100,6 +101,8 @@ paDefault:
 
 MainWindow::~MainWindow()
 {
+    m_paStream = nullptr;
+
     m_decoderThread.exit();
     m_decoderThread.wait();
 }

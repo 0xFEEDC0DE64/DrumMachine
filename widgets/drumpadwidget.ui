@@ -87,19 +87,19 @@
   <customwidget>
    <class>SamplesWidget</class>
    <extends>QWidget</extends>
-   <header>sampleswidget.h</header>
+   <header>widgets/sampleswidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>PresetDetailWidget</class>
    <extends>QScrollArea</extends>
-   <header>presetdetailwidget.h</header>
+   <header>widgets/presetdetailwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>SequencerWidget</class>
    <extends>QWidget</extends>
-   <header>sequencerwidget.h</header>
+   <header>widgets/sequencerwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

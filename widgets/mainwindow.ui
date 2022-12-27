@@ -240,19 +240,19 @@
   <customwidget>
    <class>DjWidget</class>
    <extends>QWidget</extends>
-   <header>djwidget.h</header>
+   <header>widgets/djwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>DrumPadWidget</class>
    <extends>QWidget</extends>
-   <header>drumpadwidget.h</header>
+   <header>widgets/drumpadwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>SynthisizerWidget</class>
    <extends>QWidget</extends>
-   <header>synthisizerwidget.h</header>
+   <header>widgets/synthisizerwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

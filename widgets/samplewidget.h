@@ -63,7 +63,7 @@ public:
 
 signals:
     void chokeTriggered(int choke);
-    void startDecoding(const std::shared_ptr<QIODevice> &device);
+    void startDecoding(std::shared_ptr<QIODevice> device);
     void sendMidi(const midi::MidiMessage &midiMsg);
 
 private slots:

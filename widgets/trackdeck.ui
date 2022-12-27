@@ -399,13 +399,13 @@
   <customwidget>
    <class>PreviewWidget</class>
    <extends>QWidget</extends>
-   <header>previewwidget.h</header>
+   <header>widgets/previewwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>ScratchWidget</class>
    <extends>QWidget</extends>
-   <header>scratchwidget.h</header>
+   <header>widgets/scratchwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

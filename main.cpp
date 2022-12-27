@@ -5,7 +5,7 @@
 
 #include "portaudio.h"
 
-#include "mainwindow.h"
+#include "widgets/mainwindow.h"
 
 namespace {
 template<typename T>
