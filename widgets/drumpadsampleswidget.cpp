@@ -4,6 +4,7 @@
 #include <iterator>
 
 #include <QDebug>
+#include <QtGlobal>
 
 #include "audioformat.h"
 #include "midicontainers.h"
@@ -50,7 +51,9 @@ void DrumPadSamplesWidget::midiReceived(const midi::MidiMessage &message)
         return;
     }
 
-    if (message.cmd != midi::Command::NoteOn && message.cmd != midi::Command::NoteOff)
+    if (message.cmd != midi::Command::NoteOn &&
+        message.cmd != midi::Command::NoteOff &&
+        message.cmd != midi::Command::ControlChange)
         return;
 
     for (DrumPadSampleWidget &widget : getWidgets())
@@ -61,10 +64,20 @@ void DrumPadSamplesWidget::midiReceived(const midi::MidiMessage &message)
         }
         else if (widget.channel() == message.channel && widget.note() == message.note)
         {
-            if (message.cmd == midi::Command::NoteOff || (message.cmd == midi::Command::NoteOn && message.velocity == 0))
+            switch (message.cmd)
+            {
+            case midi::Command::NoteOn:
+            case midi::Command::ControlChange:
+                if (message.velocity != 0)
+                    widget.pressed(message.velocity);
+                else
+            Q_FALLTHROUGH();
+            case midi::Command::NoteOff:
                 widget.released();
-            else if (message.cmd == midi::Command::NoteOn)
-                widget.pressed(message.velocity);
+                break;
+            default:
+                __builtin_unreachable();
+            }
         }
     }
 }

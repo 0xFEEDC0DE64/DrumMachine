@@ -4,7 +4,6 @@
 #include <QEventLoop>
 #include <QMetaEnum>
 #include <QMessageBox>
-#include <QTimer>
 #include <QAbstractEventDispatcher>
 #include <QAudioDeviceInfo>
 #include <QDebug>
@@ -243,6 +242,8 @@ void MainWindow::midiReceived(const midi::MidiMessage &message)
     m_ui->statusbar->showMessage(tr("Received midi message: flag: %0 cmd: %1 channel: %2 note: %3 velocity: %4")
                                  .arg(message.flag?"true":"false", QMetaEnum::fromType<midi::Command>().valueToKey(int(message.cmd)))
                                  .arg(message.channel).arg(message.note).arg(message.velocity), 1000);
+
+    m_ui->tabWidget->midiReceived(message);
 
     if (m_ui->tabWidget->currentIndex() == 0)
         m_ui->drumPadWidget->midiReceived(message);

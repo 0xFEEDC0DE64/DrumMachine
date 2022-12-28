@@ -42,6 +42,7 @@ SOURCES += \
     widgets/loopstationwidget.cpp \
     widgets/mainwindow.cpp \
     widgets/midibutton.cpp \
+    widgets/miditabwidget.cpp \
     widgets/previewwidget.cpp \
     widgets/scratchwidget.cpp \
     widgets/sequencerwidget.cpp \
@@ -79,6 +80,7 @@ HEADERS += \
     widgets/loopstationwidget.h \
     widgets/mainwindow.h \
     widgets/midibutton.h \
+    widgets/miditabwidget.h \
     widgets/previewwidget.h \
     widgets/scratchwidget.h \
     widgets/sequencerwidget.h \

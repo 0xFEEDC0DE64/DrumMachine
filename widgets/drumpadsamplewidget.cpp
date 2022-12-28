@@ -89,6 +89,7 @@ void DrumPadSampleWidget::setChannel(quint8 channel)
 {
     m_ui->channelSpinBox->setValue(channel);
 
+    Q_ASSERT(m_settings);
     if (m_settings)
         m_settings->setDrumpadChannel(m_padNr, channel);
     else
@@ -104,6 +105,7 @@ void DrumPadSampleWidget::setNote(quint8 note)
 {
     m_ui->noteSpinBox->setValue(note);
 
+    Q_ASSERT(m_settings);
     if (m_settings)
         m_settings->setDrumpadNote(m_padNr, note);
     else

@@ -133,6 +133,7 @@ void DrumPadWidget::currentRowChanged(const QModelIndex &current)
 {
     if (!current.isValid())
     {
+        Q_ASSERT(m_settings);
         if (m_settings)
             m_settings->setDrumpadLastPresetId(QString{});
         else
@@ -142,6 +143,7 @@ void DrumPadWidget::currentRowChanged(const QModelIndex &current)
 
     const auto &preset = m_presetsModel.getPreset(m_presetsProxyModel.mapToSource(current));
 
+    Q_ASSERT(m_settings);
     if (m_settings)
         m_settings->setDrumpadLastPresetId(preset.id ? *preset.id : QString{});
     else

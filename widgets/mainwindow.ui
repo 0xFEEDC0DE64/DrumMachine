@@ -217,7 +217,7 @@
      </layout>
     </item>
     <item>
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="MidiTabWidget" name="tabWidget">
       <widget class="DrumPadWidget" name="drumPadWidget">
        <attribute name="title">
         <string>DrumPad</string>
@@ -277,6 +277,12 @@
    <class>LoopStationWidget</class>
    <extends>QWidget</extends>
    <header>widgets/loopstationwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MidiTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>widgets/miditabwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

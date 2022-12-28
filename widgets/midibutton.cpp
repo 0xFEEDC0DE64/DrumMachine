@@ -1,6 +1,7 @@
 #include "midibutton.h"
 
 #include <QAction>
+#include <QtGlobal>
 
 #include "midicontainers.h"
 
@@ -47,12 +48,14 @@ void MidiButton::learn()
 
 void MidiButton::midiReceived(const midi::MidiMessage &message)
 {
-    if (message.cmd != midi::Command::NoteOn && message.cmd != midi::Command::NoteOff)
+    if (message.cmd != midi::Command::NoteOn &&
+        message.cmd != midi::Command::NoteOff &&
+        message.cmd != midi::Command::ControlChange)
         return;
 
     if (m_learning)
     {
-        if (message.cmd != midi::Command::NoteOn)
+        if ((message.cmd != midi::Command::NoteOn && message.cmd != midi::Command::ControlChange) || message.velocity == 0)
             return;
 
         setChannel(message.channel);
@@ -67,15 +70,16 @@ void MidiButton::midiReceived(const midi::MidiMessage &message)
         switch (message.cmd)
         {
         case midi::Command::NoteOn:
-            if (message.velocity == 0)
-                emit released();
-            else
+        case midi::Command::ControlChange:
+            if (message.velocity != 0)
                 emit pressed();
-            return;
+            else
+        Q_FALLTHROUGH();
         case midi::Command::NoteOff:
             emit released();
-            return;
-        default: __builtin_unreachable();
+            break;
+        default:
+            __builtin_unreachable();
         }
     }
 }
