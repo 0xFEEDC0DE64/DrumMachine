@@ -2,14 +2,14 @@
 
 #include <QAbstractListModel>
 
-namespace drumpad_presets { struct Preset; }
+namespace loopstation_presets { struct Preset; }
 
-class DrumPadPresetTagsModel : public QAbstractListModel
+class LoopStationPresetTagsModel : public QAbstractListModel
 {
 public:
-    DrumPadPresetTagsModel(QObject *parent = nullptr);
+    LoopStationPresetTagsModel(QObject *parent = nullptr);
 
-    void setPreset(const drumpad_presets::Preset &preset);
+    void setPreset(const loopstation_presets::Preset &preset);
 
     int rowCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;

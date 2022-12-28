@@ -90,6 +90,8 @@ void LoopStationWidget::currentRowChanged(const QModelIndex &current)
         m_settings->setLoopstationLastPresetId(preset.id ? *preset.id : QString{});
     else
         qWarning() << "no settings available";
+
+    m_ui->presetDetailWidget->setPreset(preset);
 }
 
 void LoopStationWidget::loadPresets()

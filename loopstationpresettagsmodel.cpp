@@ -1,13 +1,13 @@
-#include "drumpadpresettagsmodel.h"
+#include "loopstationpresettagsmodel.h"
 
-#include "drumpadpresets.h"
+#include "loopstationpresets.h"
 
-DrumPadPresetTagsModel::DrumPadPresetTagsModel(QObject *parent) :
+LoopStationPresetTagsModel::LoopStationPresetTagsModel(QObject *parent) :
     QAbstractListModel{parent}
 {
 }
 
-void DrumPadPresetTagsModel::setPreset(const drumpad_presets::Preset &preset)
+void LoopStationPresetTagsModel::setPreset(const loopstation_presets::Preset &preset)
 {
     beginResetModel();
     if (preset.tags)
@@ -17,14 +17,14 @@ void DrumPadPresetTagsModel::setPreset(const drumpad_presets::Preset &preset)
     endResetModel();
 }
 
-int DrumPadPresetTagsModel::rowCount(const QModelIndex &parent) const
+int LoopStationPresetTagsModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
 
     return m_tags.size();
 }
 
-QVariant DrumPadPresetTagsModel::data(const QModelIndex &index, int role) const
+QVariant LoopStationPresetTagsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return {};

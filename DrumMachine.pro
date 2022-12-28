@@ -26,6 +26,7 @@ SOURCES += \
     loopstationjsonconverters.cpp \
     loopstationpresets.cpp \
     loopstationpresetsmodel.cpp \
+    loopstationpresettagsmodel.cpp \
     main.cpp \
     midicontainers.cpp \
     midiinwrapper.cpp \
@@ -37,6 +38,7 @@ SOURCES += \
     widgets/drumpadsampleswidget.cpp \
     widgets/drumpadsamplewidget.cpp \
     widgets/drumpadwidget.cpp \
+    widgets/loopstationpresetdetailwidget.cpp \
     widgets/loopstationwidget.cpp \
     widgets/mainwindow.cpp \
     widgets/midibutton.cpp \
@@ -62,6 +64,7 @@ HEADERS += \
     loopstationjsonconverters.h \
     loopstationpresets.h \
     loopstationpresetsmodel.h \
+    loopstationpresettagsmodel.h \
     midicontainers.h \
     midiinwrapper.h \
     midioutwrapper.h \
@@ -72,6 +75,7 @@ HEADERS += \
     widgets/drumpadsampleswidget.h \
     widgets/drumpadsamplewidget.h \
     widgets/drumpadwidget.h \
+    widgets/loopstationpresetdetailwidget.h \
     widgets/loopstationwidget.h \
     widgets/mainwindow.h \
     widgets/midibutton.h \
@@ -88,6 +92,7 @@ FORMS += \
     widgets/drumpadsampleswidget.ui \
     widgets/drumpadsamplewidget.ui \
     widgets/drumpadwidget.ui \
+    widgets/loopstationpresetdetailwidget.ui \
     widgets/loopstationwidget.ui \
     widgets/mainwindow.ui \
     widgets/sequencerwidget.ui \

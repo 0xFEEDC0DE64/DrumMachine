@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LoopStationPresetDetailWidget</class>
+ <widget class="QScrollArea" name="LoopStationPresetDetailWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>431</width>
+    <height>640</height>
+   </rect>
+  </property>
+  <property name="widgetResizable">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="scrollAreaWidgetContents">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>429</width>
+     <height>638</height>
+    </rect>
+   </property>
+   <layout class="QFormLayout" name="formLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="labelId">
+      <property name="text">
+       <string>id:</string>
+      </property>
+      <property name="buddy">
+       <cstring>lineEditId</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="lineEditId">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="labelAudioPreviewUrl">
+      <property name="text">
+       <string>audioPreviewUrl:</string>
+      </property>
+      <property name="buddy">
+       <cstring>lineEditAudioPreviewUrl</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="labelAuthor">
+      <property name="text">
+       <string>author:</string>
+      </property>
+      <property name="buddy">
+       <cstring>lineEditAuthor</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="labelBpm">
+      <property name="text">
+       <string>bpm:</string>
+      </property>
+      <property name="buddy">
+       <cstring>spinBoxBpm</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="labelCoverUrl">
+      <property name="text">
+       <string>coverUrl:</string>
+      </property>
+      <property name="buddy">
+       <cstring>lineEditCoverUrl</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="labelLoopLength">
+      <property name="text">
+       <string>loopLength:</string>
+      </property>
+      <property name="buddy">
+       <cstring>spinBoxLoopLength</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLabel" name="labelOrderBy">
+      <property name="text">
+       <string>orderBy:</string>
+      </property>
+      <property name="buddy">
+       <cstring>lineEditOrderBy</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="0">
+     <widget class="QLabel" name="labelPremium">
+      <property name="text">
+       <string>premium:</string>
+      </property>
+      <property name="buddy">
+       <cstring>checkBoxPremium</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <widget class="QLabel" name="labelTags">
+      <property name="text">
+       <string>tags:</string>
+      </property>
+      <property name="buddy">
+       <cstring>listViewTags</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="labelTitle">
+      <property name="text">
+       <string>title:</string>
+      </property>
+      <property name="buddy">
+       <cstring>lineEditTitle</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="0">
+     <widget class="QLabel" name="labelDeleted">
+      <property name="text">
+       <string>DELETED:</string>
+      </property>
+      <property name="buddy">
+       <cstring>checkBoxDeleted</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="lineEditTitle">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="lineEditAudioPreviewUrl">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="lineEditAuthor">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QSpinBox" name="spinBoxBpm">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QLineEdit" name="lineEditCoverUrl">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QSpinBox" name="spinBoxLoopLength">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QLineEdit" name="lineEditOrderBy">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="0">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="8" column="1">
+     <widget class="QCheckBox" name="checkBoxPremium">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>CheckBox</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="1">
+     <widget class="QListView" name="listViewTags">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1">
+     <widget class="QCheckBox" name="checkBoxDeleted">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>CheckBox</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

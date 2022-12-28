@@ -75,6 +75,15 @@
       </property>
      </widget>
     </item>
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <widget class="LoopStationPresetDetailWidget" name="presetDetailWidget">
+       <attribute name="title">
+        <string>Properties</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QWidget" name="widget" native="true">
@@ -98,6 +107,12 @@
    <class>MidiButton</class>
    <extends>QPushButton</extends>
    <header>widgets/midibutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>LoopStationPresetDetailWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/loopstationpresetdetailwidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
