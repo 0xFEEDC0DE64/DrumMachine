@@ -5,6 +5,8 @@
 #include <optional>
 #include <vector>
 
+#include "midilearnsetting.h"
+
 namespace midi { struct MidiMessage; }
 
 class MidiTabWidget : public QTabWidget
@@ -14,15 +16,11 @@ class MidiTabWidget : public QTabWidget
 public:
     explicit MidiTabWidget(QWidget *parent = nullptr);
 
-    quint8 channel(int index) const;
-    void setChannel(int index, quint8 channel);
-
-    quint8 note(int index) const;
-    void setNote(int index, quint8 note);
+    MidiLearnSetting learnSetting(int index) const;
+    void setLearnSetting(int index, const MidiLearnSetting &learnSetting);
 
 signals:
-    void channelChanged(int index, quint8 channel);
-    void noteChanged(int index, quint8 note);
+    void learnSettingChanged(int index, const MidiLearnSetting &learnSetting);
 
 public slots:
     void learn(int index);
@@ -39,10 +37,5 @@ private:
     std::optional<int> m_learning;
     QColor m_oldColor;
 
-    struct ChannelNote
-    {
-        quint8 channel{99};
-        quint8 note{99};
-    };
-    std::vector<ChannelNote> m_channelNotes;
+    std::vector<MidiLearnSetting> m_learnSettings;
 };

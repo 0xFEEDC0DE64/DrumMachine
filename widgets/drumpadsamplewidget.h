@@ -31,12 +31,6 @@ public:
 
     void setFile(const QString &presetId, const drumpad_presets::File &file);
 
-    quint8 channel() const;
-    void setChannel(quint8 channel);
-
-    quint8 note() const;
-    void setNote(quint8 note);
-
     int speed() const;
     void setSpeed(int speed);
 
@@ -45,7 +39,7 @@ public:
 
     std::optional<int> choke() const;
 
-    void pressed(quint8 velocity);
+    void pressed();
     void released();
 
     void forceStop();
@@ -55,8 +49,7 @@ public:
 
     void writeSamples(frame_t *begin, frame_t *end);
 
-    bool isLearning() const { return m_learning; }
-    void learn(quint8 channel, quint8 note);
+    void midiReceived(const midi::MidiMessage &message);
 
     void unsendColor();
     void sendColor();
@@ -70,7 +63,6 @@ private slots:
     void updateStatus();
     void requestFinished();
     void decodingFinished(const QAudioBuffer &buffer);
-    void learnPressed();
 
 private:
     void startRequest();
@@ -91,10 +83,6 @@ private:
     QNetworkAccessManager *m_networkAccessManager{};
 
     quint8 m_padNr{};
-
-    bool m_learning{};
-    QColor m_oldColor;
-    QBrush m_oldBrush;
 
     bool m_sendColors{};
 };

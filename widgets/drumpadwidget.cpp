@@ -64,15 +64,11 @@ void DrumPadWidget::loadSettings(DrumMachineSettings &settings)
 {
     m_settings = &settings;
 
-    m_ui->pushButtonUp->setChannel(m_settings->drumpadChannelPrevPreset());
-    m_ui->pushButtonUp->setNote(m_settings->drumpadNotePrevPreset());
-    m_ui->pushButtonDown->setChannel(m_settings->drumpadChannelNextPreset());
-    m_ui->pushButtonDown->setNote(m_settings->drumpadNoteNextPreset());
+    m_ui->pushButtonUp->setLearnSetting(m_settings->drumpadPrevPreset());
+    m_ui->pushButtonDown->setLearnSetting(m_settings->drumpadNextPreset());
 
-    connect(m_ui->pushButtonUp, &MidiButton::channelChanged, m_settings, &DrumMachineSettings::setDrumpadChannelPrevPreset);
-    connect(m_ui->pushButtonUp, &MidiButton::noteChanged, m_settings, &DrumMachineSettings::setDrumpadNotePrevPreset);
-    connect(m_ui->pushButtonDown, &MidiButton::channelChanged, m_settings, &DrumMachineSettings::setDrumpadChannelNextPreset);
-    connect(m_ui->pushButtonDown, &MidiButton::noteChanged, m_settings, &DrumMachineSettings::setDrumpadNoteNextPreset);
+    connect(m_ui->pushButtonUp, &MidiButton::learnSettingChanged, m_settings, &DrumMachineSettings::setDrumpadPrevPreset);
+    connect(m_ui->pushButtonDown, &MidiButton::learnSettingChanged, m_settings, &DrumMachineSettings::setDrumpadNextPreset);
 
     m_ui->sequencerWidget->loadSettings(settings);
     m_ui->samplesWidget->loadSettings(settings);
@@ -81,17 +77,17 @@ void DrumPadWidget::loadSettings(DrumMachineSettings &settings)
 void DrumPadWidget::unsendColors()
 {
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonUp->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonUp->learnSetting().channel,
+        .cmd = m_ui->pushButtonUp->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonUp->note(),
+        .note = m_ui->pushButtonUp->learnSetting().note,
         .velocity = 0
     });
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonDown->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonDown->learnSetting().channel,
+        .cmd = m_ui->pushButtonDown->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonDown->note(),
+        .note = m_ui->pushButtonDown->learnSetting().note,
         .velocity = 0
     });
 
@@ -102,17 +98,17 @@ void DrumPadWidget::unsendColors()
 void DrumPadWidget::sendColors()
 {
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonUp->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonUp->learnSetting().channel,
+        .cmd = m_ui->pushButtonUp->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonUp->note(),
+        .note = m_ui->pushButtonUp->learnSetting().note,
         .velocity = 127
     });
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonDown->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonDown->learnSetting().channel,
+        .cmd = m_ui->pushButtonDown->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonDown->note(),
+        .note = m_ui->pushButtonDown->learnSetting().note,
         .velocity = 127
     });
 

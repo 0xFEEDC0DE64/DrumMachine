@@ -3,6 +3,9 @@
 #include <QStandardPaths>
 #include <QDebug>
 
+#include "midilearnsetting.h"
+#include "futurecpp.h"
+
 QString DrumMachineSettings::defaultCacheDir() const
 {
     return QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
@@ -73,6 +76,16 @@ void DrumMachineSettings::setLastMidiOutDevice(const QString &lastMidiOutDevice)
     setValue("lastMidiOutDevice", lastMidiOutDevice);
 }
 
+MidiLearnSetting DrumMachineSettings::tabWidget(quint8 index) const
+{
+    return learnSetting(QString{"tabWidget%0"}.arg(index));
+}
+
+void DrumMachineSettings::setTabWidget(quint8 index, const MidiLearnSetting &value)
+{
+    setLearnSetting(QString{"tabWidget%0"}.arg(index), value);
+}
+
 QString DrumMachineSettings::drumpadLastPresetId() const
 {
     return value("drumpad/lastPresetId").toString();
@@ -83,144 +96,74 @@ void DrumMachineSettings::setDrumpadLastPresetId(const QString &lastPresetId)
     setValue("drumpad/lastPresetId", lastPresetId);
 }
 
-quint8 DrumMachineSettings::drumpadChannelPrevPreset() const
+MidiLearnSetting DrumMachineSettings::drumpadPrevPreset() const
 {
-    return value("drumpad/prevPreset_channel", 99).toUInt();
+    return learnSetting("drumpad/prevPreset");
 }
 
-void DrumMachineSettings::setDrumpadChannelPrevPreset(quint8 channel)
+void DrumMachineSettings::setDrumpadPrevPreset(const MidiLearnSetting &value)
 {
-    setValue("drumpad/prevPreset_channel", channel);
+    setLearnSetting("drumpad/prevPreset", value);
 }
 
-quint8 DrumMachineSettings::drumpadNotePrevPreset() const
+MidiLearnSetting DrumMachineSettings::drumpadNextPreset() const
 {
-    return value("drumpad/prevPreset_note", 99).toUInt();
+    return learnSetting("drumpad/nextPreset");
 }
 
-void DrumMachineSettings::setDrumpadNotePrevPreset(quint8 note)
+void DrumMachineSettings::setDrumpadNextPreset(const MidiLearnSetting &value)
 {
-    setValue("drumpad/prevPreset_note", note);
+    setLearnSetting("drumpad/nextPreset", value);
 }
 
-quint8 DrumMachineSettings::drumpadChannelNextPreset() const
+MidiLearnSetting DrumMachineSettings::drumpadPrevSequence() const
 {
-    return value("drumpad/nextPreset_channel", 99).toUInt();
+    return learnSetting("drumpad/prevSequence");
 }
 
-void DrumMachineSettings::setDrumpadChannelNextPreset(quint8 channel)
+void DrumMachineSettings::setDrumpadPrevSequence(const MidiLearnSetting &value)
 {
-    setValue("drumpad/nextPreset_channel", channel);
+    setLearnSetting("drumpad/prevSequence", value);
 }
 
-quint8 DrumMachineSettings::drumpadNoteNextPreset() const
+MidiLearnSetting DrumMachineSettings::drumpadNextSequence() const
 {
-    return value("drumpad/nextPreset_note", 99).toUInt();
+    return learnSetting("drumpad/nextSequence");
 }
 
-void DrumMachineSettings::setDrumpadNoteNextPreset(quint8 note)
+void DrumMachineSettings::setDrumpadNextSequence(const MidiLearnSetting &value)
 {
-    setValue("drumpad/nextPreset_note", note);
+    setLearnSetting("drumpad/nextSequence", value);
 }
 
-quint8 DrumMachineSettings::drumpadChannelPrevSequence() const
+MidiLearnSetting DrumMachineSettings::drumpadPlayPause() const
 {
-    return value("drumpad/prevSequence_channel", 99).toUInt();
+    return learnSetting("drumpad/playPause");
 }
 
-void DrumMachineSettings::setDrumpadChannelPrevSequence(quint8 channel)
+void DrumMachineSettings::setDrumpadPlayPause(const MidiLearnSetting &value)
 {
-    setValue("drumpad/prevSequence_channel", channel);
+    setLearnSetting("drumpad/playPause", value);
 }
 
-quint8 DrumMachineSettings::drumpadNotePrevSequence() const
+MidiLearnSetting DrumMachineSettings::drumpadStop() const
 {
-    return value("drumpad/prevSequence_note", 99).toUInt();
+    return learnSetting("drumpad/stop");
 }
 
-void DrumMachineSettings::setDrumpadNotePrevSequence(quint8 note)
+void DrumMachineSettings::setDrumpadStop(const MidiLearnSetting &value)
 {
-    setValue("drumpad/prevSequence_note", note);
+    setLearnSetting("drumpad/stop", value);
 }
 
-quint8 DrumMachineSettings::drumpadChannelNextSequence() const
+MidiLearnSetting DrumMachineSettings::drumpadSample(quint8 pad) const
 {
-    return value("drumpad/nextSequence_channel", 99).toUInt();
+    return learnSetting(QString{"drumpad/pad%0"}.arg(pad));
 }
 
-void DrumMachineSettings::setDrumpadChannelNextSequence(quint8 channel)
+void DrumMachineSettings::setDrumpadSample(quint8 pad, const MidiLearnSetting &value)
 {
-    setValue("drumpad/nextSequence_channel", channel);
-}
-
-quint8 DrumMachineSettings::drumpadNoteNextSequence() const
-{
-    return value("drumpad/nextSequence_note", 99).toUInt();
-}
-
-void DrumMachineSettings::setDrumpadNoteNextSequence(quint8 note)
-{
-    setValue("drumpad/nextSequence_note", note);
-}
-
-quint8 DrumMachineSettings::drumpadChannelPlayPause() const
-{
-    return value("drumpad/playPause_channel", 99).toUInt();
-}
-
-void DrumMachineSettings::setDrumpadChannelPlayPause(quint8 channel)
-{
-    setValue("drumpad/playPause_channel", channel);
-}
-
-quint8 DrumMachineSettings::drumpadNotePlayPause() const
-{
-    return value("drumpad/playPause_note", 99).toUInt();
-}
-
-void DrumMachineSettings::setDrumpadNotePlayPause(quint8 note)
-{
-    setValue("drumpad/playPause_note", note);
-}
-
-quint8 DrumMachineSettings::drumpadChannelStop() const
-{
-    return value("drumpad/stop_channel", 99).toUInt();
-}
-
-void DrumMachineSettings::setDrumpadChannelStop(quint8 channel)
-{
-    setValue("drumpad/stop_channel", channel);
-}
-
-quint8 DrumMachineSettings::drumpadNoteStop() const
-{
-    return value("drumpad/stop_note", 99).toUInt();
-}
-
-void DrumMachineSettings::setDrumpadNoteStop(quint8 note)
-{
-    setValue("drumpad/stop_note", note);
-}
-
-quint8 DrumMachineSettings::drumpadChannel(quint8 pad) const
-{
-    return value(QString{"drumpad/pad%0_channel"}.arg(pad), 99).toUInt();
-}
-
-void DrumMachineSettings::setDrumpadChannel(quint8 pad, quint8 channel)
-{
-    setValue(QString{"drumpad/pad%0_channel"}.arg(pad), channel);
-}
-
-quint8 DrumMachineSettings::drumpadNote(quint8 pad) const
-{
-    return value(QString{"drumpad/pad%0_note"}.arg(pad), 99).toUInt();
-}
-
-void DrumMachineSettings::setDrumpadNote(quint8 pad, quint8 note)
-{
-    setValue(QString{"drumpad/pad%0_note"}.arg(pad), note);
+    setLearnSetting(QString{"drumpad/pad%0"}.arg(pad), value);
 }
 
 QString DrumMachineSettings::loopstationLastPresetId() const
@@ -233,42 +176,38 @@ void DrumMachineSettings::setLoopstationLastPresetId(const QString &lastPresetId
     setValue("loopstation/lastPresetId", lastPresetId);
 }
 
-quint8 DrumMachineSettings::loopstationChannelPrevPreset() const
+MidiLearnSetting DrumMachineSettings::loopstationPrevPreset() const
 {
-    return value("loopstation/prevPreset_channel", 99).toUInt();
+    return learnSetting("loopstation/prevPreset");
 }
 
-void DrumMachineSettings::setLoopstationChannelPrevPreset(quint8 channel)
+void DrumMachineSettings::setLoopstationPrevPreset(const MidiLearnSetting &value)
 {
-    setValue("loopstation/prevPreset_channel", channel);
+    setLearnSetting("loopstation/prevPreset", value);
 }
 
-quint8 DrumMachineSettings::loopstationNotePrevPreset() const
+MidiLearnSetting DrumMachineSettings::loopstationNextPreset() const
 {
-    return value("loopstation/prevPreset_note", 99).toUInt();
+    return learnSetting("loopstation/nextPreset");
 }
 
-void DrumMachineSettings::setLoopstationNotePrevPreset(quint8 note)
+void DrumMachineSettings::setLoopstationNextPreset(const MidiLearnSetting &value)
 {
-    setValue("loopstation/prevPreset_note", note);
+    setLearnSetting("loopstation/nextPreset", value);
 }
 
-quint8 DrumMachineSettings::loopstationChannelNextPreset() const
+MidiLearnSetting DrumMachineSettings::learnSetting(const QString &key) const
 {
-    return value("loopstation/nextPreset_channel", 99).toUInt();
+    return MidiLearnSetting{
+        .cmd = midi::Command(value(QString{"%0_cmd"}.arg(key), std::to_underlying(midi::Command::NoteOn)).value<std::underlying_type_t<midi::Command>>()),
+        .channel = value(QString{"%0_channel"}.arg(key), 99).value<quint8>(),
+        .note = value(QString{"%0_note"}.arg(key), 99).value<quint8>()
+    };
 }
 
-void DrumMachineSettings::setLoopstationChannelNextPreset(quint8 channel)
+void DrumMachineSettings::setLearnSetting(const QString &key, const MidiLearnSetting &value)
 {
-    setValue("loopstation/nextPreset_channel", channel);
-}
-
-quint8 DrumMachineSettings::loopstationNoteNextPreset() const
-{
-    return value("loopstation/nextPreset_note", 99).toUInt();
-}
-
-void DrumMachineSettings::setLoopstationNoteNextPreset(quint8 note)
-{
-    setValue("loopstation/nextPreset_note", note);
+    setValue(QString{"%0_note"}.arg(key), std::to_underlying(value.cmd));
+    setValue(QString{"%0_channel"}.arg(key), value.channel);
+    setValue(QString{"%0_note"}.arg(key), value.note);
 }

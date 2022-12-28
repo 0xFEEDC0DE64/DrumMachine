@@ -57,31 +57,27 @@ void LoopStationWidget::loadSettings(DrumMachineSettings &settings)
 {
     m_settings = &settings;
 
-    m_ui->pushButtonUp->setChannel(m_settings->loopstationChannelPrevPreset());
-    m_ui->pushButtonUp->setNote(m_settings->loopstationNotePrevPreset());
-    m_ui->pushButtonDown->setChannel(m_settings->loopstationChannelNextPreset());
-    m_ui->pushButtonDown->setNote(m_settings->loopstationNoteNextPreset());
+    m_ui->pushButtonUp->setLearnSetting(m_settings->loopstationPrevPreset());
+    m_ui->pushButtonDown->setLearnSetting(m_settings->loopstationNextPreset());
 
-    connect(m_ui->pushButtonUp, &MidiButton::channelChanged, m_settings, &DrumMachineSettings::setLoopstationChannelPrevPreset);
-    connect(m_ui->pushButtonUp, &MidiButton::noteChanged, m_settings, &DrumMachineSettings::setLoopstationNotePrevPreset);
-    connect(m_ui->pushButtonDown, &MidiButton::channelChanged, m_settings, &DrumMachineSettings::setLoopstationChannelNextPreset);
-    connect(m_ui->pushButtonDown, &MidiButton::noteChanged, m_settings, &DrumMachineSettings::setLoopstationNoteNextPreset);
+    connect(m_ui->pushButtonUp, &MidiButton::learnSettingChanged, m_settings, &DrumMachineSettings::setLoopstationPrevPreset);
+    connect(m_ui->pushButtonDown, &MidiButton::learnSettingChanged, m_settings, &DrumMachineSettings::setLoopstationNextPreset);
 }
 
 void LoopStationWidget::unsendColors()
 {
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonUp->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonUp->learnSetting().channel,
+        .cmd = m_ui->pushButtonUp->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonUp->note(),
+        .note = m_ui->pushButtonUp->learnSetting().note,
         .velocity = 0
     });
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonDown->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonDown->learnSetting().channel,
+        .cmd = m_ui->pushButtonDown->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonDown->note(),
+        .note = m_ui->pushButtonDown->learnSetting().note,
         .velocity = 0
     });
 }
@@ -89,17 +85,17 @@ void LoopStationWidget::unsendColors()
 void LoopStationWidget::sendColors()
 {
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonUp->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonUp->learnSetting().channel,
+        .cmd = m_ui->pushButtonUp->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonUp->note(),
+        .note = m_ui->pushButtonUp->learnSetting().note,
         .velocity = 127
     });
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonDown->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonDown->learnSetting().channel,
+        .cmd = m_ui->pushButtonDown->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonDown->note(),
+        .note = m_ui->pushButtonDown->learnSetting().note,
         .velocity = 127
     });
 }

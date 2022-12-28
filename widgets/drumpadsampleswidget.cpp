@@ -51,34 +51,9 @@ void DrumPadSamplesWidget::midiReceived(const midi::MidiMessage &message)
         return;
     }
 
-    if (message.cmd != midi::Command::NoteOn &&
-        message.cmd != midi::Command::NoteOff &&
-        message.cmd != midi::Command::ControlChange)
-        return;
-
     for (DrumPadSampleWidget &widget : getWidgets())
     {
-        if (widget.isLearning())
-        {
-            widget.learn(message.channel, message.note);
-        }
-        else if (widget.channel() == message.channel && widget.note() == message.note)
-        {
-            switch (message.cmd)
-            {
-            case midi::Command::NoteOn:
-            case midi::Command::ControlChange:
-                if (message.velocity != 0)
-                    widget.pressed(message.velocity);
-                else
-            Q_FALLTHROUGH();
-            case midi::Command::NoteOff:
-                widget.released();
-                break;
-            default:
-                __builtin_unreachable();
-            }
-        }
+        widget.midiReceived(message);
     }
 }
 
@@ -120,7 +95,7 @@ void DrumPadSamplesWidget::sequencerTriggerSample(int index)
         qDebug() << "index out of range" << index;
         return;
     }
-    widgets[index].get().pressed(127);
+    widgets[index].get().pressed();
 }
 
 void DrumPadSamplesWidget::chokeTriggered(int choke)

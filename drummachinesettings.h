@@ -2,6 +2,8 @@
 
 #include <QSettings>
 
+struct MidiLearnSetting;
+
 class DrumMachineSettings : public QSettings
 {
 public:
@@ -27,58 +29,47 @@ public:
     QString lastMidiOutDevice() const;
     void setLastMidiOutDevice(const QString &lastMidiOutDevice);
 
+    MidiLearnSetting tabWidget(quint8 index) const;
+    void setTabWidget(quint8 index, const MidiLearnSetting &value);
+
 
 
     QString drumpadLastPresetId() const;
     void setDrumpadLastPresetId(const QString &lastPresetId);
 
-    quint8 drumpadChannelPrevPreset() const;
-    void setDrumpadChannelPrevPreset(quint8 channel);
-    quint8 drumpadNotePrevPreset() const;
-    void setDrumpadNotePrevPreset(quint8 note);
+    MidiLearnSetting drumpadPrevPreset() const;
+    void setDrumpadPrevPreset(const MidiLearnSetting &value);
 
-    quint8 drumpadChannelNextPreset() const;
-    void setDrumpadChannelNextPreset(quint8 channel);
-    quint8 drumpadNoteNextPreset() const;
-    void setDrumpadNoteNextPreset(quint8 note);
+    MidiLearnSetting drumpadNextPreset() const;
+    void setDrumpadNextPreset(const MidiLearnSetting &value);
 
-    quint8 drumpadChannelPrevSequence() const;
-    void setDrumpadChannelPrevSequence(quint8 channel);
-    quint8 drumpadNotePrevSequence() const;
-    void setDrumpadNotePrevSequence(quint8 note);
+    MidiLearnSetting drumpadPrevSequence() const;
+    void setDrumpadPrevSequence(const MidiLearnSetting &value);
 
-    quint8 drumpadChannelNextSequence() const;
-    void setDrumpadChannelNextSequence(quint8 channel);
-    quint8 drumpadNoteNextSequence() const;
-    void setDrumpadNoteNextSequence(quint8 note);
+    MidiLearnSetting drumpadNextSequence() const;
+    void setDrumpadNextSequence(const MidiLearnSetting &value);
 
-    quint8 drumpadChannelPlayPause() const;
-    void setDrumpadChannelPlayPause(quint8 channel);
-    quint8 drumpadNotePlayPause() const;
-    void setDrumpadNotePlayPause(quint8 note);
+    MidiLearnSetting drumpadPlayPause() const;
+    void setDrumpadPlayPause(const MidiLearnSetting &value);
 
-    quint8 drumpadChannelStop() const;
-    void setDrumpadChannelStop(quint8 channel);
-    quint8 drumpadNoteStop() const;
-    void setDrumpadNoteStop(quint8 note);
+    MidiLearnSetting drumpadStop() const;
+    void setDrumpadStop(const MidiLearnSetting &value);
 
-    quint8 drumpadChannel(quint8 pad) const;
-    void setDrumpadChannel(quint8 pad, quint8 channel);
-    quint8 drumpadNote(quint8 pad) const;
-    void setDrumpadNote(quint8 pad, quint8 note);
+    MidiLearnSetting drumpadSample(quint8 pad) const;
+    void setDrumpadSample(quint8 pad, const MidiLearnSetting &value);
 
 
 
     QString loopstationLastPresetId() const;
     void setLoopstationLastPresetId(const QString &lastPresetId);
 
-    quint8 loopstationChannelPrevPreset() const;
-    void setLoopstationChannelPrevPreset(quint8 channel);
-    quint8 loopstationNotePrevPreset() const;
-    void setLoopstationNotePrevPreset(quint8 note);
+    MidiLearnSetting loopstationPrevPreset() const;
+    void setLoopstationPrevPreset(const MidiLearnSetting &value);
 
-    quint8 loopstationChannelNextPreset() const;
-    void setLoopstationChannelNextPreset(quint8 channel);
-    quint8 loopstationNoteNextPreset() const;
-    void setLoopstationNoteNextPreset(quint8 note);
+    MidiLearnSetting loopstationNextPreset() const;
+    void setLoopstationNextPreset(const MidiLearnSetting &value);
+
+private:
+    MidiLearnSetting learnSetting(const QString &key) const;
+    void setLearnSetting(const QString &key, const MidiLearnSetting &value);
 };

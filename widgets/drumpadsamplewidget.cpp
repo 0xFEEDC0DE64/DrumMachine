@@ -30,9 +30,8 @@ DrumPadSampleWidget::DrumPadSampleWidget(QWidget *parent) :
 
     connect(&m_player, &AudioPlayer::playingChanged, this, &DrumPadSampleWidget::updateStatus);
 
-    connect(m_ui->pushButton, &QAbstractButton::pressed, this, [this](){ pressed(127); });
-    connect(m_ui->pushButton, &QAbstractButton::released, this, &DrumPadSampleWidget::released);
-    connect(m_ui->toolButtonLearn, &QAbstractButton::pressed, this, &DrumPadSampleWidget::learnPressed);
+    connect(m_ui->pushButtonPlay, &QAbstractButton::pressed, this, &DrumPadSampleWidget::pressed);
+    connect(m_ui->pushButtonPlay, &QAbstractButton::released, this, &DrumPadSampleWidget::released);
 
     updateStatus();
 }
@@ -41,10 +40,17 @@ DrumPadSampleWidget::~DrumPadSampleWidget() = default;
 
 void DrumPadSampleWidget::loadSettings(DrumMachineSettings &settings)
 {
-    m_ui->channelSpinBox->setValue(settings.drumpadChannel(m_padNr));
-    m_ui->noteSpinBox->setValue(settings.drumpadNote(m_padNr));
-
     m_settings = &settings;
+
+    m_ui->pushButtonPlay->setLearnSetting(m_settings->drumpadSample(m_padNr));
+
+    connect(m_ui->pushButtonPlay, &MidiButton::learnSettingChanged, this, [this](const MidiLearnSetting &learnSetting){
+        Q_ASSERT(m_settings);
+        if (m_settings)
+            m_settings->setDrumpadSample(m_padNr, learnSetting);
+        else
+            qWarning() << "no settings available";
+    });
 }
 
 void DrumPadSampleWidget::setFile(const QString &presetId, const drumpad_presets::File &file)
@@ -80,38 +86,6 @@ void DrumPadSampleWidget::setFile(const QString &presetId, const drumpad_presets
     setupLabel(file.choke, m_ui->chokeLabel);
 }
 
-quint8 DrumPadSampleWidget::channel() const
-{
-    return m_ui->channelSpinBox->value();
-}
-
-void DrumPadSampleWidget::setChannel(quint8 channel)
-{
-    m_ui->channelSpinBox->setValue(channel);
-
-    Q_ASSERT(m_settings);
-    if (m_settings)
-        m_settings->setDrumpadChannel(m_padNr, channel);
-    else
-        qWarning() << "no settings available";
-}
-
-quint8 DrumPadSampleWidget::note() const
-{
-    return m_ui->noteSpinBox->value();
-}
-
-void DrumPadSampleWidget::setNote(quint8 note)
-{
-    m_ui->noteSpinBox->setValue(note);
-
-    Q_ASSERT(m_settings);
-    if (m_settings)
-        m_settings->setDrumpadNote(m_padNr, note);
-    else
-        qWarning() << "no settings available";
-}
-
 int DrumPadSampleWidget::speed() const
 {
     return m_ui->dialSpeed->value();
@@ -139,10 +113,8 @@ std::optional<int> DrumPadSampleWidget::choke() const
     return m_file->choke;
 }
 
-void DrumPadSampleWidget::pressed(quint8 velocity)
+void DrumPadSampleWidget::pressed()
 {
-    Q_UNUSED(velocity)
-
     m_player.restart();
 
     if (m_file && m_file->choke && *m_file->choke)
@@ -181,61 +153,59 @@ void DrumPadSampleWidget::writeSamples(frame_t *begin, frame_t *end)
     m_player.writeSamples(begin, end);
 }
 
-void DrumPadSampleWidget::learn(quint8 channel, quint8 note)
+void DrumPadSampleWidget::midiReceived(const midi::MidiMessage &message)
 {
-    setChannel(channel);
-    setNote(note);
-    if (m_learning)
-        learnPressed();
+    m_ui->pushButtonPlay->midiReceived(message);
 }
 
 void DrumPadSampleWidget::unsendColor()
 {
     m_sendColors = false;
-    midi::MidiMessage midiMsg;
 
-    midiMsg.channel = m_ui->channelSpinBox->value();
-    midiMsg.cmd = midi::Command::NoteOn;
-    midiMsg.flag = true;
-    midiMsg.note = m_ui->noteSpinBox->value();
-    midiMsg.velocity = 0;
-
-    emit sendMidi(midiMsg);
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonPlay->learnSetting().channel,
+        .cmd = m_ui->pushButtonPlay->learnSetting().cmd,
+        .flag = true,
+        .note = m_ui->pushButtonPlay->learnSetting().note,
+        .velocity = 0
+    });
 }
 
 void DrumPadSampleWidget::sendColor()
 {
     m_sendColors = true;
-    midi::MidiMessage midiMsg;
 
-    midiMsg.channel = m_ui->channelSpinBox->value();
-    midiMsg.cmd = midi::Command::NoteOn;
-    midiMsg.flag = true;
-    midiMsg.note = m_ui->noteSpinBox->value();
+    uint8_t velocity;
 
     if (m_file && m_file->color && m_player.buffer().isValid())
     {
         const auto &color = *m_file->color;
         if (color == "purple")
-            midiMsg.velocity = m_player.playing() ? 43 : 18;
+            velocity = m_player.playing() ? 43 : 18;
         else if (color == "red")
-            midiMsg.velocity = m_player.playing() ? 3 : 1;
+            velocity = m_player.playing() ? 3 : 1;
         else if (color == "yellow")
-            midiMsg.velocity = m_player.playing() ? 58 : 33;
+            velocity = m_player.playing() ? 58 : 33;
         else if (color == "green")
-            midiMsg.velocity = m_player.playing() ? 56 : 16;
+            velocity = m_player.playing() ? 56 : 16;
         else if (color == "blue")
-            midiMsg.velocity = m_player.playing() ? 49 : 51;
+            velocity = m_player.playing() ? 49 : 51;
         else
             goto noColor;
     }
     else
     {
         noColor:
-        midiMsg.velocity = 0;
+        velocity = 0;
     }
 
-    emit sendMidi(midiMsg);
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonPlay->learnSetting().channel,
+        .cmd = m_ui->pushButtonPlay->learnSetting().cmd,
+        .flag = true,
+        .note = m_ui->pushButtonPlay->learnSetting().note,
+        .velocity = velocity
+    });
 }
 
 void DrumPadSampleWidget::updateStatus()
@@ -307,27 +277,6 @@ void DrumPadSampleWidget::decodingFinished(const QAudioBuffer &buffer)
     setSpeed(100);
     setVolume(100);
     updateStatus();
-}
-
-void DrumPadSampleWidget::learnPressed()
-{
-    auto palette = m_ui->toolButtonLearn->palette();
-
-    if (m_learning)
-    {
-        palette.setColor(m_ui->toolButtonLearn->backgroundRole(), m_oldColor);
-        palette.setBrush(m_ui->toolButtonLearn->backgroundRole(), m_oldBrush);
-    }
-    else
-    {
-        m_oldColor = palette.color(m_ui->toolButtonLearn->backgroundRole());
-        m_oldBrush = palette.brush(m_ui->toolButtonLearn->backgroundRole());
-        palette.setColor(m_ui->toolButtonLearn->backgroundRole(), Qt::red);
-        palette.setBrush(m_ui->toolButtonLearn->backgroundRole(), Qt::red);
-    }
-    m_ui->toolButtonLearn->setPalette(palette);
-
-    m_learning = !m_learning;
 }
 
 void DrumPadSampleWidget::startRequest()

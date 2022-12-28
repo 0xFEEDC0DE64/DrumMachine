@@ -36,23 +36,15 @@ SequencerWidget::~SequencerWidget() = default;
 
 void SequencerWidget::loadSettings(DrumMachineSettings &settings)
 {
-    m_ui->pushButtonUp->setChannel(settings.drumpadChannelPrevSequence());
-    m_ui->pushButtonUp->setNote(settings.drumpadNotePrevSequence());
-    m_ui->pushButtonDown->setChannel(settings.drumpadChannelNextSequence());
-    m_ui->pushButtonDown->setNote(settings.drumpadNoteNextSequence());
-    m_ui->pushButtonPlayPause->setChannel(settings.drumpadChannelPlayPause());
-    m_ui->pushButtonPlayPause->setNote(settings.drumpadNotePlayPause());
-    m_ui->pushButtonStop->setChannel(settings.drumpadChannelStop());
-    m_ui->pushButtonStop->setNote(settings.drumpadNoteStop());
+    m_ui->pushButtonUp->setLearnSetting(settings.drumpadPrevSequence());
+    m_ui->pushButtonDown->setLearnSetting(settings.drumpadNextSequence());
+    m_ui->pushButtonPlayPause->setLearnSetting(settings.drumpadPlayPause());
+    m_ui->pushButtonStop->setLearnSetting(settings.drumpadStop());
 
-    connect(m_ui->pushButtonUp, &MidiButton::channelChanged, &settings, &DrumMachineSettings::setDrumpadChannelPrevSequence);
-    connect(m_ui->pushButtonUp, &MidiButton::noteChanged, &settings, &DrumMachineSettings::setDrumpadNotePrevSequence);
-    connect(m_ui->pushButtonDown, &MidiButton::channelChanged, &settings, &DrumMachineSettings::setDrumpadChannelNextSequence);
-    connect(m_ui->pushButtonDown, &MidiButton::noteChanged, &settings, &DrumMachineSettings::setDrumpadNoteNextSequence);
-    connect(m_ui->pushButtonPlayPause, &MidiButton::channelChanged, &settings, &DrumMachineSettings::setDrumpadChannelPlayPause);
-    connect(m_ui->pushButtonPlayPause, &MidiButton::noteChanged, &settings, &DrumMachineSettings::setDrumpadNotePlayPause);
-    connect(m_ui->pushButtonStop, &MidiButton::channelChanged, &settings, &DrumMachineSettings::setDrumpadChannelStop);
-    connect(m_ui->pushButtonStop, &MidiButton::noteChanged, &settings, &DrumMachineSettings::setDrumpadNoteStop);
+    connect(m_ui->pushButtonUp, &MidiButton::learnSettingChanged, &settings, &DrumMachineSettings::setDrumpadPrevSequence);
+    connect(m_ui->pushButtonDown, &MidiButton::learnSettingChanged, &settings, &DrumMachineSettings::setDrumpadNextSequence);
+    connect(m_ui->pushButtonPlayPause, &MidiButton::learnSettingChanged, &settings, &DrumMachineSettings::setDrumpadPlayPause);
+    connect(m_ui->pushButtonStop, &MidiButton::learnSettingChanged, &settings, &DrumMachineSettings::setDrumpadStop);
 }
 
 void SequencerWidget::unsendColors()
@@ -60,31 +52,31 @@ void SequencerWidget::unsendColors()
     m_sendColors = false;
 
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonUp->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonUp->learnSetting().channel,
+        .cmd = m_ui->pushButtonUp->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonUp->note(),
+        .note = m_ui->pushButtonUp->learnSetting().note,
         .velocity = 0
     });
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonDown->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonDown->learnSetting().channel,
+        .cmd = m_ui->pushButtonDown->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonDown->note(),
+        .note = m_ui->pushButtonDown->learnSetting().note,
         .velocity = 0
     });
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonPlayPause->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonPlayPause->learnSetting().channel,
+        .cmd = m_ui->pushButtonPlayPause->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonPlayPause->note(),
+        .note = m_ui->pushButtonPlayPause->learnSetting().note,
         .velocity = 0
     });
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonStop->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonStop->learnSetting().channel,
+        .cmd = m_ui->pushButtonStop->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonStop->note(),
+        .note = m_ui->pushButtonStop->learnSetting().note,
         .velocity = 0
     });
 }
@@ -94,31 +86,31 @@ void SequencerWidget::sendColors()
     m_sendColors = true;
 
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonUp->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonUp->learnSetting().channel,
+        .cmd = m_ui->pushButtonUp->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonUp->note(),
+        .note = m_ui->pushButtonUp->learnSetting().note,
         .velocity = 127
     });
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonDown->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonDown->learnSetting().channel,
+        .cmd = m_ui->pushButtonDown->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonDown->note(),
+        .note = m_ui->pushButtonDown->learnSetting().note,
         .velocity = 127
     });
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonPlayPause->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonPlayPause->learnSetting().channel,
+        .cmd = m_ui->pushButtonPlayPause->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonPlayPause->note(),
+        .note = m_ui->pushButtonPlayPause->learnSetting().note,
         .velocity = 60
     });
     emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonStop->channel(),
-        .cmd = midi::Command::NoteOn,
+        .channel = m_ui->pushButtonStop->learnSetting().channel,
+        .cmd = m_ui->pushButtonStop->learnSetting().cmd,
         .flag = true,
-        .note = m_ui->pushButtonStop->note(),
+        .note = m_ui->pushButtonStop->learnSetting().note,
         .velocity = 3
     });
 }

@@ -6,6 +6,7 @@
 #include <QDebug>
 
 #include "midicontainers.h"
+#include "futurecpp.h"
 
 MidiTabWidget::MidiTabWidget(QWidget *parent) :
     QTabWidget{parent}
@@ -14,30 +15,16 @@ MidiTabWidget::MidiTabWidget(QWidget *parent) :
     connect(tabBar(), &QWidget::customContextMenuRequested, this, &MidiTabWidget::showContextMenu);
 }
 
-quint8 MidiTabWidget::channel(int index) const
+MidiLearnSetting MidiTabWidget::learnSetting(int index) const
 {
-    return m_channelNotes[index].channel;
+    return m_learnSettings[index];
 }
 
-void MidiTabWidget::setChannel(int index, quint8 channel)
+void MidiTabWidget::setLearnSetting(int index, const MidiLearnSetting &learnSetting)
 {
-    auto &channelNote = m_channelNotes[index];
-    if (channelNote.channel == channel)
+    if (learnSetting == m_learnSettings[index])
         return;
-    emit channelChanged(index, channelNote.channel = channel);
-}
-
-quint8 MidiTabWidget::note(int index) const
-{
-    return m_channelNotes[index].note;
-}
-
-void MidiTabWidget::setNote(int index, quint8 note)
-{
-    auto &channelNote = m_channelNotes[index];
-    if (channelNote.note == note)
-        return;
-    emit noteChanged(index, channelNote.note = note);
+    emit learnSettingChanged(index, m_learnSettings[index] = learnSetting);
 }
 
 void MidiTabWidget::learn(int index)
@@ -67,18 +54,21 @@ void MidiTabWidget::midiReceived(const midi::MidiMessage &message)
 
     if (m_learning)
     {
-        qDebug() << "learning" << message.cmd << message.velocity << message.channel << message.note;
-        setChannel(*m_learning, message.channel);
-        setNote(*m_learning, message.note);
+        setLearnSetting(*m_learning, MidiLearnSetting{
+                            .cmd = message.cmd == midi::Command::NoteOff ? midi::Command::NoteOn : message.cmd,
+                            .channel = message.channel,
+                            .note = message.note
+                        });
+
         learn(*m_learning);
     }
     else
     {
-        qDebug() << "normal" << message.cmd << message.velocity << message.channel << message.note;
         for (int i = 0; i < count(); i++)
         {
-            if (message.channel != m_channelNotes[i].channel ||
-                message.note != m_channelNotes[i].note)
+            if (message.cmd != m_learnSettings[i].cmd ||
+                message.channel != m_learnSettings[i].channel ||
+                message.note != m_learnSettings[i].note)
                 continue;
 
             setCurrentIndex(i);
@@ -90,13 +80,13 @@ void MidiTabWidget::midiReceived(const midi::MidiMessage &message)
 void MidiTabWidget::tabInserted(int index)
 {
     QTabWidget::tabInserted(index);
-    m_channelNotes.insert(std::begin(m_channelNotes) + index, ChannelNote{.channel=quint8(index)});
+    m_learnSettings.insert(std::begin(m_learnSettings) + index, MidiLearnSetting{});
 }
 
 void MidiTabWidget::tabRemoved(int index)
 {
     QTabWidget::tabInserted(index);
-    m_channelNotes.erase(std::begin(m_channelNotes) + index);
+    m_learnSettings.erase(std::begin(m_learnSettings) + index);
 }
 
 void MidiTabWidget::showContextMenu(const QPoint &pos)
@@ -107,6 +97,12 @@ void MidiTabWidget::showContextMenu(const QPoint &pos)
 
     QMenu menu{tabBar()};
     const auto learnAction = menu.addAction(tr("Learn..."));
+    {
+        const auto &learnSetting = m_learnSettings[index];
+        menu.addAction(tr("cmd: %0").arg(std::to_underlying(learnSetting.cmd)))->setDisabled(true);
+        menu.addAction(tr("channel: %0").arg(learnSetting.channel))->setDisabled(true);
+        menu.addAction(tr("note: %0").arg(learnSetting.note))->setDisabled(true);
+    }
     if (const auto selectedAction = menu.exec(tabBar()->mapToGlobal(pos));
             selectedAction == learnAction)
     {

@@ -1,6 +1,6 @@
 QT = core multimedia gui widgets network
 
-CONFIG += c++20
+CONFIG += c++22
 
 QMAKE_CXXFLAGS += -Werror=all
 release: QMAKE_CXXFLAGS_RELEASE -= -O1
@@ -30,6 +30,7 @@ SOURCES += \
     main.cpp \
     midicontainers.cpp \
     midiinwrapper.cpp \
+    midilearnsetting.cpp \
     midioutwrapper.cpp \
     synthisizer.cpp \
     treetotableproxymodel.cpp \
@@ -60,6 +61,7 @@ HEADERS += \
     drumpadpresets.h \
     drumpadpresetsmodel.h \
     drumpadpresettagsmodel.h \
+    futurecpp.h \
     graphrenderer.h \
     jsonconverters.h \
     loopstationjsonconverters.h \
@@ -68,6 +70,7 @@ HEADERS += \
     loopstationpresettagsmodel.h \
     midicontainers.h \
     midiinwrapper.h \
+    midilearnsetting.h \
     midioutwrapper.h \
     synthisizer.h \
     treetotableproxymodel.h \

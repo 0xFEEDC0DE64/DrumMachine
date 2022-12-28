@@ -303,6 +303,10 @@ void MainWindow::updateMidiOutDevices()
 
 void MainWindow::loadSettings()
 {
+    for (int i = 0; i < m_ui->tabWidget->count(); i++)
+        m_ui->tabWidget->setLearnSetting(i, m_settings.tabWidget(i));
+    connect(m_ui->tabWidget, &MidiTabWidget::learnSettingChanged, &m_settings, &DrumMachineSettings::setTabWidget);
+
     m_ui->drumPadWidget->loadSettings(m_settings);
     m_ui->loopStationWidget->loadSettings(m_settings);
     m_ui->djWidget->loadSettings(m_settings);
@@ -311,6 +315,17 @@ void MainWindow::loadSettings()
 
 void MainWindow::unsendColors(int index)
 {
+    {
+        const auto &learnSetting = m_ui->tabWidget->learnSetting(index);
+        emit sendMidi(midi::MidiMessage {
+            .channel = learnSetting.channel,
+            .cmd = learnSetting.cmd,
+            .flag = true,
+            .note = learnSetting.note,
+            .velocity = 0
+        });
+    }
+
     if (index == 0)
         m_ui->drumPadWidget->unsendColors();
     else if (index == 1)
@@ -323,6 +338,17 @@ void MainWindow::unsendColors(int index)
 
 void MainWindow::sendColors(int index)
 {
+    {
+        const auto &learnSetting = m_ui->tabWidget->learnSetting(index);
+        emit sendMidi(midi::MidiMessage {
+            .channel = learnSetting.channel,
+            .cmd = learnSetting.cmd,
+            .flag = true,
+            .note = learnSetting.note,
+            .velocity = 3
+        });
+    }
+
     if (index == 0)
         m_ui->drumPadWidget->sendColors();
     else if (index == 1)

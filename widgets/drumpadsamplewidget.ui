@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>140</width>
-    <height>157</height>
+    <width>135</width>
+    <height>122</height>
    </rect>
   </property>
   <property name="autoFillBackground">
@@ -59,7 +59,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
-      <widget class="MidiButton" name="pushButton">
+      <widget class="MidiButton" name="pushButtonPlay">
        <property name="maximumSize">
         <size>
          <width>32</width>
@@ -90,23 +90,6 @@
        </property>
        <property name="notchesVisible">
         <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QSpinBox" name="channelSpinBox"/>
-     </item>
-     <item>
-      <widget class="QSpinBox" name="noteSpinBox"/>
-     </item>
-     <item>
-      <widget class="QToolButton" name="toolButtonLearn">
-       <property name="text">
-        <string>...</string>
        </property>
       </widget>
      </item>

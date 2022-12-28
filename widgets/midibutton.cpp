@@ -4,6 +4,7 @@
 #include <QtGlobal>
 
 #include "midicontainers.h"
+#include "futurecpp.h"
 
 MidiButton::MidiButton(QWidget *parent) :
     QPushButton{parent}
@@ -13,6 +14,22 @@ MidiButton::MidiButton(QWidget *parent) :
     auto action = new QAction{tr("Learn...")};
     connect(action, &QAction::triggered, this, &MidiButton::learn);
     addAction(action);
+
+    {
+        m_actionCmd = new QAction{tr("cmd:")};
+        m_actionCmd->setDisabled(true);
+        addAction(m_actionCmd);
+    }
+    {
+        m_actionChannel = new QAction{tr("channel:")};
+        m_actionChannel->setDisabled(true);
+        addAction(m_actionChannel);
+    }
+    {
+        m_actionNote = new QAction{tr("note:")};
+        m_actionNote->setDisabled(true);
+        addAction(m_actionNote);
+    }
 }
 
 MidiButton::MidiButton(const QString &text, QWidget *parent) :
@@ -23,6 +40,16 @@ MidiButton::MidiButton(const QString &text, QWidget *parent) :
 MidiButton::MidiButton(const QIcon &icon, const QString &text, QWidget *parent) :
     QPushButton{icon, text, parent}
 {
+}
+
+void MidiButton::setLearnSetting(const MidiLearnSetting &learnSetting)
+{
+    if (m_learnSetting == learnSetting)
+        return;
+    emit learnSettingChanged(m_learnSetting = learnSetting);
+    m_actionCmd->setText(tr("cmd: %0").arg(std::to_underlying(m_learnSetting.cmd)));
+    m_actionChannel->setText(tr("channel: %0").arg(m_learnSetting.channel));
+    m_actionNote->setText(tr("note: %0").arg(m_learnSetting.note));
 }
 
 void MidiButton::learn()
@@ -48,38 +75,49 @@ void MidiButton::learn()
 
 void MidiButton::midiReceived(const midi::MidiMessage &message)
 {
-    if (message.cmd != midi::Command::NoteOn &&
-        message.cmd != midi::Command::NoteOff &&
-        message.cmd != midi::Command::ControlChange)
-        return;
-
     if (m_learning)
     {
         if ((message.cmd != midi::Command::NoteOn && message.cmd != midi::Command::ControlChange) || message.velocity == 0)
             return;
 
-        setChannel(message.channel);
-        setNote(message.note);
+        setLearnSetting(MidiLearnSetting{
+                            .cmd = message.cmd == midi::Command::NoteOff ? midi::Command::NoteOn : message.cmd,
+                            .channel = message.channel,
+                            .note = message.note
+                        });
+
         learn();
     }
     else
     {
-        if (message.channel != m_channel || message.note != m_note)
+        if (message.channel != m_learnSetting.channel ||
+            message.note != m_learnSetting.note)
             return;
 
-        switch (message.cmd)
+        if (m_learnSetting.cmd == midi::Command::NoteOn || m_learnSetting.cmd == midi::Command::NoteOff)
         {
-        case midi::Command::NoteOn:
-        case midi::Command::ControlChange:
+            switch (message.cmd)
+            {
+            case midi::Command::NoteOn:
+                if (message.velocity != 0)
+                    emit pressed();
+                else
+            Q_FALLTHROUGH();
+            case midi::Command::NoteOff:
+                emit released();
+                break;
+            default:
+                return;
+            }
+        }
+        else if (m_learnSetting.cmd == message.cmd)
+        {
             if (message.velocity != 0)
                 emit pressed();
             else
-        Q_FALLTHROUGH();
-        case midi::Command::NoteOff:
-            emit released();
-            break;
-        default:
-            __builtin_unreachable();
+                emit released();
         }
+        else
+            return;
     }
 }
