@@ -207,7 +207,7 @@ MidiLearnSetting DrumMachineSettings::learnSetting(const QString &key) const
 
 void DrumMachineSettings::setLearnSetting(const QString &key, const MidiLearnSetting &value)
 {
-    setValue(QString{"%0_note"}.arg(key), std::to_underlying(value.cmd));
+    setValue(QString{"%0_cmd"}.arg(key), std::to_underlying(value.cmd));
     setValue(QString{"%0_channel"}.arg(key), value.channel);
     setValue(QString{"%0_note"}.arg(key), value.note);
 }
