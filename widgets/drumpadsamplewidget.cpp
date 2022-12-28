@@ -2,7 +2,6 @@
 #include "ui_drumpadsamplewidget.h"
 
 #include <QAbstractEventDispatcher>
-#include <QSoundEffect>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
@@ -17,7 +16,7 @@ namespace {
 QString toString(QString value) { return value; }
 QString toString(int value) { return QString::number(value); }
 QString toString(bool value) { return value?"true":"false"; }
-}
+} // namespace
 
 DrumPadSampleWidget::DrumPadSampleWidget(QWidget *parent) :
     QFrame{parent},
@@ -212,7 +211,6 @@ void DrumPadSampleWidget::updateStatus()
 {
     QPalette pal;
 
-
     if (m_file && m_file->color && m_player.buffer().isValid())
     {
         const auto bright = m_player.playing() ? 255 : 155;
@@ -264,9 +262,7 @@ void DrumPadSampleWidget::updateStatus()
 void DrumPadSampleWidget::requestFinished()
 {
     if (m_reply->error() == QNetworkReply::NoError)
-    {
         emit startDecoding(m_reply);
-    }
     updateStatus();
 }
 

@@ -196,6 +196,16 @@ void DrumMachineSettings::setLoopstationNextPreset(const MidiLearnSetting &value
     setLearnSetting("loopstation/nextPreset", value);
 }
 
+MidiLearnSetting DrumMachineSettings::loopstationSample(quint8 pad) const
+{
+    return learnSetting(QString{"loopstation/pad%0"}.arg(pad));
+}
+
+void DrumMachineSettings::setLoopstationSample(quint8 pad, const MidiLearnSetting &value)
+{
+    setLearnSetting(QString{"loopstation/pad%0"}.arg(pad), value);
+}
+
 MidiLearnSetting DrumMachineSettings::learnSetting(const QString &key) const
 {
     return MidiLearnSetting{

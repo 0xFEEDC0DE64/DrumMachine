@@ -51,6 +51,13 @@
      </property>
     </widget>
    </item>
+   <item>
+    <widget class="QLabel" name="labelType">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>

@@ -1,54 +1,82 @@
 #include "loopstationsampleswidget.h"
 #include "ui_loopstationsampleswidget.h"
 
+#include "loopstationpresets.h"
+
 LoopStationSamplesWidget::LoopStationSamplesWidget(QWidget *parent) :
     QWidget{parent},
     m_ui{std::make_unique<Ui::LoopStationSamplesWidget>()}
 {
     m_ui->setupUi(this);
+
+    quint8 padNr{};
+    for (LoopStationSampleWidget &widget : getWidgets())
+    {
+        widget.setPadNr(padNr++);
+        connect(&widget, &LoopStationSampleWidget::sendMidi, this, &LoopStationSamplesWidget::sendMidi);
+    }
 }
 
 LoopStationSamplesWidget::~LoopStationSamplesWidget() = default;
 
 void LoopStationSamplesWidget::loadSettings(DrumMachineSettings &settings)
 {
-    Q_UNUSED(settings)
+    for (LoopStationSampleWidget &widget : getWidgets())
+        widget.loadSettings(settings);
 }
 
 void LoopStationSamplesWidget::setPreset(const loopstation_presets::Preset &preset)
 {
-    Q_UNUSED(preset)
+    assert(preset.id);
+    assert(preset.pads);
+
+    const auto &presetId = *preset.id;
+    const auto &widgets = getWidgets();
+    const auto &pads = *preset.pads;
+
+    auto iter = std::begin(widgets);
+    auto iter2 = std::begin(pads);
+    int i{};
+    for (; iter != std::end(widgets) && iter2 != std::end(pads); iter++, iter2++)
+    {
+        ((*iter)).get().setSample(presetId, QString{"%0_%1.wav"}.arg(presetId).arg(++i, 2, 10, QLatin1Char('0')), *iter2);
+    }
 }
 
 void LoopStationSamplesWidget::midiReceived(const midi::MidiMessage &message)
 {
-    Q_UNUSED(message)
+    for (LoopStationSampleWidget &widget : getWidgets())
+        widget.midiReceived(message);
 }
 
 void LoopStationSamplesWidget::writeSamples(frame_t *begin, frame_t *end)
 {
-    Q_UNUSED(begin)
-    Q_UNUSED(end)
+    for (LoopStationSampleWidget &widget : getWidgets())
+        widget.writeSamples(begin, end);
 }
 
 void LoopStationSamplesWidget::injectNetworkAccessManager(QNetworkAccessManager &networkAccessManager)
 {
-    Q_UNUSED(networkAccessManager)
+    for (LoopStationSampleWidget &widget : getWidgets())
+        widget.injectNetworkAccessManager(networkAccessManager);
 }
 
 void LoopStationSamplesWidget::injectDecodingThread(QThread &thread)
 {
-    Q_UNUSED(thread)
+    for (LoopStationSampleWidget &widget : getWidgets())
+        widget.injectDecodingThread(thread);
 }
 
 void LoopStationSamplesWidget::unsendColors()
 {
-
+    for (LoopStationSampleWidget &widget : getWidgets())
+        widget.unsendColor();
 }
 
 void LoopStationSamplesWidget::sendColors()
 {
-
+    for (LoopStationSampleWidget &widget : getWidgets())
+        widget.sendColor();
 }
 
 std::array<std::reference_wrapper<LoopStationSampleWidget>, 48> LoopStationSamplesWidget::getWidgets()

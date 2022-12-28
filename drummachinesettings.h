@@ -69,6 +69,9 @@ public:
     MidiLearnSetting loopstationNextPreset() const;
     void setLoopstationNextPreset(const MidiLearnSetting &value);
 
+    MidiLearnSetting loopstationSample(quint8 pad) const;
+    void setLoopstationSample(quint8 pad, const MidiLearnSetting &value);
+
 private:
     MidiLearnSetting learnSetting(const QString &key) const;
     void setLearnSetting(const QString &key, const MidiLearnSetting &value);

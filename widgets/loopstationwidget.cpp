@@ -22,6 +22,8 @@ LoopStationWidget::LoopStationWidget(QWidget *parent) :
     connect(m_ui->pushButtonDown, &QAbstractButton::pressed, this, &LoopStationWidget::selectNextPreset);
     connect(m_ui->pushButtonRefresh, &QAbstractButton::pressed, this, &LoopStationWidget::loadPresets);
 
+    connect(m_ui->samplesWidget, &LoopStationSamplesWidget::sendMidi, this, &LoopStationWidget::sendMidi);
+
     m_presetsProxyModel.setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_presetsProxyModel.setSortRole(Qt::EditRole);
     m_presetsProxyModel.setSourceModel(&m_presetsModel);

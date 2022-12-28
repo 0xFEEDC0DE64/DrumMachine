@@ -52,9 +52,7 @@ void DrumPadSamplesWidget::midiReceived(const midi::MidiMessage &message)
     }
 
     for (DrumPadSampleWidget &widget : getWidgets())
-    {
         widget.midiReceived(message);
-    }
 }
 
 void DrumPadSamplesWidget::writeSamples(frame_t *begin, frame_t *end)
