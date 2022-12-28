@@ -62,6 +62,9 @@ void AudioPlayer::writeSamples(frame_t *begin, frame_t *end)
             return frame;
         }
 
+        if (index < 0 || index >= buffer.frameCount())
+            return frame;
+
         const frame_t &frame2 = data[index];
 
         std::transform(std::cbegin(frame), std::cend(frame), std::begin(frame2), std::begin(frame),
