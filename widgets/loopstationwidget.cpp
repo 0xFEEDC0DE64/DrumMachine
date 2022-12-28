@@ -38,19 +38,19 @@ LoopStationWidget::~LoopStationWidget() = default;
 
 void LoopStationWidget::writeSamples(frame_t *begin, frame_t *end)
 {
-    Q_UNUSED(begin)
-    Q_UNUSED(end)
+    m_ui->samplesWidget->writeSamples(begin, end);
 }
 
 void LoopStationWidget::injectNetworkAccessManager(QNetworkAccessManager &networkAccessManager)
 {
     m_networkAccessManager = &networkAccessManager;
     loadPresets();
+    m_ui->samplesWidget->injectNetworkAccessManager(networkAccessManager);
 }
 
 void LoopStationWidget::injectDecodingThread(QThread &thread)
 {
-    Q_UNUSED(thread)
+    m_ui->samplesWidget->injectDecodingThread(thread);
 }
 
 void LoopStationWidget::loadSettings(DrumMachineSettings &settings)
@@ -62,6 +62,8 @@ void LoopStationWidget::loadSettings(DrumMachineSettings &settings)
 
     connect(m_ui->pushButtonUp, &MidiButton::learnSettingChanged, m_settings, &DrumMachineSettings::setLoopstationPrevPreset);
     connect(m_ui->pushButtonDown, &MidiButton::learnSettingChanged, m_settings, &DrumMachineSettings::setLoopstationNextPreset);
+
+    m_ui->samplesWidget->loadSettings(settings);
 }
 
 void LoopStationWidget::unsendColors()
@@ -80,6 +82,8 @@ void LoopStationWidget::unsendColors()
         .note = m_ui->pushButtonDown->learnSetting().note,
         .velocity = 0
     });
+
+    m_ui->samplesWidget->unsendColors();
 }
 
 void LoopStationWidget::sendColors()
@@ -98,6 +102,8 @@ void LoopStationWidget::sendColors()
         .note = m_ui->pushButtonDown->learnSetting().note,
         .velocity = 127
     });
+
+    m_ui->samplesWidget->sendColors();
 }
 
 void LoopStationWidget::midiReceived(const midi::MidiMessage &message)
@@ -105,7 +111,7 @@ void LoopStationWidget::midiReceived(const midi::MidiMessage &message)
     m_ui->pushButtonUp->midiReceived(message);
     m_ui->pushButtonDown->midiReceived(message);
 
-    // TODO
+    m_ui->samplesWidget->midiReceived(message);
 }
 
 void LoopStationWidget::currentRowChanged(const QModelIndex &current)
@@ -129,6 +135,7 @@ void LoopStationWidget::currentRowChanged(const QModelIndex &current)
         qWarning() << "no settings available";
 
     m_ui->presetDetailWidget->setPreset(preset);
+    m_ui->samplesWidget->setPreset(preset);
 }
 
 void LoopStationWidget::loadPresets()

@@ -13,99 +13,95 @@
   <property name="orientation">
    <enum>Qt::Horizontal</enum>
   </property>
-  <widget class="QWidget" name="layoutWidget">
-   <layout class="QVBoxLayout">
-    <property name="topMargin">
-     <number>9</number>
-    </property>
-    <item>
-     <layout class="QVBoxLayout">
-      <item>
-       <layout class="QHBoxLayout" stretch="1,0,0,0">
-        <item>
-         <widget class="QLineEdit" name="lineEdit">
-          <property name="clearButtonEnabled">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="MidiButton" name="pushButtonUp">
-          <property name="maximumSize">
-           <size>
-            <width>32</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>⬆</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="MidiButton" name="pushButtonDown">
-          <property name="maximumSize">
-           <size>
-            <width>32</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>⬇</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButtonRefresh">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>32</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>↻</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QTreeView" name="presetsView">
-        <property name="rootIsDecorated">
-         <bool>false</bool>
-        </property>
-        <property name="sortingEnabled">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <widget class="QTabWidget" name="tabWidget">
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <widget class="DrumPadPresetDetailWidget" name="presetDetailWidget">
-       <attribute name="title">
-        <string>Properties</string>
-       </attribute>
-      </widget>
-      <widget class="QTreeView" name="filesView">
+  <widget class="QSplitter" name="splitter">
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" stretch="1,0,0,0">
+       <item>
+        <widget class="QLineEdit" name="lineEdit">
+         <property name="clearButtonEnabled">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="MidiButton" name="pushButtonUp">
+         <property name="maximumSize">
+          <size>
+           <width>32</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>⬆</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="MidiButton" name="pushButtonDown">
+         <property name="maximumSize">
+          <size>
+           <width>32</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>⬇</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButtonRefresh">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>32</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>↻</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QTreeView" name="presetsView">
        <property name="rootIsDecorated">
         <bool>false</bool>
        </property>
-       <attribute name="title">
-        <string>Samples</string>
-       </attribute>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
       </widget>
-     </widget>
-    </item>
-   </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="DrumPadPresetDetailWidget" name="presetDetailWidget">
+     <attribute name="title">
+      <string>Properties</string>
+     </attribute>
+    </widget>
+    <widget class="QTreeView" name="filesView">
+     <property name="rootIsDecorated">
+      <bool>false</bool>
+     </property>
+     <attribute name="title">
+      <string>Samples</string>
+     </attribute>
+    </widget>
+   </widget>
   </widget>
   <widget class="QSplitter" name="splitter">
    <property name="orientation">

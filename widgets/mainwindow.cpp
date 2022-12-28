@@ -338,27 +338,30 @@ void MainWindow::unsendColors(int index)
 
 void MainWindow::sendColors(int index)
 {
+    if (true)
     {
-        const auto &learnSetting = m_ui->tabWidget->learnSetting(index);
-        emit sendMidi(midi::MidiMessage {
-            .channel = learnSetting.channel,
-            .cmd = learnSetting.cmd,
-            .flag = true,
-            .note = learnSetting.note,
-            .velocity = 3
-        });
+        {
+            const auto &learnSetting = m_ui->tabWidget->learnSetting(index);
+            emit sendMidi(midi::MidiMessage {
+                .channel = learnSetting.channel,
+                .cmd = learnSetting.cmd,
+                .flag = true,
+                .note = learnSetting.note,
+                .velocity = 3
+            });
+        }
+
+        if (index == 0)
+            m_ui->drumPadWidget->sendColors();
+        else if (index == 1)
+            m_ui->loopStationWidget->sendColors();
+        else if (index == 2)
+            m_ui->djWidget->sendColors();
+        else if (index == 3)
+            m_ui->synthisizerWidget->sendColors();
+
+        return;
     }
-
-    if (index == 0)
-        m_ui->drumPadWidget->sendColors();
-    else if (index == 1)
-        m_ui->loopStationWidget->sendColors();
-    else if (index == 2)
-        m_ui->djWidget->sendColors();
-    else if (index == 3)
-        m_ui->synthisizerWidget->sendColors();
-
-    return;
 
     // this was just for debugging all the available colors on novation launchpad mk1
 

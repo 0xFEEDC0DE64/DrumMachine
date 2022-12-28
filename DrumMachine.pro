@@ -40,6 +40,8 @@ SOURCES += \
     widgets/drumpadsamplewidget.cpp \
     widgets/drumpadwidget.cpp \
     widgets/loopstationpresetdetailwidget.cpp \
+    widgets/loopstationsampleswidget.cpp \
+    widgets/loopstationsamplewidget.cpp \
     widgets/loopstationwidget.cpp \
     widgets/mainwindow.cpp \
     widgets/midibutton.cpp \
@@ -80,6 +82,8 @@ HEADERS += \
     widgets/drumpadsamplewidget.h \
     widgets/drumpadwidget.h \
     widgets/loopstationpresetdetailwidget.h \
+    widgets/loopstationsampleswidget.h \
+    widgets/loopstationsamplewidget.h \
     widgets/loopstationwidget.h \
     widgets/mainwindow.h \
     widgets/midibutton.h \
@@ -98,6 +102,8 @@ FORMS += \
     widgets/drumpadsamplewidget.ui \
     widgets/drumpadwidget.ui \
     widgets/loopstationpresetdetailwidget.ui \
+    widgets/loopstationsampleswidget.ui \
+    widgets/loopstationsamplewidget.ui \
     widgets/loopstationwidget.ui \
     widgets/mainwindow.ui \
     widgets/sequencerwidget.ui \

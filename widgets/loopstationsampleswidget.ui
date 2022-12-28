@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LoopStationSamplesWidget</class>
+ <widget class="QWidget" name="LoopStationSamplesWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1254</width>
+    <height>890</height>
+   </rect>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="4">
+    <widget class="LoopStationSampleWidget" name="sampleWidget3" native="true"/>
+   </item>
+   <item row="2" column="1">
+    <widget class="LoopStationSampleWidget" name="sampleWidget4" native="true"/>
+   </item>
+   <item row="5" column="3">
+    <widget class="LoopStationSampleWidget" name="sampleWidget18" native="true"/>
+   </item>
+   <item row="4" column="1">
+    <widget class="LoopStationSampleWidget" name="sampleWidget12" native="true"/>
+   </item>
+   <item row="5" column="4">
+    <widget class="LoopStationSampleWidget" name="sampleWidget19" native="true"/>
+   </item>
+   <item row="1" column="9">
+    <widget class="LoopStationSampleWidget" name="sampleWidget27" native="true"/>
+   </item>
+   <item row="4" column="4">
+    <widget class="LoopStationSampleWidget" name="sampleWidget15" native="true"/>
+   </item>
+   <item row="6" column="3">
+    <widget class="LoopStationSampleWidget" name="sampleWidget22" native="true"/>
+   </item>
+   <item row="3" column="3">
+    <widget class="LoopStationSampleWidget" name="sampleWidget10" native="true"/>
+   </item>
+   <item row="2" column="10">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="3" column="4">
+    <widget class="LoopStationSampleWidget" name="sampleWidget11" native="true"/>
+   </item>
+   <item row="6" column="1">
+    <widget class="LoopStationSampleWidget" name="sampleWidget20" native="true"/>
+   </item>
+   <item row="3" column="1">
+    <widget class="LoopStationSampleWidget" name="sampleWidget8" native="true"/>
+   </item>
+   <item row="4" column="3">
+    <widget class="LoopStationSampleWidget" name="sampleWidget14" native="true"/>
+   </item>
+   <item row="6" column="2">
+    <widget class="LoopStationSampleWidget" name="sampleWidget21" native="true"/>
+   </item>
+   <item row="1" column="2">
+    <widget class="LoopStationSampleWidget" name="sampleWidget1" native="true"/>
+   </item>
+   <item row="5" column="1">
+    <widget class="LoopStationSampleWidget" name="sampleWidget16" native="true"/>
+   </item>
+   <item row="0" column="2">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="0">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="7">
+    <widget class="LoopStationSampleWidget" name="sampleWidget25" native="true"/>
+   </item>
+   <item row="4" column="2">
+    <widget class="LoopStationSampleWidget" name="sampleWidget13" native="true"/>
+   </item>
+   <item row="1" column="3">
+    <widget class="LoopStationSampleWidget" name="sampleWidget2" native="true"/>
+   </item>
+   <item row="3" column="2">
+    <widget class="LoopStationSampleWidget" name="sampleWidget9" native="true"/>
+   </item>
+   <item row="1" column="1">
+    <widget class="LoopStationSampleWidget" name="sampleWidget0" native="true"/>
+   </item>
+   <item row="1" column="6">
+    <widget class="LoopStationSampleWidget" name="sampleWidget24" native="true"/>
+   </item>
+   <item row="2" column="2">
+    <widget class="LoopStationSampleWidget" name="sampleWidget5" native="true"/>
+   </item>
+   <item row="6" column="4">
+    <widget class="LoopStationSampleWidget" name="sampleWidget23" native="true"/>
+   </item>
+   <item row="5" column="2">
+    <widget class="LoopStationSampleWidget" name="sampleWidget17" native="true"/>
+   </item>
+   <item row="7" column="2">
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="3">
+    <widget class="LoopStationSampleWidget" name="sampleWidget6" native="true"/>
+   </item>
+   <item row="2" column="4">
+    <widget class="LoopStationSampleWidget" name="sampleWidget7" native="true"/>
+   </item>
+   <item row="1" column="8">
+    <widget class="LoopStationSampleWidget" name="sampleWidget26" native="true"/>
+   </item>
+   <item row="2" column="5">
+    <spacer name="horizontalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="6">
+    <widget class="LoopStationSampleWidget" name="sampleWidget28" native="true"/>
+   </item>
+   <item row="2" column="7">
+    <widget class="LoopStationSampleWidget" name="sampleWidget29" native="true"/>
+   </item>
+   <item row="2" column="8">
+    <widget class="LoopStationSampleWidget" name="sampleWidget30" native="true"/>
+   </item>
+   <item row="2" column="9">
+    <widget class="LoopStationSampleWidget" name="sampleWidget31" native="true"/>
+   </item>
+   <item row="3" column="6">
+    <widget class="LoopStationSampleWidget" name="sampleWidget32" native="true"/>
+   </item>
+   <item row="3" column="7">
+    <widget class="LoopStationSampleWidget" name="sampleWidget33" native="true"/>
+   </item>
+   <item row="3" column="8">
+    <widget class="LoopStationSampleWidget" name="sampleWidget34" native="true"/>
+   </item>
+   <item row="3" column="9">
+    <widget class="LoopStationSampleWidget" name="sampleWidget35" native="true"/>
+   </item>
+   <item row="4" column="6">
+    <widget class="LoopStationSampleWidget" name="sampleWidget36" native="true"/>
+   </item>
+   <item row="4" column="7">
+    <widget class="LoopStationSampleWidget" name="sampleWidget37" native="true"/>
+   </item>
+   <item row="4" column="8">
+    <widget class="LoopStationSampleWidget" name="sampleWidget38" native="true"/>
+   </item>
+   <item row="4" column="9">
+    <widget class="LoopStationSampleWidget" name="sampleWidget39" native="true"/>
+   </item>
+   <item row="5" column="6">
+    <widget class="LoopStationSampleWidget" name="sampleWidget40" native="true"/>
+   </item>
+   <item row="5" column="7">
+    <widget class="LoopStationSampleWidget" name="sampleWidget41" native="true"/>
+   </item>
+   <item row="5" column="8">
+    <widget class="LoopStationSampleWidget" name="sampleWidget42" native="true"/>
+   </item>
+   <item row="5" column="9">
+    <widget class="LoopStationSampleWidget" name="sampleWidget43" native="true"/>
+   </item>
+   <item row="6" column="6">
+    <widget class="LoopStationSampleWidget" name="sampleWidget44" native="true"/>
+   </item>
+   <item row="6" column="7">
+    <widget class="LoopStationSampleWidget" name="sampleWidget45" native="true"/>
+   </item>
+   <item row="6" column="8">
+    <widget class="LoopStationSampleWidget" name="sampleWidget46" native="true"/>
+   </item>
+   <item row="6" column="9">
+    <widget class="LoopStationSampleWidget" name="sampleWidget47" native="true"/>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>LoopStationSampleWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/loopstationsamplewidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
