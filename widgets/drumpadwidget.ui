@@ -57,6 +57,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButtonRefresh">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="maximumSize">
            <size>
             <width>32</width>
@@ -114,6 +117,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>MidiButton</class>
+   <extends>QPushButton</extends>
+   <header>widgets/midibutton.h</header>
+  </customwidget>
+  <customwidget>
    <class>DrumPadSamplesWidget</class>
    <extends>QWidget</extends>
    <header>widgets/drumpadsampleswidget.h</header>
@@ -130,11 +138,6 @@
    <extends>QWidget</extends>
    <header>widgets/sequencerwidget.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>MidiButton</class>
-   <extends>QPushButton</extends>
-   <header>widgets/midibutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

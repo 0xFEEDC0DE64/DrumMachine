@@ -56,21 +56,60 @@ void LoopStationWidget::injectDecodingThread(QThread &thread)
 void LoopStationWidget::loadSettings(DrumMachineSettings &settings)
 {
     m_settings = &settings;
+
+    m_ui->pushButtonUp->setChannel(m_settings->loopstationChannelPrevPreset());
+    m_ui->pushButtonUp->setNote(m_settings->loopstationNotePrevPreset());
+    m_ui->pushButtonDown->setChannel(m_settings->loopstationChannelNextPreset());
+    m_ui->pushButtonDown->setNote(m_settings->loopstationNoteNextPreset());
+
+    connect(m_ui->pushButtonUp, &MidiButton::channelChanged, m_settings, &DrumMachineSettings::setLoopstationChannelPrevPreset);
+    connect(m_ui->pushButtonUp, &MidiButton::noteChanged, m_settings, &DrumMachineSettings::setLoopstationNotePrevPreset);
+    connect(m_ui->pushButtonDown, &MidiButton::channelChanged, m_settings, &DrumMachineSettings::setLoopstationChannelNextPreset);
+    connect(m_ui->pushButtonDown, &MidiButton::noteChanged, m_settings, &DrumMachineSettings::setLoopstationNoteNextPreset);
 }
 
 void LoopStationWidget::unsendColors()
 {
-
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonUp->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonUp->note(),
+        .velocity = 0
+    });
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonDown->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonDown->note(),
+        .velocity = 0
+    });
 }
 
 void LoopStationWidget::sendColors()
 {
-
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonUp->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonUp->note(),
+        .velocity = 127
+    });
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonDown->channel(),
+        .cmd = midi::Command::NoteOn,
+        .flag = true,
+        .note = m_ui->pushButtonDown->note(),
+        .velocity = 127
+    });
 }
 
 void LoopStationWidget::midiReceived(const midi::MidiMessage &message)
 {
-    Q_UNUSED(message);
+    m_ui->pushButtonUp->midiReceived(message);
+    m_ui->pushButtonDown->midiReceived(message);
+
+    // TODO
 }
 
 void LoopStationWidget::currentRowChanged(const QModelIndex &current)
@@ -120,15 +159,14 @@ void LoopStationWidget::requestFinished()
         return;
     }
 
-    auto reply = std::move(m_reply);
-    if (reply->error() != QNetworkReply::NoError)
-    {
-        QMessageBox::warning(this, tr("Could not load presets!"), tr("Could not load presets!") + "\n\n" + reply->errorString());
-        return;
-    }
+    m_ui->pushButtonRefresh->setEnabled(true);
 
+    auto reply = std::move(m_reply);
     try
     {
+        if (reply->error() != QNetworkReply::NoError)
+            throw std::runtime_error{QString{"request failed: %0"}.arg(reply->errorString()).toStdString()};
+
         auto result = json_converters::loopstation::parsePresetsConfig(json_converters::loadJson(reply->readAll()));
 
         if (!result.presets)
@@ -159,23 +197,48 @@ noLastId:
     }
     catch (const std::exception &e)
     {
-        QMessageBox::warning(this, tr("error"), tr("error") + "\n\n" + QString::fromStdString(e.what()));
+        QMessageBox::warning(this, tr("Could not load presets!"), tr("Could not load presets!") + "\n\n" + QString::fromStdString(e.what()));
     }
 }
 
 void LoopStationWidget::selectFirstPreset()
 {
+    if (!m_presetsProxyModel.rowCount())
+        return;
 
+    selectIndex(m_presetsProxyModel.index(0, 0));
 }
 
 void LoopStationWidget::selectPrevPreset()
 {
+    if (!m_presetsProxyModel.rowCount())
+        return;
 
+    const auto index = m_ui->presetsView->selectionModel()->currentIndex();
+    if (!index.isValid())
+    {
+        qWarning() << "invalid index";
+        return;
+    }
+
+    if (index.row() > 0)
+        selectIndex(m_presetsProxyModel.index(index.row() - 1, 0));
 }
 
 void LoopStationWidget::selectNextPreset()
 {
+    if (!m_presetsProxyModel.rowCount())
+        return;
 
+    const auto index = m_ui->presetsView->selectionModel()->currentIndex();
+    if (!index.isValid())
+    {
+        qWarning() << "invalid index";
+        return;
+    }
+
+    if (index.row() + 1 < m_presetsProxyModel.rowCount())
+        selectIndex(m_presetsProxyModel.index(index.row() + 1, 0));
 }
 
 void LoopStationWidget::selectIndex(const QModelIndex &index)

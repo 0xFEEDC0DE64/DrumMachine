@@ -179,15 +179,14 @@ void DrumPadWidget::requestFinished()
         return;
     }
 
-    auto reply = std::move(m_reply);
-    if (reply->error() != QNetworkReply::NoError)
-    {
-        QMessageBox::warning(this, tr("Could not load presets!"), tr("Could not load presets!") + "\n\n" + reply->errorString());
-        return;
-    }
+    m_ui->pushButtonRefresh->setEnabled(true);
 
+    auto reply = std::move(m_reply);
     try
     {
+        if (reply->error() != QNetworkReply::NoError)
+            throw std::runtime_error{QString{"request failed: %0"}.arg(reply->errorString()).toStdString()};
+
         auto result = json_converters::drumpad::parsePresetsConfig(json_converters::loadJson(reply->readAll()));
 
         if (!result.presets)
@@ -218,7 +217,7 @@ noLastId:
     }
     catch (const std::exception &e)
     {
-        QMessageBox::warning(this, tr("error"), tr("error") + "\n\n" + QString::fromStdString(e.what()));
+        QMessageBox::warning(this, tr("Could not load presets!"), tr("Could not load presets!") + "\n\n" + QString::fromStdString(e.what()));
     }
 }
 

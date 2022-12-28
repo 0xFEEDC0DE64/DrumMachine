@@ -51,7 +51,10 @@
        </widget>
       </item>
       <item>
-       <widget class="MidiButton" name="pushButtonRefresh">
+       <widget class="QPushButton" name="pushButtonRefresh">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="maximumSize">
          <size>
           <width>32</width>

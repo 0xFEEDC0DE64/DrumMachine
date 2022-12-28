@@ -28,8 +28,6 @@ struct File
     std::optional<QString> stopOnRelease;
     std::optional<bool> looped;
     std::optional<int> choke;
-
-    bool operator==(const File &other) const;
 };
 
 struct SequencePad

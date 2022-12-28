@@ -232,3 +232,43 @@ void DrumMachineSettings::setLoopstationLastPresetId(const QString &lastPresetId
 {
     setValue("loopstation/lastPresetId", lastPresetId);
 }
+
+quint8 DrumMachineSettings::loopstationChannelPrevPreset() const
+{
+    return value("loopstation/prevPreset_channel", 99).toUInt();
+}
+
+void DrumMachineSettings::setLoopstationChannelPrevPreset(quint8 channel)
+{
+    setValue("loopstation/prevPreset_channel", channel);
+}
+
+quint8 DrumMachineSettings::loopstationNotePrevPreset() const
+{
+    return value("loopstation/prevPreset_note", 99).toUInt();
+}
+
+void DrumMachineSettings::setLoopstationNotePrevPreset(quint8 note)
+{
+    setValue("loopstation/prevPreset_note", note);
+}
+
+quint8 DrumMachineSettings::loopstationChannelNextPreset() const
+{
+    return value("loopstation/nextPreset_channel", 99).toUInt();
+}
+
+void DrumMachineSettings::setLoopstationChannelNextPreset(quint8 channel)
+{
+    setValue("loopstation/nextPreset_channel", channel);
+}
+
+quint8 DrumMachineSettings::loopstationNoteNextPreset() const
+{
+    return value("loopstation/nextPreset_note", 99).toUInt();
+}
+
+void DrumMachineSettings::setLoopstationNoteNextPreset(quint8 note)
+{
+    setValue("loopstation/nextPreset_note", note);
+}

@@ -71,4 +71,14 @@ public:
 
     QString loopstationLastPresetId() const;
     void setLoopstationLastPresetId(const QString &lastPresetId);
+
+    quint8 loopstationChannelPrevPreset() const;
+    void setLoopstationChannelPrevPreset(quint8 channel);
+    quint8 loopstationNotePrevPreset() const;
+    void setLoopstationNotePrevPreset(quint8 note);
+
+    quint8 loopstationChannelNextPreset() const;
+    void setLoopstationChannelNextPreset(quint8 channel);
+    quint8 loopstationNoteNextPreset() const;
+    void setLoopstationNoteNextPreset(quint8 note);
 };
