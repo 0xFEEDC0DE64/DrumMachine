@@ -85,4 +85,6 @@ private:
     quint8 m_padNr{};
 
     bool m_sendColors{};
+
+    QColor m_lastColor;
 };

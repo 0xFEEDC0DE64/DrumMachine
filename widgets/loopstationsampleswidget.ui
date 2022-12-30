@@ -6,126 +6,42 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1254</width>
-    <height>890</height>
+    <width>411</width>
+    <height>273</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="4">
-    <widget class="LoopStationSampleWidget" name="sampleWidget3" native="true"/>
-   </item>
-   <item row="2" column="1">
-    <widget class="LoopStationSampleWidget" name="sampleWidget4" native="true"/>
-   </item>
-   <item row="5" column="3">
-    <widget class="LoopStationSampleWidget" name="sampleWidget18" native="true"/>
-   </item>
-   <item row="4" column="1">
-    <widget class="LoopStationSampleWidget" name="sampleWidget12" native="true"/>
-   </item>
-   <item row="5" column="4">
-    <widget class="LoopStationSampleWidget" name="sampleWidget19" native="true"/>
-   </item>
-   <item row="1" column="9">
-    <widget class="LoopStationSampleWidget" name="sampleWidget27" native="true"/>
-   </item>
-   <item row="4" column="4">
-    <widget class="LoopStationSampleWidget" name="sampleWidget15" native="true"/>
-   </item>
-   <item row="6" column="3">
-    <widget class="LoopStationSampleWidget" name="sampleWidget22" native="true"/>
-   </item>
-   <item row="3" column="3">
-    <widget class="LoopStationSampleWidget" name="sampleWidget10" native="true"/>
-   </item>
-   <item row="2" column="10">
-    <spacer name="horizontalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+   <item row="6" column="8">
+    <widget class="LoopStationSampleWidget" name="sampleWidget44">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
      </property>
-    </spacer>
-   </item>
-   <item row="3" column="4">
-    <widget class="LoopStationSampleWidget" name="sampleWidget11" native="true"/>
-   </item>
-   <item row="6" column="1">
-    <widget class="LoopStationSampleWidget" name="sampleWidget20" native="true"/>
-   </item>
-   <item row="3" column="1">
-    <widget class="LoopStationSampleWidget" name="sampleWidget8" native="true"/>
-   </item>
-   <item row="4" column="3">
-    <widget class="LoopStationSampleWidget" name="sampleWidget14" native="true"/>
-   </item>
-   <item row="6" column="2">
-    <widget class="LoopStationSampleWidget" name="sampleWidget21" native="true"/>
-   </item>
-   <item row="1" column="2">
-    <widget class="LoopStationSampleWidget" name="sampleWidget1" native="true"/>
-   </item>
-   <item row="5" column="1">
-    <widget class="LoopStationSampleWidget" name="sampleWidget16" native="true"/>
-   </item>
-   <item row="0" column="2">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="2" column="0">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="1" column="7">
-    <widget class="LoopStationSampleWidget" name="sampleWidget25" native="true"/>
-   </item>
-   <item row="4" column="2">
-    <widget class="LoopStationSampleWidget" name="sampleWidget13" native="true"/>
-   </item>
-   <item row="1" column="3">
-    <widget class="LoopStationSampleWidget" name="sampleWidget2" native="true"/>
-   </item>
-   <item row="3" column="2">
-    <widget class="LoopStationSampleWidget" name="sampleWidget9" native="true"/>
-   </item>
-   <item row="1" column="1">
-    <widget class="LoopStationSampleWidget" name="sampleWidget0" native="true"/>
-   </item>
-   <item row="1" column="6">
-    <widget class="LoopStationSampleWidget" name="sampleWidget24" native="true"/>
-   </item>
-   <item row="2" column="2">
-    <widget class="LoopStationSampleWidget" name="sampleWidget5" native="true"/>
-   </item>
-   <item row="6" column="4">
-    <widget class="LoopStationSampleWidget" name="sampleWidget23" native="true"/>
-   </item>
-   <item row="5" column="2">
-    <widget class="LoopStationSampleWidget" name="sampleWidget17" native="true"/>
+    </widget>
    </item>
    <item row="7" column="2">
+    <widget class="LoopStationSampleWidget" name="sampleWidget11">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="LoopStationSampleWidget" name="sampleWidget5">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="2">
     <spacer name="verticalSpacer_2">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -138,16 +54,27 @@
      </property>
     </spacer>
    </item>
-   <item row="2" column="3">
-    <widget class="LoopStationSampleWidget" name="sampleWidget6" native="true"/>
+   <item row="4" column="9">
+    <widget class="LoopStationSampleWidget" name="sampleWidget42">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
    </item>
-   <item row="2" column="4">
-    <widget class="LoopStationSampleWidget" name="sampleWidget7" native="true"/>
+   <item row="6" column="1">
+    <widget class="LoopStationSampleWidget" name="sampleWidget8">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
    </item>
-   <item row="1" column="8">
-    <widget class="LoopStationSampleWidget" name="sampleWidget26" native="true"/>
-   </item>
-   <item row="2" column="5">
+   <item row="3" column="5">
     <spacer name="horizontalSpacer_3">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -160,72 +87,545 @@
      </property>
     </spacer>
    </item>
-   <item row="2" column="6">
-    <widget class="LoopStationSampleWidget" name="sampleWidget28" native="true"/>
-   </item>
-   <item row="2" column="7">
-    <widget class="LoopStationSampleWidget" name="sampleWidget29" native="true"/>
+   <item row="3" column="2">
+    <widget class="LoopStationSampleWidget" name="sampleWidget3">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
    </item>
    <item row="2" column="8">
-    <widget class="LoopStationSampleWidget" name="sampleWidget30" native="true"/>
+    <widget class="LoopStationSampleWidget" name="sampleWidget36">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
    </item>
-   <item row="2" column="9">
-    <widget class="LoopStationSampleWidget" name="sampleWidget31" native="true"/>
-   </item>
-   <item row="3" column="6">
-    <widget class="LoopStationSampleWidget" name="sampleWidget32" native="true"/>
-   </item>
-   <item row="3" column="7">
-    <widget class="LoopStationSampleWidget" name="sampleWidget33" native="true"/>
-   </item>
-   <item row="3" column="8">
-    <widget class="LoopStationSampleWidget" name="sampleWidget34" native="true"/>
-   </item>
-   <item row="3" column="9">
-    <widget class="LoopStationSampleWidget" name="sampleWidget35" native="true"/>
-   </item>
-   <item row="4" column="6">
-    <widget class="LoopStationSampleWidget" name="sampleWidget36" native="true"/>
-   </item>
-   <item row="4" column="7">
-    <widget class="LoopStationSampleWidget" name="sampleWidget37" native="true"/>
+   <item row="7" column="4">
+    <widget class="LoopStationSampleWidget" name="sampleWidget23">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
    </item>
    <item row="4" column="8">
-    <widget class="LoopStationSampleWidget" name="sampleWidget38" native="true"/>
+    <widget class="LoopStationSampleWidget" name="sampleWidget40">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
    </item>
-   <item row="4" column="9">
-    <widget class="LoopStationSampleWidget" name="sampleWidget39" native="true"/>
+   <item row="4" column="3">
+    <widget class="LoopStationSampleWidget" name="sampleWidget16">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="7">
+    <widget class="LoopStationSampleWidget" name="sampleWidget35">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="7">
+    <widget class="LoopStationSampleWidget" name="sampleWidget27">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="LoopStationSampleWidget" name="sampleWidget2">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="8">
+    <widget class="LoopStationSampleWidget" name="sampleWidget37">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="6">
+    <widget class="LoopStationSampleWidget" name="sampleWidget28">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="6">
+    <widget class="LoopStationSampleWidget" name="sampleWidget33">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="LoopStationSampleWidget" name="sampleWidget1">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="LoopStationSampleWidget" name="sampleWidget0">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="6" column="3">
+    <widget class="LoopStationSampleWidget" name="sampleWidget20">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
    </item>
    <item row="5" column="6">
-    <widget class="LoopStationSampleWidget" name="sampleWidget40" native="true"/>
-   </item>
-   <item row="5" column="7">
-    <widget class="LoopStationSampleWidget" name="sampleWidget41" native="true"/>
-   </item>
-   <item row="5" column="8">
-    <widget class="LoopStationSampleWidget" name="sampleWidget42" native="true"/>
+    <widget class="LoopStationSampleWidget" name="sampleWidget29">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
    </item>
    <item row="5" column="9">
-    <widget class="LoopStationSampleWidget" name="sampleWidget43" native="true"/>
+    <widget class="LoopStationSampleWidget" name="sampleWidget43">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
    </item>
-   <item row="6" column="6">
-    <widget class="LoopStationSampleWidget" name="sampleWidget44" native="true"/>
+   <item row="5" column="7">
+    <widget class="LoopStationSampleWidget" name="sampleWidget31">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="LoopStationSampleWidget" name="sampleWidget12">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
+    <widget class="LoopStationSampleWidget" name="sampleWidget14">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="4">
+    <widget class="LoopStationSampleWidget" name="sampleWidget22">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="LoopStationSampleWidget" name="sampleWidget6">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="7">
+    <widget class="LoopStationSampleWidget" name="sampleWidget30">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <widget class="LoopStationSampleWidget" name="sampleWidget10">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="6">
+    <widget class="LoopStationSampleWidget" name="sampleWidget25">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="3">
+    <widget class="LoopStationSampleWidget" name="sampleWidget17">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="LoopStationSampleWidget" name="sampleWidget13">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
    </item>
    <item row="6" column="7">
-    <widget class="LoopStationSampleWidget" name="sampleWidget45" native="true"/>
+    <widget class="LoopStationSampleWidget" name="sampleWidget34">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
    </item>
-   <item row="6" column="8">
-    <widget class="LoopStationSampleWidget" name="sampleWidget46" native="true"/>
+   <item row="7" column="1">
+    <widget class="LoopStationSampleWidget" name="sampleWidget9">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="4">
+    <widget class="LoopStationSampleWidget" name="sampleWidget18">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="9">
+    <widget class="LoopStationSampleWidget" name="sampleWidget39">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="4">
+    <widget class="LoopStationSampleWidget" name="sampleWidget19">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="6">
+    <widget class="LoopStationSampleWidget" name="sampleWidget32">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="9">
+    <widget class="LoopStationSampleWidget" name="sampleWidget38">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="8">
+    <widget class="LoopStationSampleWidget" name="sampleWidget45">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="7" column="9">
+    <widget class="LoopStationSampleWidget" name="sampleWidget47">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="3">
+    <widget class="LoopStationSampleWidget" name="sampleWidget21">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="LoopStationSampleWidget" name="sampleWidget4">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="8">
+    <widget class="LoopStationSampleWidget" name="sampleWidget41">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="7">
+    <widget class="LoopStationSampleWidget" name="sampleWidget26">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2">
+    <widget class="LoopStationSampleWidget" name="sampleWidget7">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="6">
+    <widget class="LoopStationSampleWidget" name="sampleWidget24">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="4">
+    <widget class="LoopStationSampleWidget" name="sampleWidget15">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
    </item>
    <item row="6" column="9">
-    <widget class="LoopStationSampleWidget" name="sampleWidget47" native="true"/>
+    <widget class="LoopStationSampleWidget" name="sampleWidget46">
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="10">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="0" colspan="12">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="labelBpm">
+       <property name="text">
+        <string>Bpm:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="spinBoxBpm">
+       <property name="suffix">
+        <string>BPM</string>
+       </property>
+       <property name="minimum">
+        <number>50</number>
+       </property>
+       <property name="maximum">
+        <number>500</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonPlayPause">
+       <property name="text">
+        <string>Play/Pause</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonStop">
+       <property name="text">
+        <string>Stop</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="horizontalSlider">
+       <property name="maximum">
+        <number>8</number>
+       </property>
+       <property name="pageStep">
+        <number>1</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
    <class>LoopStationSampleWidget</class>
-   <extends>QWidget</extends>
+   <extends>QFrame</extends>
    <header>widgets/loopstationsamplewidget.h</header>
    <container>1</container>
   </customwidget>

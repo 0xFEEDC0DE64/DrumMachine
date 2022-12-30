@@ -100,7 +100,11 @@ void MidiButton::midiReceived(const midi::MidiMessage &message)
             {
             case midi::Command::NoteOn:
                 if (message.velocity != 0)
+                {
+                    if (isCheckable())
+                        toggle();
                     emit pressed();
+                }
                 else
             Q_FALLTHROUGH();
             case midi::Command::NoteOff:
@@ -113,7 +117,11 @@ void MidiButton::midiReceived(const midi::MidiMessage &message)
         else if (m_learnSetting.cmd == message.cmd)
         {
             if (message.velocity != 0)
+            {
+                if (isCheckable())
+                    toggle();
                 emit pressed();
+            }
             else
                 emit released();
         }

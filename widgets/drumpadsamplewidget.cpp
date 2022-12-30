@@ -209,8 +209,7 @@ void DrumPadSampleWidget::sendColor()
 
 void DrumPadSampleWidget::updateStatus()
 {
-    QPalette pal;
-
+    QColor newColor;
     if (m_file && m_file->color && m_player.buffer().isValid())
     {
         const auto bright = m_player.playing() ? 255 : 155;
@@ -224,19 +223,29 @@ void DrumPadSampleWidget::updateStatus()
 
         const auto &color = *m_file->color;
         if (color == "purple")
-            pal.setColor(QPalette::Window, QColor{bright, dark, bright});
+            newColor = QColor{bright, dark, bright};
         else if (color == "red")
-            pal.setColor(QPalette::Window, QColor{bright, dark, dark});
+            newColor = QColor{bright, dark, dark};
         else if (color == "yellow")
-            pal.setColor(QPalette::Window, QColor{bright, bright, dark});
+            newColor = QColor{bright, bright, dark};
         else if (color == "green")
-            pal.setColor(QPalette::Window, QColor{dark, bright, dark});
+            newColor = QColor{dark, bright, dark};
         else if (color == "blue")
-            pal.setColor(QPalette::Window, QColor{dark, dark, bright});
+            newColor = QColor{dark, dark, bright};
         else
+        {
             qWarning() << "unknown color:" << color;
+            newColor = QColor{dark, dark, dark};
+        }
     }
-    setPalette(pal);
+
+    if (newColor.isValid() && (!m_lastColor.isValid() || newColor != m_lastColor))
+    {
+        QPalette pal;
+        pal.setColor(QPalette::Window, newColor);
+        m_lastColor = newColor;
+        setPalette(pal);
+    }
 
     if (m_sendColors)
         sendColor();

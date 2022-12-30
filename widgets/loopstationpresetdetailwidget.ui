@@ -178,6 +178,12 @@
       <property name="enabled">
        <bool>false</bool>
       </property>
+      <property name="minimum">
+       <number>-2147483647</number>
+      </property>
+      <property name="maximum">
+       <number>2147483647</number>
+      </property>
      </widget>
     </item>
     <item row="5" column="1">
@@ -194,6 +200,12 @@
      <widget class="QSpinBox" name="spinBoxLoopLength">
       <property name="enabled">
        <bool>false</bool>
+      </property>
+      <property name="minimum">
+       <number>-2147483647</number>
+      </property>
+      <property name="maximum">
+       <number>2147483647</number>
       </property>
      </widget>
     </item>

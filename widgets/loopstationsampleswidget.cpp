@@ -9,12 +9,45 @@ LoopStationSamplesWidget::LoopStationSamplesWidget(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
+    connect(m_ui->spinBoxBpm, qOverload<int>(&QSpinBox::valueChanged), this, &LoopStationSamplesWidget::tempoChanged);
+
+    connect(m_ui->pushButtonPlayPause, &QAbstractButton::pressed, this, &LoopStationSamplesWidget::playPausePressed);
+    connect(m_ui->pushButtonStop, &QAbstractButton::pressed, this, &LoopStationSamplesWidget::stopPressed);
+
+    connect(&m_timer, &QTimer::timeout, this, &LoopStationSamplesWidget::timeout);
+
+    m_timer.setTimerType(Qt::PreciseTimer);
+
     quint8 padNr{};
     for (LoopStationSampleWidget &widget : getWidgets())
     {
         widget.setPadNr(padNr++);
         connect(&widget, &LoopStationSampleWidget::sendMidi, this, &LoopStationSamplesWidget::sendMidi);
+        connect(&widget, &LoopStationSampleWidget::loopEnabled, this, &LoopStationSamplesWidget::loopEnabled);
     }
+
+    constexpr const auto setCategories = [](auto category, auto *widget0, auto *widget1, auto *widget2, auto *widget3, auto *widget4, auto *widget5, auto *widget6, auto *widget7){
+        widget0->setCategory(category);
+        widget1->setCategory(category);
+        widget2->setCategory(category);
+        widget3->setCategory(category);
+        widget4->setCategory(category);
+        widget5->setCategory(category);
+        widget6->setCategory(category);
+        widget7->setCategory(category);
+    };
+    setCategories(0, m_ui->sampleWidget0,  m_ui->sampleWidget1,  m_ui->sampleWidget2,  m_ui->sampleWidget3,
+                     m_ui->sampleWidget24, m_ui->sampleWidget25, m_ui->sampleWidget26, m_ui->sampleWidget27);
+    setCategories(1, m_ui->sampleWidget4,  m_ui->sampleWidget5,  m_ui->sampleWidget6,  m_ui->sampleWidget7,
+                     m_ui->sampleWidget28, m_ui->sampleWidget29, m_ui->sampleWidget30, m_ui->sampleWidget31);
+    setCategories(2, m_ui->sampleWidget8,  m_ui->sampleWidget9,  m_ui->sampleWidget10, m_ui->sampleWidget11,
+                     m_ui->sampleWidget32, m_ui->sampleWidget33, m_ui->sampleWidget34, m_ui->sampleWidget35);
+    setCategories(3, m_ui->sampleWidget12, m_ui->sampleWidget13, m_ui->sampleWidget14, m_ui->sampleWidget15,
+                     m_ui->sampleWidget36, m_ui->sampleWidget37, m_ui->sampleWidget38, m_ui->sampleWidget39);
+    setCategories(4, m_ui->sampleWidget16, m_ui->sampleWidget17, m_ui->sampleWidget18, m_ui->sampleWidget19,
+                     m_ui->sampleWidget40, m_ui->sampleWidget41, m_ui->sampleWidget42, m_ui->sampleWidget43);
+    setCategories(5, m_ui->sampleWidget20, m_ui->sampleWidget21, m_ui->sampleWidget22, m_ui->sampleWidget23,
+                     m_ui->sampleWidget44, m_ui->sampleWidget45, m_ui->sampleWidget46, m_ui->sampleWidget47);
 }
 
 LoopStationSamplesWidget::~LoopStationSamplesWidget() = default;
@@ -29,17 +62,22 @@ void LoopStationSamplesWidget::setPreset(const loopstation_presets::Preset &pres
 {
     assert(preset.id);
     assert(preset.pads);
+    assert(preset.bpm);
 
     const auto &presetId = *preset.id;
     const auto &widgets = getWidgets();
     const auto &pads = *preset.pads;
+
+    stopPressed();
+    m_ui->spinBoxBpm->setValue(*preset.bpm);
 
     auto iter = std::begin(widgets);
     auto iter2 = std::begin(pads);
     int i{};
     for (; iter != std::end(widgets) && iter2 != std::end(pads); iter++, iter2++)
     {
-        ((*iter)).get().setSample(presetId, QString{"%0_%1.wav"}.arg(presetId).arg(++i, 2, 10, QLatin1Char('0')), *iter2);
+        auto &widget = ((*iter)).get();
+        widget.setSample(presetId, QString{"%0_%1.wav"}.arg(presetId).arg(++i, 2, 10, QLatin1Char('0')), *iter2);
     }
 }
 
@@ -77,6 +115,78 @@ void LoopStationSamplesWidget::sendColors()
 {
     for (LoopStationSampleWidget &widget : getWidgets())
         widget.sendColor();
+}
+
+void LoopStationSamplesWidget::timeout()
+{
+    if (m_pos >= 7)
+    {
+        for (LoopStationSampleWidget &widget : getWidgets())
+            widget.timeout();
+        m_pos = 0;
+    }
+    else
+    {
+        if (m_pos == 3)
+        {
+            for (LoopStationSampleWidget &widget : getWidgets())
+                widget.timeout();
+        }
+
+        m_pos++;
+    }
+    m_ui->horizontalSlider->setValue(m_pos);
+}
+
+void LoopStationSamplesWidget::tempoChanged(int tempo)
+{
+    m_timer.setInterval(1000. * 60. / tempo);
+}
+
+void LoopStationSamplesWidget::loopEnabled(quint8 category)
+{
+    for (LoopStationSampleWidget &widget : getWidgets())
+    {
+        if (widget.category() != category)
+            continue;
+        if (&widget == sender())
+            continue;
+        widget.setLoopEnabled(false);
+    }
+
+    if (!m_timer.isActive())
+    {
+        m_pos = 0;
+        m_ui->horizontalSlider->setValue(m_pos);
+        m_timer.start();
+        for (LoopStationSampleWidget &widget : getWidgets())
+            widget.timeout();
+    }
+}
+
+void LoopStationSamplesWidget::playPausePressed()
+{
+    if (m_timer.isActive())
+        m_timer.stop();
+    else
+    {
+        m_timer.start();
+        if (m_pos == 0)
+            for (LoopStationSampleWidget &widget : getWidgets())
+                widget.timeout();
+    }
+}
+
+void LoopStationSamplesWidget::stopPressed()
+{
+    m_timer.stop();
+    for (LoopStationSampleWidget &widget : getWidgets())
+    {
+        widget.setLoopEnabled(false);
+        widget.stop();
+    }
+    m_pos = 0;
+    m_ui->horizontalSlider->setValue(m_pos);
 }
 
 std::array<std::reference_wrapper<LoopStationSampleWidget>, 48> LoopStationSamplesWidget::getWidgets()

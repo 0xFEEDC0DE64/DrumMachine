@@ -26,11 +26,12 @@ public:
     quint8 padNr() const { return m_padNr; }
     void setPadNr(quint8 padNr) { m_padNr = padNr; }
 
+    quint8 category() const { return m_category; }
+    void setCategory(quint8 category);
+
     void loadSettings(DrumMachineSettings &settings);
 
     void setSample(const QString &presetId, const QString &filename, const QString &type);
-
-    void pressed();
 
     void injectNetworkAccessManager(QNetworkAccessManager &networkAccessManager);
     void injectDecodingThread(QThread &thread);
@@ -42,9 +43,15 @@ public:
     void unsendColor();
     void sendColor();
 
+public slots:
+    void timeout();
+    void setLoopEnabled(bool enabled);
+    void stop();
+
 signals:
     void startDecoding(std::shared_ptr<QIODevice> device);
     void sendMidi(const midi::MidiMessage &midiMsg);
+    void loopEnabled(quint8 category);
 
 private slots:
     void updateStatus();
@@ -70,6 +77,9 @@ private:
     QNetworkAccessManager *m_networkAccessManager{};
 
     quint8 m_padNr{};
+    quint8 m_category{};
 
     bool m_sendColors{};
+
+    QColor m_lastColor;
 };

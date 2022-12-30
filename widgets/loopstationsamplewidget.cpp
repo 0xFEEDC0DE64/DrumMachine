@@ -6,6 +6,7 @@
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
 #include <QMetaEnum>
+#include <QPalette>
 
 #include "audioformat.h"
 #include "audiodecoder.h"
@@ -20,12 +21,23 @@ LoopStationSampleWidget::LoopStationSampleWidget(QWidget *parent) :
 
     connect(&m_player, &AudioPlayer::playingChanged, this, &LoopStationSampleWidget::updateStatus);
 
-    connect(m_ui->pushButtonPlay, &QAbstractButton::pressed, this, &LoopStationSampleWidget::pressed);
+    connect(m_ui->pushButtonPlay, &QAbstractButton::toggled, this, [this](bool toggled){
+        if (!toggled)
+            return;
+        emit loopEnabled(m_category);
+    });
 
     updateStatus();
 }
 
 LoopStationSampleWidget::~LoopStationSampleWidget() = default;
+
+void LoopStationSampleWidget::setCategory(quint8 category)
+{
+    m_category = category;
+    m_ui->labelCategory->setText(QString::number(category));
+    updateStatus();
+}
 
 void LoopStationSampleWidget::loadSettings(DrumMachineSettings &settings)
 {
@@ -53,11 +65,6 @@ void LoopStationSampleWidget::setSample(const QString &presetId, const QString &
 
     m_ui->labelFilename->setText(filename);
     m_ui->labelType->setText(type);
-}
-
-void LoopStationSampleWidget::pressed()
-{
-    m_player.restart();
 }
 
 void LoopStationSampleWidget::injectNetworkAccessManager(QNetworkAccessManager &networkAccessManager)
@@ -111,11 +118,77 @@ void LoopStationSampleWidget::sendColor()
         .flag = true,
         .note = m_ui->pushButtonPlay->learnSetting().note,
         .velocity = uint8_t(m_padNr+1)
-    });
+                  });
+}
+
+void LoopStationSampleWidget::timeout()
+{
+    if (m_ui->pushButtonPlay->isChecked())
+    {
+        // if is not playing or position > 90%
+        if (!m_player.playing() || m_player.position() >= m_player.buffer().frameCount() * 9 / 10)
+            m_player.restart();
+    }
+    else
+    {
+        // if is playing and position < 60%
+        if (m_player.playing() && m_player.position() < m_player.buffer().frameCount() * 6 / 10)
+            m_player.stop();
+    }
+}
+
+void LoopStationSampleWidget::setLoopEnabled(bool enabled)
+{
+    m_ui->pushButtonPlay->setChecked(enabled);
+}
+
+void LoopStationSampleWidget::stop()
+{
+    m_player.stop();
 }
 
 void LoopStationSampleWidget::updateStatus()
 {
+    QColor newColor;
+
+    if (m_player.buffer().isValid())
+    {
+        const auto bright = m_player.playing() ? 255 : 155;
+        const auto dark = m_player.playing() ?
+#if !defined(Q_OS_WIN)
+        80 : 0
+#else
+        180 : 80
+#endif
+;
+
+        if (m_category == 0)
+            newColor = QColor{bright, dark, bright};
+        else if (m_category == 1)
+            newColor = QColor{bright, dark, dark};
+        else if (m_category == 2)
+            newColor = QColor{bright, bright, dark};
+        else if (m_category == 3)
+            newColor = QColor{dark, bright, dark};
+        else if (m_category == 4)
+            newColor = QColor{dark, dark, bright};
+        else if (m_category == 5)
+            newColor = QColor{dark, bright, bright};
+        else
+        {
+            qWarning() << "unknown category:" << m_category;
+            newColor = QColor{dark, dark, dark};
+        }
+    }
+
+    if (newColor.isValid() && (!m_lastColor.isValid() || newColor != m_lastColor))
+    {
+        QPalette pal;
+        pal.setColor(QPalette::Window, newColor);
+        m_lastColor = newColor;
+        setPalette(pal);
+    }
+
     if (m_sendColors)
         sendColor();
 

@@ -26,8 +26,9 @@ SequencerWidget::SequencerWidget(QWidget *parent) :
 
     connect(m_ui->horizontalSlider, &QSlider::valueChanged, this, [=](int value){ m_pos = value; updateStatusLabel(); });
 
-
     connect(&m_timer, &QTimer::timeout, this, &SequencerWidget::timeout);
+
+    m_timer.setTimerType(Qt::PreciseTimer);
 
     updateStatusLabel();
 }
@@ -204,8 +205,8 @@ void SequencerWidget::sequenceSelected()
     m_ui->pushButtonPlayPause->setEnabled(m_selectedSequence != nullptr);
     m_ui->pushButtonStop->setEnabled(m_selectedSequence != nullptr);
 
-    m_pos = 0;
-    m_ui->horizontalSlider->setValue(0);
+    m_pos = m_selectedSequence ? m_pos % 8 : 0;
+    m_ui->horizontalSlider->setValue(m_pos);
     updateStatusLabel();
 }
 
