@@ -168,43 +168,48 @@ void DrumPadSampleWidget::unsendColor()
         .note = m_ui->pushButtonPlay->learnSetting().note,
         .velocity = 0
     });
+    m_lastMidiColor = 0;
 }
 
 void DrumPadSampleWidget::sendColor()
 {
     m_sendColors = true;
 
-    uint8_t velocity;
+    uint8_t newColor;
 
     if (m_file && m_file->color && m_player.buffer().isValid())
     {
         const auto &color = *m_file->color;
         if (color == "purple")
-            velocity = m_player.playing() ? 43 : 18;
+            newColor = m_player.playing() ? 43 : 18;
         else if (color == "red")
-            velocity = m_player.playing() ? 3 : 1;
+            newColor = m_player.playing() ? 3 : 1;
         else if (color == "yellow")
-            velocity = m_player.playing() ? 58 : 33;
+            newColor = m_player.playing() ? 58 : 33;
         else if (color == "green")
-            velocity = m_player.playing() ? 56 : 16;
+            newColor = m_player.playing() ? 56 : 16;
         else if (color == "blue")
-            velocity = m_player.playing() ? 49 : 51;
+            newColor = m_player.playing() ? 49 : 51;
         else
             goto noColor;
     }
     else
     {
-        noColor:
-        velocity = 0;
+noColor:
+        newColor = 0;
     }
 
-    emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonPlay->learnSetting().channel,
-        .cmd = m_ui->pushButtonPlay->learnSetting().cmd,
-        .flag = true,
-        .note = m_ui->pushButtonPlay->learnSetting().note,
-        .velocity = velocity
-    });
+    if (newColor != m_lastMidiColor)
+    {
+        emit sendMidi(midi::MidiMessage {
+            .channel = m_ui->pushButtonPlay->learnSetting().channel,
+            .cmd = m_ui->pushButtonPlay->learnSetting().cmd,
+            .flag = true,
+            .note = m_ui->pushButtonPlay->learnSetting().note,
+            .velocity = newColor
+        });
+        m_lastMidiColor = newColor;
+    }
 }
 
 void DrumPadSampleWidget::updateStatus()

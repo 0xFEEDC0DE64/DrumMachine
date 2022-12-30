@@ -106,19 +106,54 @@ void LoopStationSampleWidget::unsendColor()
         .note = m_ui->pushButtonPlay->learnSetting().note,
         .velocity = 0
     });
+    m_lastMidiColor = 0;
 }
 
 void LoopStationSampleWidget::sendColor()
 {
     m_sendColors = true;
 
-    emit sendMidi(midi::MidiMessage {
-        .channel = m_ui->pushButtonPlay->learnSetting().channel,
-        .cmd = m_ui->pushButtonPlay->learnSetting().cmd,
-        .flag = true,
-        .note = m_ui->pushButtonPlay->learnSetting().note,
-        .velocity = uint8_t(m_padNr+1)
-                  });
+    quint8 newColor;
+
+    if (false) // testing colors on launchpad mk2
+        newColor = m_padNr;
+    else
+    {
+        if (m_player.buffer().isValid())
+        {
+            if (m_category == 0)
+                newColor = m_player.playing() ? 44 : 47; //dunkelblue
+            else if (m_category == 1)
+                newColor = m_player.playing() ? 16 : 19; // green
+            else if (m_category == 2)
+                newColor = m_player.playing() ? 48 : 51; // violet
+            else if (m_category == 3)
+                newColor = m_player.playing() ? 36 : 39; // hellblue
+            else if (m_category == 4)
+                newColor = m_player.playing() ? 8  : 11; // orange
+            else if (m_category == 5)
+                newColor = m_player.playing() ? 52 : 55; // pink
+            else
+                goto noColor;
+        }
+        else
+        {
+noColor:
+            newColor = 0;
+        }
+    }
+
+    if (newColor != m_lastMidiColor)
+    {
+        emit sendMidi(midi::MidiMessage {
+            .channel = m_ui->pushButtonPlay->learnSetting().channel,
+            .cmd = m_ui->pushButtonPlay->learnSetting().cmd,
+            .flag = true,
+            .note = m_ui->pushButtonPlay->learnSetting().note,
+            .velocity = newColor
+        });
+        m_lastMidiColor = newColor;
+    }
 }
 
 void LoopStationSampleWidget::timeout()

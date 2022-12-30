@@ -87,4 +87,5 @@ private:
     bool m_sendColors{};
 
     QColor m_lastColor;
+    quint8 m_lastMidiColor{};
 };
