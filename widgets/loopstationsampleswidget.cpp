@@ -1,13 +1,19 @@
 #include "loopstationsampleswidget.h"
 #include "ui_loopstationsampleswidget.h"
 
+#include <algorithm>
+
 #include "loopstationpresets.h"
+#include "drummachinesettings.h"
 
 LoopStationSamplesWidget::LoopStationSamplesWidget(QWidget *parent) :
     QWidget{parent},
-    m_ui{std::make_unique<Ui::LoopStationSamplesWidget>()}
+    m_ui{std::make_unique<Ui::LoopStationSamplesWidget>()},
+    m_timer{this}
 {
     m_ui->setupUi(this);
+
+    connect(m_ui->pushButtonSettings, &QAbstractButton::pressed, this, &LoopStationSamplesWidget::showSettings);
 
     connect(m_ui->spinBoxBpm, qOverload<int>(&QSpinBox::valueChanged), this, &LoopStationSamplesWidget::tempoChanged);
 
@@ -23,7 +29,7 @@ LoopStationSamplesWidget::LoopStationSamplesWidget(QWidget *parent) :
     {
         widget.setPadNr(padNr++);
         connect(&widget, &LoopStationSampleWidget::sendMidi, this, &LoopStationSamplesWidget::sendMidi);
-        connect(&widget, &LoopStationSampleWidget::loopEnabled, this, &LoopStationSamplesWidget::loopEnabled);
+        connect(&widget, &LoopStationSampleWidget::loopEnabledChanged, this, &LoopStationSamplesWidget::loopEnabledChanged);
     }
 
     constexpr const auto setCategories = [](auto category, auto *widget0, auto *widget1, auto *widget2, auto *widget3, auto *widget4, auto *widget5, auto *widget6, auto *widget7){
@@ -54,6 +60,14 @@ LoopStationSamplesWidget::~LoopStationSamplesWidget() = default;
 
 void LoopStationSamplesWidget::loadSettings(DrumMachineSettings &settings)
 {
+    m_settings = &settings;
+
+    m_ui->pushButtonPlayPause->setLearnSetting(settings.loopstationPlayPause());
+    m_ui->pushButtonStop->setLearnSetting(settings.loopstationStop());
+
+    connect(m_ui->pushButtonPlayPause, &MidiButton::learnSettingChanged, &settings, &DrumMachineSettings::setLoopstationPlayPause);
+    connect(m_ui->pushButtonStop, &MidiButton::learnSettingChanged, &settings, &DrumMachineSettings::setLoopstationStop);
+
     for (LoopStationSampleWidget &widget : getWidgets())
         widget.loadSettings(settings);
 }
@@ -83,6 +97,9 @@ void LoopStationSamplesWidget::setPreset(const loopstation_presets::Preset &pres
 
 void LoopStationSamplesWidget::midiReceived(const midi::MidiMessage &message)
 {
+    m_ui->pushButtonPlayPause->midiReceived(message);
+    m_ui->pushButtonStop->midiReceived(message);
+
     for (LoopStationSampleWidget &widget : getWidgets())
         widget.midiReceived(message);
 }
@@ -106,15 +123,52 @@ void LoopStationSamplesWidget::injectDecodingThread(QThread &thread)
 }
 
 void LoopStationSamplesWidget::unsendColors()
-{
+{    
+    const quint8 color = m_settings ? m_settings->colorOff() : quint8{0};
+
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonPlayPause->learnSetting().channel,
+        .cmd = m_ui->pushButtonPlayPause->learnSetting().cmd,
+        .flag = true,
+        .note = m_ui->pushButtonPlayPause->learnSetting().note,
+        .velocity = color
+    });
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonStop->learnSetting().channel,
+        .cmd = m_ui->pushButtonStop->learnSetting().cmd,
+        .flag = true,
+        .note = m_ui->pushButtonStop->learnSetting().note,
+        .velocity = color
+    });
+
     for (LoopStationSampleWidget &widget : getWidgets())
         widget.unsendColor();
 }
 
 void LoopStationSamplesWidget::sendColors()
 {
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonPlayPause->learnSetting().channel,
+        .cmd = m_ui->pushButtonPlayPause->learnSetting().cmd,
+        .flag = true,
+        .note = m_ui->pushButtonPlayPause->learnSetting().note,
+        .velocity = 3
+    });
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonStop->learnSetting().channel,
+        .cmd = m_ui->pushButtonStop->learnSetting().cmd,
+        .flag = true,
+        .note = m_ui->pushButtonStop->learnSetting().note,
+        .velocity = 60
+    });
+
     for (LoopStationSampleWidget &widget : getWidgets())
-        widget.sendColor();
+        widget.sendColor(true);
+}
+
+void LoopStationSamplesWidget::showSettings()
+{
+
 }
 
 void LoopStationSamplesWidget::timeout()
@@ -143,34 +197,55 @@ void LoopStationSamplesWidget::tempoChanged(int tempo)
     m_timer.setInterval(1000. * 60. / tempo);
 }
 
-void LoopStationSamplesWidget::loopEnabled(quint8 category)
+void LoopStationSamplesWidget::loopEnabledChanged(bool loopEnabled, quint8 category)
 {
-    for (LoopStationSampleWidget &widget : getWidgets())
+    if (loopEnabled)
     {
-        if (widget.category() != category)
-            continue;
-        if (&widget == sender())
-            continue;
-        widget.setLoopEnabled(false);
-    }
-
-    if (!m_timer.isActive())
-    {
-        m_pos = 0;
-        m_ui->horizontalSlider->setValue(m_pos);
-        m_timer.start();
         for (LoopStationSampleWidget &widget : getWidgets())
-            widget.timeout();
+        {
+            if (widget.category() != category)
+                continue;
+            if (&widget == sender())
+                continue;
+            widget.setLoopEnabled(false);
+        }
+
+        if (!m_timer.isActive())
+        {
+            m_pos = 0;
+            m_ui->horizontalSlider->setValue(m_pos);
+            m_timer.start();
+            m_ui->pushButtonPlayPause->setText(tr("▮▮"));
+            for (LoopStationSampleWidget &widget : getWidgets())
+                widget.timeout();
+        }
+    }
+    else
+    {
+        const auto widgets = getWidgets();
+        if (m_timer.isActive() && std::none_of(std::begin(widgets), std::end(widgets), [](const LoopStationSampleWidget &widget){
+                                      return widget.loopEnabled();
+                                  }))
+        {
+            m_timer.stop();
+            m_ui->pushButtonPlayPause->setText(tr("▶"));
+            m_pos = 0;
+            m_ui->horizontalSlider->setValue(m_pos);
+        }
     }
 }
 
 void LoopStationSamplesWidget::playPausePressed()
 {
     if (m_timer.isActive())
+    {
         m_timer.stop();
+        m_ui->pushButtonPlayPause->setText(tr("▶"));
+    }
     else
     {
         m_timer.start();
+        m_ui->pushButtonPlayPause->setText(tr("▮▮"));
         if (m_pos == 0)
             for (LoopStationSampleWidget &widget : getWidgets())
                 widget.timeout();
@@ -180,6 +255,7 @@ void LoopStationSamplesWidget::playPausePressed()
 void LoopStationSamplesWidget::stopPressed()
 {
     m_timer.stop();
+    m_ui->pushButtonPlayPause->setText(tr("▶"));
     for (LoopStationSampleWidget &widget : getWidgets())
     {
         widget.setLoopEnabled(false);

@@ -20,7 +20,8 @@ QString toString(bool value) { return value?"true":"false"; }
 
 DrumPadSampleWidget::DrumPadSampleWidget(QWidget *parent) :
     QFrame{parent},
-    m_ui{std::make_unique<Ui::DrumPadSampleWidget>()}
+    m_ui{std::make_unique<Ui::DrumPadSampleWidget>()},
+    m_player{this}
 {
     m_ui->setupUi(this);
 
@@ -161,17 +162,20 @@ void DrumPadSampleWidget::unsendColor()
 {
     m_sendColors = false;
 
+    const quint8 color = m_settings ? m_settings->colorOff() : quint8{0};
+
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonPlay->learnSetting().channel,
         .cmd = m_ui->pushButtonPlay->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonPlay->learnSetting().note,
-        .velocity = 0
+        .velocity = color
     });
-    m_lastMidiColor = 0;
+
+    m_lastMidiColor = color;
 }
 
-void DrumPadSampleWidget::sendColor()
+void DrumPadSampleWidget::sendColor(bool force)
 {
     m_sendColors = true;
 
@@ -181,25 +185,24 @@ void DrumPadSampleWidget::sendColor()
     {
         const auto &color = *m_file->color;
         if (color == "purple")
-            newColor = m_player.playing() ? 43 : 18;
+            newColor = m_player.playing() ? 56 : 59;
         else if (color == "red")
-            newColor = m_player.playing() ? 3 : 1;
+            newColor = m_player.playing() ? 4 : 7;
         else if (color == "yellow")
-            newColor = m_player.playing() ? 58 : 33;
+            newColor = m_player.playing() ? 12 : 15;
         else if (color == "green")
-            newColor = m_player.playing() ? 56 : 16;
+            newColor = m_player.playing() ? 20 : 23;
         else if (color == "blue")
-            newColor = m_player.playing() ? 49 : 51;
+            newColor = m_player.playing() ? 44 : 47;
         else
-            goto noColor;
+            newColor = m_player.playing() ? 127 : 1;
     }
     else
     {
-noColor:
         newColor = 0;
     }
 
-    if (newColor != m_lastMidiColor)
+    if (force || newColor != m_lastMidiColor)
     {
         emit sendMidi(midi::MidiMessage {
             .channel = m_ui->pushButtonPlay->learnSetting().channel,
@@ -253,7 +256,7 @@ void DrumPadSampleWidget::updateStatus()
     }
 
     if (m_sendColors)
-        sendColor();
+        sendColor(false);
 
     if (m_reply)
     {

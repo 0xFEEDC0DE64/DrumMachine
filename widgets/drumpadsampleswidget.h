@@ -44,6 +44,7 @@ public slots:
     void sequencerTriggerSample(int index);
 
 private slots:
+    void showSettings();
     void chokeTriggered(int choke);
     void updateWidgets();
     void stopAll();
@@ -52,6 +53,8 @@ private:
     std::array<std::reference_wrapper<DrumPadSampleWidget>, 24> getWidgets();
 
     const std::unique_ptr<Ui::DrumPadSamplesWidget> m_ui;
+
+    DrumMachineSettings *m_settings{};
 
     drumpad_presets::Preset m_preset;
 };

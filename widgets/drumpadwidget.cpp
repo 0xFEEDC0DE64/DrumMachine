@@ -14,7 +14,10 @@
 
 DrumPadWidget::DrumPadWidget(QWidget *parent) :
     QSplitter{parent},
-    m_ui{std::make_unique<Ui::DrumPadWidget>()}
+    m_ui{std::make_unique<Ui::DrumPadWidget>()},
+    m_presetsModel{this},
+    m_presetsProxyModel{this},
+    m_filesModel{this}
 {
     m_ui->setupUi(this);
 
@@ -22,10 +25,10 @@ DrumPadWidget::DrumPadWidget(QWidget *parent) :
     connect(m_ui->pushButtonDown, &QAbstractButton::pressed, this, &DrumPadWidget::selectNextPreset);
     connect(m_ui->pushButtonRefresh, &QAbstractButton::pressed, this, &DrumPadWidget::loadPresets);
 
-    connect(m_ui->sequencerWidget, &SequencerWidget::sendMidi, this, &DrumPadWidget::sendMidi);
+    connect(m_ui->sequencerWidget, &DrumPadSequencerWidget::sendMidi, this, &DrumPadWidget::sendMidi);
     connect(m_ui->samplesWidget, &DrumPadSamplesWidget::sendMidi, this, &DrumPadWidget::sendMidi);
 
-    connect(m_ui->sequencerWidget, &SequencerWidget::triggerSample, m_ui->samplesWidget, &DrumPadSamplesWidget::sequencerTriggerSample);
+    connect(m_ui->sequencerWidget, &DrumPadSequencerWidget::triggerSample, m_ui->samplesWidget, &DrumPadSamplesWidget::sequencerTriggerSample);
 
     m_presetsProxyModel.setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_presetsProxyModel.setSortRole(Qt::EditRole);
@@ -76,19 +79,21 @@ void DrumPadWidget::loadSettings(DrumMachineSettings &settings)
 
 void DrumPadWidget::unsendColors()
 {
+    const quint8 color = m_settings ? m_settings->colorOff() : quint8{0};
+
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonUp->learnSetting().channel,
         .cmd = m_ui->pushButtonUp->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonUp->learnSetting().note,
-        .velocity = 0
+        .velocity = color
     });
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonDown->learnSetting().channel,
         .cmd = m_ui->pushButtonDown->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonDown->learnSetting().note,
-        .velocity = 0
+        .velocity = color
     });
 
     m_ui->sequencerWidget->unsendColors();
@@ -102,14 +107,14 @@ void DrumPadWidget::sendColors()
         .cmd = m_ui->pushButtonUp->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonUp->learnSetting().note,
-        .velocity = 127
+        .velocity = m_settings ? m_settings->drumpadColorPrevPreset() : quint8{127}
     });
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonDown->learnSetting().channel,
         .cmd = m_ui->pushButtonDown->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonDown->learnSetting().note,
-        .velocity = 127
+        .velocity = m_settings ? m_settings->drumpadColorNextPreset() : quint8{127}
     });
 
     m_ui->sequencerWidget->sendColors();

@@ -4,7 +4,8 @@
 
 #include "midicontainers.h"
 
-MidiOutWrapper::MidiOutWrapper(RtMidi::Api api, const QString &clientName) :
+MidiOutWrapper::MidiOutWrapper(RtMidi::Api api, const QString &clientName, QObject *parent) :
+    QObject{parent},
     midiOut{api, clientName.toStdString()}
 {
 }

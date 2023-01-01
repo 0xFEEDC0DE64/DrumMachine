@@ -70,19 +70,21 @@ void LoopStationWidget::loadSettings(DrumMachineSettings &settings)
 
 void LoopStationWidget::unsendColors()
 {
+    const quint8 color = m_settings ? m_settings->colorOff() : quint8{0};
+
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonUp->learnSetting().channel,
         .cmd = m_ui->pushButtonUp->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonUp->learnSetting().note,
-        .velocity = 0
+        .velocity = color
     });
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonDown->learnSetting().channel,
         .cmd = m_ui->pushButtonDown->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonDown->learnSetting().note,
-        .velocity = 0
+        .velocity = color
     });
 
     m_ui->samplesWidget->unsendColors();

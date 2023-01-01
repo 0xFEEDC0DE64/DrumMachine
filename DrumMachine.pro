@@ -38,6 +38,8 @@ SOURCES += \
     widgets/drumpadpresetdetailwidget.cpp \
     widgets/drumpadsampleswidget.cpp \
     widgets/drumpadsamplewidget.cpp \
+    widgets/drumpadsequencerwidget.cpp \
+    widgets/drumpadsettingsdialog.cpp \
     widgets/drumpadwidget.cpp \
     widgets/loopstationpresetdetailwidget.cpp \
     widgets/loopstationsampleswidget.cpp \
@@ -48,7 +50,6 @@ SOURCES += \
     widgets/miditabwidget.cpp \
     widgets/previewwidget.cpp \
     widgets/scratchwidget.cpp \
-    widgets/sequencerwidget.cpp \
     widgets/settingsdialog.cpp \
     widgets/synthisizerwidget.cpp \
     widgets/trackdeck.cpp
@@ -80,6 +81,8 @@ HEADERS += \
     widgets/drumpadpresetdetailwidget.h \
     widgets/drumpadsampleswidget.h \
     widgets/drumpadsamplewidget.h \
+    widgets/drumpadsequencerwidget.h \
+    widgets/drumpadsettingsdialog.h \
     widgets/drumpadwidget.h \
     widgets/loopstationpresetdetailwidget.h \
     widgets/loopstationsampleswidget.h \
@@ -90,7 +93,6 @@ HEADERS += \
     widgets/miditabwidget.h \
     widgets/previewwidget.h \
     widgets/scratchwidget.h \
-    widgets/sequencerwidget.h \
     widgets/settingsdialog.h \
     widgets/synthisizerwidget.h \
     widgets/trackdeck.h
@@ -100,13 +102,14 @@ FORMS += \
     widgets/drumpadpresetdetailwidget.ui \
     widgets/drumpadsampleswidget.ui \
     widgets/drumpadsamplewidget.ui \
+    widgets/drumpadsequencerwidget.ui \
+    widgets/drumpadsettingsdialog.ui \
     widgets/drumpadwidget.ui \
     widgets/loopstationpresetdetailwidget.ui \
     widgets/loopstationsampleswidget.ui \
     widgets/loopstationsamplewidget.ui \
     widgets/loopstationwidget.ui \
     widgets/mainwindow.ui \
-    widgets/sequencerwidget.ui \
     widgets/settingsdialog.ui \
     widgets/synthisizerwidget.ui \
     widgets/trackdeck.ui

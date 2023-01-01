@@ -15,16 +15,15 @@
 
 LoopStationSampleWidget::LoopStationSampleWidget(QWidget *parent) :
     QFrame{parent},
-    m_ui{std::make_unique<Ui::LoopStationSampleWidget>()}
+    m_ui{std::make_unique<Ui::LoopStationSampleWidget>()},
+    m_player{this}
 {
     m_ui->setupUi(this);
 
     connect(&m_player, &AudioPlayer::playingChanged, this, &LoopStationSampleWidget::updateStatus);
 
     connect(m_ui->pushButtonPlay, &QAbstractButton::toggled, this, [this](bool toggled){
-        if (!toggled)
-            return;
-        emit loopEnabled(m_category);
+        emit loopEnabledChanged(toggled, m_category);
     });
 
     updateStatus();
@@ -99,24 +98,27 @@ void LoopStationSampleWidget::unsendColor()
 {
     m_sendColors = false;
 
+    const quint8 color = m_settings ? m_settings->colorOff() : quint8{0};
+
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonPlay->learnSetting().channel,
         .cmd = m_ui->pushButtonPlay->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonPlay->learnSetting().note,
-        .velocity = 0
+        .velocity = color
     });
-    m_lastMidiColor = 0;
+
+    m_lastMidiColor = color;
 }
 
-void LoopStationSampleWidget::sendColor()
+void LoopStationSampleWidget::sendColor(bool force)
 {
     m_sendColors = true;
 
     quint8 newColor;
 
     if (false) // testing colors on launchpad mk2
-        newColor = m_padNr;
+        newColor = m_padNr + 48;
     else
     {
         if (m_player.buffer().isValid())
@@ -134,16 +136,15 @@ void LoopStationSampleWidget::sendColor()
             else if (m_category == 5)
                 newColor = m_player.playing() ? 52 : 55; // pink
             else
-                goto noColor;
+                newColor = m_player.playing() ? 4 : 7; // red
         }
         else
         {
-noColor:
             newColor = 0;
         }
     }
 
-    if (newColor != m_lastMidiColor)
+    if (force || newColor != m_lastMidiColor)
     {
         emit sendMidi(midi::MidiMessage {
             .channel = m_ui->pushButtonPlay->learnSetting().channel,
@@ -156,12 +157,17 @@ noColor:
     }
 }
 
+bool LoopStationSampleWidget::loopEnabled() const
+{
+    return m_ui->pushButtonPlay->isChecked();
+}
+
 void LoopStationSampleWidget::timeout()
 {
     if (m_ui->pushButtonPlay->isChecked())
     {
-        // if is not playing or position > 90%
-        if (!m_player.playing() || m_player.position() >= m_player.buffer().frameCount() * 9 / 10)
+        // if is not playing or position > 80%
+        if (!m_player.playing() || m_player.position() >= m_player.buffer().frameCount() * 8 / 10)
             m_player.restart();
     }
     else
@@ -225,7 +231,7 @@ void LoopStationSampleWidget::updateStatus()
     }
 
     if (m_sendColors)
-        sendColor();
+        sendColor(false);
 
     if (m_reply)
     {

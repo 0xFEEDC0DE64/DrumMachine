@@ -22,7 +22,7 @@ class LoopStationSamplesWidget : public QWidget
 
 public:
     explicit LoopStationSamplesWidget(QWidget *parent = nullptr);
-    ~LoopStationSamplesWidget();
+    ~LoopStationSamplesWidget() override;
 
     void loadSettings(DrumMachineSettings &settings);
 
@@ -42,9 +42,10 @@ signals:
     void sendMidi(const midi::MidiMessage &midiMsg);
 
 private slots:
+    void showSettings();
     void timeout();
     void tempoChanged(int tempo);
-    void loopEnabled(quint8 category);
+    void loopEnabledChanged(bool loopEnabled, quint8 category);
     void playPausePressed();
     void stopPressed();
 
@@ -52,6 +53,8 @@ private:
     std::array<std::reference_wrapper<LoopStationSampleWidget>, 48> getWidgets();
 
     const std::unique_ptr<Ui::LoopStationSamplesWidget> m_ui;
+
+    DrumMachineSettings *m_settings{};
 
     QTimer m_timer;
 

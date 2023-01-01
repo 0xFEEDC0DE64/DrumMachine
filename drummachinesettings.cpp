@@ -46,6 +46,16 @@ void DrumMachineSettings::setLastAudioDevice(const QString &lastAudioDevice)
     setValue("lastAudioDevice", lastAudioDevice);
 }
 
+bool DrumMachineSettings::autoOpenAudioDevice() const
+{
+    return value("autoOpenAudioDevice").toBool();
+}
+
+void DrumMachineSettings::setAutoOpenAudioDevice(bool autoOpenAudioDevice)
+{
+    setValue("autoOpenAudioDevice", autoOpenAudioDevice);
+}
+
 unsigned int DrumMachineSettings::framesPerBuffer() const
 {
     return value("framesPerBuffer", 32).toUInt();
@@ -66,6 +76,16 @@ void DrumMachineSettings::setLastMidiInDevice(const QString &lastMidiInDevice)
     setValue("lastMidiInDevice", lastMidiInDevice);
 }
 
+bool DrumMachineSettings::autoOpenMidiIn() const
+{
+    return value("autoOpenMidiIn").toBool();
+}
+
+void DrumMachineSettings::setAutoOpenMidiIn(bool autoOpenMidiIn)
+{
+    setValue("autoOpenMidiIn", autoOpenMidiIn);
+}
+
 QString DrumMachineSettings::lastMidiOutDevice() const
 {
     return value("lastMidiOutDevice").toString();
@@ -76,6 +96,31 @@ void DrumMachineSettings::setLastMidiOutDevice(const QString &lastMidiOutDevice)
     setValue("lastMidiOutDevice", lastMidiOutDevice);
 }
 
+bool DrumMachineSettings::autoOpenMidiOut() const
+{
+    return value("autoOpenMidiOut").toBool();
+}
+
+void DrumMachineSettings::setAutoOpenMidiOut(bool autoOpenMidiOut)
+{
+    setValue("autoOpenMidiOut", autoOpenMidiOut);
+}
+
+quint8 DrumMachineSettings::colorOff() const
+{
+    return value("colorOff", defaultColorOff()).value<quint8>();
+}
+
+quint8 DrumMachineSettings::defaultColorOff() const
+{
+    return 0;
+}
+
+void DrumMachineSettings::setColorOff(quint8 colorOff)
+{
+    setValue("colorOff", colorOff);
+}
+
 MidiLearnSetting DrumMachineSettings::tabWidget(quint8 index) const
 {
     return learnSetting(QString{"tabWidget%0"}.arg(index));
@@ -84,6 +129,21 @@ MidiLearnSetting DrumMachineSettings::tabWidget(quint8 index) const
 void DrumMachineSettings::setTabWidget(quint8 index, const MidiLearnSetting &value)
 {
     setLearnSetting(QString{"tabWidget%0"}.arg(index), value);
+}
+
+quint8 DrumMachineSettings::colorTabWidget() const
+{
+    return value("colorTabWidget", defaultColorTabWidget()).value<quint8>();
+}
+
+quint8 DrumMachineSettings::defaultColorTabWidget() const
+{
+    return 3;
+}
+
+void DrumMachineSettings::setColorTabWidget(quint8 colorTabWidget)
+{
+    setValue("colorTabWidget", colorTabWidget);
 }
 
 QString DrumMachineSettings::drumpadLastPresetId() const
@@ -106,6 +166,21 @@ void DrumMachineSettings::setDrumpadPrevPreset(const MidiLearnSetting &value)
     setLearnSetting("drumpad/prevPreset", value);
 }
 
+quint8 DrumMachineSettings::drumpadColorPrevPreset() const
+{
+    return value("drumpad/colorPrevPreset", defaultDrumpadColorPrevPreset()).value<quint8>();
+}
+
+quint8 DrumMachineSettings::defaultDrumpadColorPrevPreset() const
+{
+    return 127;
+}
+
+void DrumMachineSettings::setDrumpadColorPrevPreset(quint8 drumpadColorPrevPreset)
+{
+    setValue("drumpad/colorPrevPreset", drumpadColorPrevPreset);
+}
+
 MidiLearnSetting DrumMachineSettings::drumpadNextPreset() const
 {
     return learnSetting("drumpad/nextPreset");
@@ -114,6 +189,21 @@ MidiLearnSetting DrumMachineSettings::drumpadNextPreset() const
 void DrumMachineSettings::setDrumpadNextPreset(const MidiLearnSetting &value)
 {
     setLearnSetting("drumpad/nextPreset", value);
+}
+
+quint8 DrumMachineSettings::drumpadColorNextPreset() const
+{
+    return value("drumpad/colorNextPreset", defaultDrumpadColorNextPreset()).value<quint8>();
+}
+
+quint8 DrumMachineSettings::defaultDrumpadColorNextPreset() const
+{
+    return 127;
+}
+
+void DrumMachineSettings::setDrumpadColorNextPreset(quint8 drumpadColorNextPreset)
+{
+    setValue("drumpad/colorNextPreset", drumpadColorNextPreset);
 }
 
 MidiLearnSetting DrumMachineSettings::drumpadPrevSequence() const
@@ -126,6 +216,21 @@ void DrumMachineSettings::setDrumpadPrevSequence(const MidiLearnSetting &value)
     setLearnSetting("drumpad/prevSequence", value);
 }
 
+quint8 DrumMachineSettings::drumpadColorPrevSequence() const
+{
+    return value("drumpad/colorPrevSequence", defaultDrumpadColorPrevSequence()).value<quint8>();
+}
+
+quint8 DrumMachineSettings::defaultDrumpadColorPrevSequence() const
+{
+    return 127;
+}
+
+void DrumMachineSettings::setDrumpadColorPrevSequence(quint8 drumpadColorPrevSequence)
+{
+    setValue("drumpad/colorPrevSequence", drumpadColorPrevSequence);
+}
+
 MidiLearnSetting DrumMachineSettings::drumpadNextSequence() const
 {
     return learnSetting("drumpad/nextSequence");
@@ -134,6 +239,21 @@ MidiLearnSetting DrumMachineSettings::drumpadNextSequence() const
 void DrumMachineSettings::setDrumpadNextSequence(const MidiLearnSetting &value)
 {
     setLearnSetting("drumpad/nextSequence", value);
+}
+
+quint8 DrumMachineSettings::drumpadColorNextSequence() const
+{
+    return value("drumpad/colorNextSequence", defaultDrumpadColorNextSequence()).value<quint8>();
+}
+
+quint8 DrumMachineSettings::defaultDrumpadColorNextSequence() const
+{
+    return 127;
+}
+
+void DrumMachineSettings::setDrumpadColorNextSequence(quint8 drumpadColorNextSequence)
+{
+    setValue("drumpad/colorNextSequence", drumpadColorNextSequence);
 }
 
 MidiLearnSetting DrumMachineSettings::drumpadPlayPause() const
@@ -146,14 +266,94 @@ void DrumMachineSettings::setDrumpadPlayPause(const MidiLearnSetting &value)
     setLearnSetting("drumpad/playPause", value);
 }
 
-MidiLearnSetting DrumMachineSettings::drumpadStop() const
+quint8 DrumMachineSettings::drumpadColorPlayPause() const
 {
-    return learnSetting("drumpad/stop");
+    return value("drumpad/colorPlayPause", defaultDrumpadColorPlayPause()).value<quint8>();
 }
 
-void DrumMachineSettings::setDrumpadStop(const MidiLearnSetting &value)
+quint8 DrumMachineSettings::defaultDrumpadColorPlayPause() const
 {
-    setLearnSetting("drumpad/stop", value);
+    return 3;
+}
+
+void DrumMachineSettings::setDrumpadColorPlayPause(quint8 drumpadColorPlayPause)
+{
+    setValue("drumpad/colorPlayPause", drumpadColorPlayPause);
+}
+
+MidiLearnSetting DrumMachineSettings::drumpadStopSequence() const
+{
+    return learnSetting("drumpad/stopSequence");
+}
+
+void DrumMachineSettings::setDrumpadStopSequence(const MidiLearnSetting &value)
+{
+    setLearnSetting("drumpad/stopSequence", value);
+}
+
+quint8 DrumMachineSettings::drumpadColorStopSequence() const
+{
+    return value("drumpad/colorStopSequence", defaultDrumpadColorStopSequence()).value<quint8>();
+}
+
+quint8 DrumMachineSettings::defaultDrumpadColorStopSequence() const
+{
+    return 60;
+}
+
+void DrumMachineSettings::setDrumpadColorStopSequence(quint8 drumpadColorStopSequence)
+{
+    setValue("drumpad/colorStopSequence", drumpadColorStopSequence);
+}
+
+MidiLearnSetting DrumMachineSettings::drumpadSwap() const
+{
+    return learnSetting("drumpad/swap");
+}
+
+void DrumMachineSettings::setDrumpadSwap(const MidiLearnSetting &value)
+{
+    setLearnSetting("drumpad/swap", value);
+}
+
+quint8 DrumMachineSettings::drumpadColorSwap() const
+{
+    return value("drumpad/colorSwap", defaultDrumpadColorSwap()).value<quint8>();
+}
+
+quint8 DrumMachineSettings::defaultDrumpadColorSwap() const
+{
+    return 127;
+}
+
+void DrumMachineSettings::setDrumpadColorSwap(quint8 drumpadColorSwap)
+{
+    setValue("drumpad/colorSwap", drumpadColorSwap);
+}
+
+MidiLearnSetting DrumMachineSettings::drumpadStopAll() const
+{
+    return learnSetting("drumpad/stopAll");
+}
+
+void DrumMachineSettings::setDrumpadStopAll(const MidiLearnSetting &value)
+{
+    setLearnSetting("drumpad/stopAll", value);
+}
+
+quint8 DrumMachineSettings::drumpadColorStopAll() const
+{
+    return value("drumpad/colorStopAll", defaultDrumpadColorStopAll()).value<quint8>();
+}
+
+quint8 DrumMachineSettings::defaultDrumpadColorStopAll() const
+{
+    return 60;
+}
+
+void DrumMachineSettings::setDrumpadColorStopAll(quint8 drumpadColorStopAll)
+{
+    setValue("drumpad/colorStopAll", drumpadColorStopAll);
 }
 
 MidiLearnSetting DrumMachineSettings::drumpadSample(quint8 pad) const
@@ -194,6 +394,26 @@ MidiLearnSetting DrumMachineSettings::loopstationNextPreset() const
 void DrumMachineSettings::setLoopstationNextPreset(const MidiLearnSetting &value)
 {
     setLearnSetting("loopstation/nextPreset", value);
+}
+
+MidiLearnSetting DrumMachineSettings::loopstationPlayPause() const
+{
+    return learnSetting("loopstation/playPause");
+}
+
+void DrumMachineSettings::setLoopstationPlayPause(const MidiLearnSetting &value)
+{
+    setLearnSetting("loopstation/playPause", value);
+}
+
+MidiLearnSetting DrumMachineSettings::loopstationStop() const
+{
+    return learnSetting("loopstation/stop");
+}
+
+void DrumMachineSettings::setLoopstationStop(const MidiLearnSetting &value)
+{
+    setLearnSetting("loopstation/stop", value);
 }
 
 MidiLearnSetting DrumMachineSettings::loopstationSample(quint8 pad) const

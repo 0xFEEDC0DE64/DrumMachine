@@ -8,7 +8,7 @@
 #include "audioformat.h"
 
 AudioDecoder::AudioDecoder(QObject *parent) :
-    QObject(parent)
+    QObject{parent}
 {
     QObject::connect(&m_decoder, qOverload<QAudioDecoder::Error>(&QAudioDecoder::error),
                      this, &AudioDecoder::error);

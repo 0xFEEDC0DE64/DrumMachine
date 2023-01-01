@@ -559,6 +559,19 @@
    <item row="0" column="0" colspan="12">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
+      <widget class="QPushButton" name="pushButtonSettings">
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>⚙️</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLabel" name="labelBpm">
        <property name="text">
         <string>Bpm:</string>
@@ -579,16 +592,28 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButtonPlayPause">
+      <widget class="MidiButton" name="pushButtonPlayPause">
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="text">
-        <string>Play/Pause</string>
+        <string>▶</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButtonStop">
+      <widget class="MidiButton" name="pushButtonStop">
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="text">
-        <string>Stop</string>
+        <string>◼</string>
        </property>
       </widget>
      </item>
@@ -628,6 +653,11 @@
    <extends>QFrame</extends>
    <header>widgets/loopstationsamplewidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MidiButton</class>
+   <extends>QPushButton</extends>
+   <header>widgets/midibutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

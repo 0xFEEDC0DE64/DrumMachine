@@ -16,7 +16,10 @@
 
 TrackDeck::TrackDeck(QWidget *parent) :
     QWidget{parent},
-    m_ui{std::make_unique<Ui::TrackDeck>()}
+    m_ui{std::make_unique<Ui::TrackDeck>()},
+    m_loopGroup{this},
+    m_player{this},
+    m_timer{this}
 {
     m_ui->setupUi(this);
     m_ui->progressBar->hide();

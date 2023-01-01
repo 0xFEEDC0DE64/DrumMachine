@@ -52,7 +52,7 @@ public:
     void midiReceived(const midi::MidiMessage &message);
 
     void unsendColor();
-    void sendColor();
+    void sendColor(bool force);
 
 signals:
     void chokeTriggered(int choke);

@@ -27,9 +27,13 @@ int paCallback(const void *inputBuffer, void *outputBuffer,
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow{parent},
     m_ui{std::make_unique<Ui::MainWindow>()},
+    m_settings{this},
     m_paStream{nullptr, DummyDeleter},
-    m_midiIn{RtMidi::UNSPECIFIED, "DrumMachine"},
-    m_midiOut{RtMidi::UNSPECIFIED, "DrumMachine"}
+    m_midiIn{RtMidi::UNSPECIFIED, "DrumMachine", 100, this},
+    m_midiOut{RtMidi::UNSPECIFIED, "DrumMachine", this},
+    m_networkAccessManager{this},
+    m_cache{this},
+    m_decoderThread{this}
 {
     m_ui->setupUi(this);
 
@@ -58,10 +62,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     updateAudioDevices();
     connect(m_ui->pushButtonRefreshAudioDevices, &QAbstractButton::pressed, this, &MainWindow::updateAudioDevices);
+    m_ui->spinBoxBufferSize->setValue(m_settings.framesPerBuffer());
     if (const auto &lastAudioDevice = m_settings.lastAudioDevice(); !lastAudioDevice.isEmpty())
     {
         if (const auto index = m_ui->comboBoxAudioDevice->findText(lastAudioDevice); index >= 0)
+        {
             m_ui->comboBoxAudioDevice->setCurrentIndex(index);
+            if (m_settings.autoOpenAudioDevice())
+                openAudioDevice();
+        }
         else
             goto paDefault;
     }
@@ -70,7 +79,6 @@ MainWindow::MainWindow(QWidget *parent) :
 paDefault:
         m_ui->comboBoxAudioDevice->setCurrentIndex(Pa_GetDefaultOutputDevice());
     }
-    m_ui->spinBoxBufferSize->setValue(m_settings.framesPerBuffer());
     connect(m_ui->pushButtonAudioDevice, &QAbstractButton::pressed, this, &MainWindow::openAudioDevice);
 
     updateMidiInDevices();    
@@ -78,7 +86,11 @@ paDefault:
     if (const auto &lastMidiInDevice = m_settings.lastMidiInDevice(); !lastMidiInDevice.isEmpty())
     {
         if (const auto index = m_ui->comboBoxMidiIn->findText(lastMidiInDevice); index >= 0)
+        {
             m_ui->comboBoxMidiIn->setCurrentIndex(index);
+            if (m_settings.autoOpenMidiIn())
+                openMidiInDevice();
+        }
     }
     connect(m_ui->pushButtonMidiIn, &QAbstractButton::pressed, this, &MainWindow::openMidiInDevice);
 
@@ -87,7 +99,11 @@ paDefault:
     if (const auto &lastMidiOutDevice = m_settings.lastMidiOutDevice(); !lastMidiOutDevice.isEmpty())
     {
         if (const auto index = m_ui->comboBoxMidiOut->findText(lastMidiOutDevice); index >= 0)
+        {
             m_ui->comboBoxMidiOut->setCurrentIndex(index);
+            if (m_settings.autoOpenMidiOut())
+                openMidiOutDevice();
+        }
     }
     connect(m_ui->pushButtonMidiOut, &QAbstractButton::pressed, this, &MainWindow::openMidiOutDevice);
 
@@ -145,12 +161,19 @@ void MainWindow::openAudioDevice()
     {
         m_paStream = nullptr;
         m_ui->comboBoxAudioDevice->setEnabled(true);
+        m_ui->pushButtonRefreshAudioDevices->setEnabled(true);
         m_ui->spinBoxBufferSize->setEnabled(true);
         m_ui->pushButtonAudioDevice->setText(tr("Open"));
+        m_settings.setAutoOpenAudioDevice(false);
     }
     else
     {
         PaDeviceIndex index = m_ui->comboBoxAudioDevice->currentIndex();
+        if (index < 0)
+        {
+            QMessageBox::warning(this, tr("No audio device selected!"), tr("No audio device selected!"));
+            return;
+        }
 
         const PaDeviceInfo* pInfo = Pa_GetDeviceInfo(index);
 
@@ -166,7 +189,7 @@ void MainWindow::openAudioDevice()
 
         if (PaError err = Pa_OpenStream(&stream, NULL, &outputParameters, frameRate, m_ui->spinBoxBufferSize->value(), paNoFlag, &paCallback, this); err != paNoError)
         {
-            QMessageBox::warning(this, tr("Error opening stream!"), tr("Error opening stream!") + "\n\n" + Pa_GetErrorText(err));
+            QMessageBox::warning(this, tr("Error opening audio device!"), tr("Error opening audio device!") + "\n\n" + Pa_GetErrorText(err));
             return;
         }
 
@@ -175,13 +198,13 @@ void MainWindow::openAudioDevice()
 
         if (PaError err = Pa_SetStreamFinishedCallback(smartPtr.get(), &paStreamFinished); err != paNoError)
         {
-            QMessageBox::warning(this, tr("Error setting finished callback!"), tr("Error setting finished callback!") + "\n\n" + Pa_GetErrorText(err));
+            QMessageBox::warning(this, tr("Error opening audio device!"), tr("Error setting finished callback!") + "\n\n" + Pa_GetErrorText(err));
             return;
         }
 
         if (PaError err = Pa_StartStream(smartPtr.get()); err != paNoError)
         {
-            QMessageBox::warning(this, tr("Error starting stream!"), tr("Error starting stream!") + "\n\n" + Pa_GetErrorText(err));
+            QMessageBox::warning(this, tr("Error opening audio device!"), tr("Error starting stream!") + "\n\n" + Pa_GetErrorText(err));
             return;
         }
 
@@ -190,51 +213,100 @@ void MainWindow::openAudioDevice()
 
         m_paStream = std::move(smartPtr);
         m_ui->comboBoxAudioDevice->setEnabled(false);
+        m_ui->pushButtonRefreshAudioDevices->setEnabled(false);
         m_ui->spinBoxBufferSize->setEnabled(false);
         m_ui->pushButtonAudioDevice->setText(tr("Close"));
-
         m_settings.setLastAudioDevice(m_ui->comboBoxAudioDevice->currentText());
         m_settings.setFramesPerBuffer(m_ui->spinBoxBufferSize->value());
+        m_settings.setAutoOpenAudioDevice(true);
     }
 }
 
 void MainWindow::openMidiInDevice()
 {
     if (m_midiIn.isPortOpen())
+    {
         m_midiIn.closePort();
+
+        if (m_midiIn.isPortOpen())
+        {
+            QMessageBox::warning(this, tr("Could not close midi in device!"), tr("Could not close midi in device!"));
+            return;
+        }
+
+        m_ui->comboBoxMidiIn->setEnabled(true);
+        m_ui->pushButtonRefreshMidiIn->setEnabled(true);
+        m_ui->pushButtonMidiIn->setText(tr("Open"));
+        m_settings.setAutoOpenMidiIn(false);
+    }
     else
     {
         const auto index = m_ui->comboBoxMidiIn->currentIndex();
-        if (index != -1)
-            m_midiIn.openPort(index, "Input");
-        m_settings.setLastMidiInDevice(m_ui->comboBoxMidiIn->currentText());
-    }
+        if (index < 0)
+        {
+            QMessageBox::warning(this, tr("No midi in device selected!"), tr("No midi in device selected!"));
+            return;
+        }
 
-    m_ui->comboBoxMidiIn->setDisabled(m_midiIn.isPortOpen());
-    m_ui->pushButtonMidiIn->setText(m_midiIn.isPortOpen() ? tr("Close") : tr("Open"));
+        m_midiIn.openPort(index, "Input");
+
+        if (!m_midiIn.isPortOpen())
+        {
+            QMessageBox::warning(this, tr("Could not open midi in device!"), tr("Could not open midi in device!"));
+            return;
+        }
+
+        m_ui->comboBoxMidiIn->setEnabled(false);
+        m_ui->pushButtonRefreshMidiIn->setEnabled(false);
+        m_ui->pushButtonMidiIn->setText(tr("Close"));
+        m_settings.setLastMidiInDevice(m_ui->comboBoxMidiIn->currentText());
+        m_settings.setAutoOpenMidiIn(true);
+    }
 }
 
 void MainWindow::openMidiOutDevice()
 {
     if (m_midiOut.isPortOpen())
     {
-        qDebug() << "closing port";
         unsendColors(m_ui->tabWidget->currentIndex());
+
         m_midiOut.closePort();
+
+        if (m_midiOut.isPortOpen())
+        {
+            QMessageBox::warning(this, tr("Could not close midi out device!"), tr("Could not close midi out device!"));
+            return;
+        }
+
+        m_ui->comboBoxMidiOut->setEnabled(true);
+        m_ui->pushButtonRefreshMidiOut->setEnabled(true);
+        m_ui->pushButtonMidiOut->setText(tr("Open"));
+        m_settings.setAutoOpenMidiOut(false);
     }
     else
     {
         const auto index = m_ui->comboBoxMidiOut->currentIndex();
-        if (index != -1)
+        if (index < 0)
         {
-            m_midiOut.openPort(index, "Output");
-            m_settings.setLastMidiOutDevice(m_ui->comboBoxMidiOut->currentText());
-            sendColors(m_ui->tabWidget->currentIndex());
+            QMessageBox::warning(this, tr("No midi out device selected!"), tr("No midi out device selected!"));
+            return;
         }
-    }
 
-    m_ui->comboBoxMidiOut->setDisabled(m_midiOut.isPortOpen());
-    m_ui->pushButtonMidiOut->setText(m_midiOut.isPortOpen() ? tr("Close") : tr("Open"));
+        m_midiOut.openPort(index, "Output");
+
+        if (!m_midiOut.isPortOpen())
+        {
+            QMessageBox::warning(this, tr("Could not open midi out device!"), tr("Could not open midi out device!"));
+            return;
+        }
+
+        m_ui->comboBoxMidiOut->setEnabled(false);
+        m_ui->pushButtonRefreshMidiOut->setEnabled(false);
+        m_ui->pushButtonMidiOut->setText(tr("Close"));
+        m_settings.setLastMidiOutDevice(m_ui->comboBoxMidiOut->currentText());
+        m_settings.setAutoOpenMidiOut(true);
+        sendColors(m_ui->tabWidget->currentIndex());
+    }
 }
 
 void MainWindow::midiReceived(const midi::MidiMessage &message)
@@ -322,7 +394,7 @@ void MainWindow::unsendColors(int index)
             .cmd = learnSetting.cmd,
             .flag = true,
             .note = learnSetting.note,
-            .velocity = 0
+            .velocity = m_settings.colorOff()
         });
     }
 
@@ -347,7 +419,7 @@ void MainWindow::sendColors(int index)
                 .cmd = learnSetting.cmd,
                 .flag = true,
                 .note = learnSetting.note,
-                .velocity = 3
+                .velocity = m_settings.colorTabWidget()
             });
         }
 

@@ -41,7 +41,9 @@ public:
     void midiReceived(const midi::MidiMessage &message);
 
     void unsendColor();
-    void sendColor();
+    void sendColor(bool force);
+
+    bool loopEnabled() const;
 
 public slots:
     void timeout();
@@ -51,7 +53,7 @@ public slots:
 signals:
     void startDecoding(std::shared_ptr<QIODevice> device);
     void sendMidi(const midi::MidiMessage &midiMsg);
-    void loopEnabled(quint8 category);
+    void loopEnabledChanged(bool loopEnabled, quint8 category);
 
 private slots:
     void updateStatus();

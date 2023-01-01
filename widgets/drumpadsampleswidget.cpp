@@ -8,6 +8,8 @@
 
 #include "audioformat.h"
 #include "midicontainers.h"
+#include "drummachinesettings.h"
+#include "drumpadsettingsdialog.h"
 
 DrumPadSamplesWidget::DrumPadSamplesWidget(QWidget *parent) :
     QWidget{parent},
@@ -15,8 +17,8 @@ DrumPadSamplesWidget::DrumPadSamplesWidget(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
-    connect(m_ui->checkBox, &QCheckBox::toggled, this, &DrumPadSamplesWidget::updateWidgets);
-
+    connect(m_ui->pushButtonSettings, &QAbstractButton::pressed, this, &DrumPadSamplesWidget::showSettings);
+    connect(m_ui->pushButtonSwap, &QAbstractButton::toggled, this, &DrumPadSamplesWidget::updateWidgets);
     connect(m_ui->pushButtonStopAll, &QAbstractButton::pressed, this, &DrumPadSamplesWidget::stopAll);
 
     quint8 padNr{};
@@ -32,6 +34,14 @@ DrumPadSamplesWidget::~DrumPadSamplesWidget() = default;
 
 void DrumPadSamplesWidget::loadSettings(DrumMachineSettings &settings)
 {
+    m_settings = &settings;
+
+    m_ui->pushButtonSwap->setLearnSetting(settings.drumpadSwap());
+    m_ui->pushButtonStopAll->setLearnSetting(settings.drumpadStopAll());
+
+    connect(m_ui->pushButtonSwap, &MidiButton::learnSettingChanged, &settings, &DrumMachineSettings::setDrumpadSwap);
+    connect(m_ui->pushButtonStopAll, &MidiButton::learnSettingChanged, &settings, &DrumMachineSettings::setDrumpadStopAll);
+
     for (DrumPadSampleWidget &widget : getWidgets())
         widget.loadSettings(settings);
 }
@@ -45,11 +55,8 @@ void DrumPadSamplesWidget::setPreset(const drumpad_presets::Preset &preset)
 
 void DrumPadSamplesWidget::midiReceived(const midi::MidiMessage &message)
 {
-    if (message == midi::MidiMessage{.channel=0,.cmd=midi::Command::ControlChange,.flag=true,.note=64,.velocity=127})
-    {
-        m_ui->checkBox->toggle();
-        return;
-    }
+    m_ui->pushButtonSwap->midiReceived(message);
+    m_ui->pushButtonStopAll->midiReceived(message);
 
     for (DrumPadSampleWidget &widget : getWidgets())
         widget.midiReceived(message);
@@ -75,14 +82,46 @@ void DrumPadSamplesWidget::injectDecodingThread(QThread &thread)
 
 void DrumPadSamplesWidget::unsendColors()
 {
+    const quint8 color = m_settings ? m_settings->colorOff() : quint8{0};
+
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonSwap->learnSetting().channel,
+        .cmd = m_ui->pushButtonSwap->learnSetting().cmd,
+        .flag = true,
+        .note = m_ui->pushButtonSwap->learnSetting().note,
+        .velocity = color
+    });
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonStopAll->learnSetting().channel,
+        .cmd = m_ui->pushButtonStopAll->learnSetting().cmd,
+        .flag = true,
+        .note = m_ui->pushButtonStopAll->learnSetting().note,
+        .velocity = color
+    });
+
     for (DrumPadSampleWidget &widget : getWidgets())
         widget.unsendColor();
 }
 
 void DrumPadSamplesWidget::sendColors()
 {
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonSwap->learnSetting().channel,
+        .cmd = m_ui->pushButtonSwap->learnSetting().cmd,
+        .flag = true,
+        .note = m_ui->pushButtonSwap->learnSetting().note,
+        .velocity = m_settings ? m_settings->drumpadColorSwap() : quint8{127}
+    });
+    emit sendMidi(midi::MidiMessage {
+        .channel = m_ui->pushButtonStopAll->learnSetting().channel,
+        .cmd = m_ui->pushButtonStopAll->learnSetting().cmd,
+        .flag = true,
+        .note = m_ui->pushButtonStopAll->learnSetting().note,
+        .velocity = m_settings ? m_settings->drumpadColorStopAll() : quint8{127}
+    });
+
     for (DrumPadSampleWidget &widget : getWidgets())
-        widget.sendColor();
+        widget.sendColor(true);
 }
 
 void DrumPadSamplesWidget::sequencerTriggerSample(int index)
@@ -94,6 +133,18 @@ void DrumPadSamplesWidget::sequencerTriggerSample(int index)
         return;
     }
     widgets[index].get().pressed();
+}
+
+void DrumPadSamplesWidget::showSettings()
+{
+    if (!m_settings)
+    {
+        qWarning() << "settings are missing";
+        return;
+    }
+
+    DrumPadSettingsDialog dialog{*m_settings, this};
+    dialog.exec();
 }
 
 void DrumPadSamplesWidget::chokeTriggered(int choke)
@@ -114,7 +165,7 @@ void DrumPadSamplesWidget::updateWidgets()
 
     auto files = *m_preset.files;
 
-    if (m_ui->checkBox->isChecked())
+    if (m_ui->pushButtonSwap->isChecked())
         for (int i = 0; i < 12; i++)
             std::swap(files[i], files[i+12]);
 

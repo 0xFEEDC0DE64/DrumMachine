@@ -47,9 +47,17 @@ void SettingsDialog::accept()
             m_settings.setCacheDir(cacheDir);
     }
 
-    const auto maximumCacheSize = qint64{m_ui->spinBoxMaxCacheSize->value()} * 1024 * 1024;
-    if (m_settings.maximumCacheSize() != maximumCacheSize)
+    if (const auto maximumCacheSize = qint64{m_ui->spinBoxMaxCacheSize->value()} * 1024 * 1024;
+        m_settings.maximumCacheSize() != maximumCacheSize)
         m_settings.setMaximumCacheSize(maximumCacheSize);
+
+    if (const quint8 colorOff = m_ui->spinBoxColorOff->value();
+        m_settings.colorOff() != colorOff)
+        m_settings.setColorOff(colorOff);
+
+    if (const quint8 colorTabWidget = m_ui->spinBoxColorTabWidget->value();
+        m_settings.colorTabWidget() != colorTabWidget)
+        m_settings.setColorTabWidget(colorTabWidget);
 
     QDialog::accept();
 }
@@ -78,12 +86,16 @@ void SettingsDialog::resetFields()
 {
     m_ui->lineEditCacheDir->setText(m_settings.cacheDir());
     m_ui->spinBoxMaxCacheSize->setValue(m_settings.maximumCacheSize() / 1024 / 1024);
+    m_ui->spinBoxColorOff->setValue(m_settings.colorOff());
+    m_ui->spinBoxColorTabWidget->setValue(m_settings.colorTabWidget());
 }
 
 void SettingsDialog::restoreDefaults()
 {
     m_ui->lineEditCacheDir->setText(m_settings.defaultCacheDir());
     m_ui->spinBoxMaxCacheSize->setValue(m_settings.defaultMaximumCacheSize() / 1024 / 1024);
+    m_ui->spinBoxColorOff->setValue(m_settings.defaultColorOff());
+    m_ui->spinBoxColorTabWidget->setValue(m_settings.defaultColorTabWidget());
 }
 
 void SettingsDialog::selectCacheDir()

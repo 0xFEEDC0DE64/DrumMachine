@@ -1,5 +1,5 @@
-#include "sequencerwidget.h"
-#include "ui_sequencerwidget.h"
+#include "drumpadsequencerwidget.h"
+#include "ui_drumpadsequencerwidget.h"
 
 #include <algorithm>
 
@@ -9,80 +9,85 @@
 #include "drummachinesettings.h"
 #include "midicontainers.h"
 
-SequencerWidget::SequencerWidget(QWidget *parent) :
+DrumPadSequencerWidget::DrumPadSequencerWidget(QWidget *parent) :
     QWidget{parent},
-    m_ui{std::make_unique<Ui::SequencerWidget>()}
+    m_ui{std::make_unique<Ui::DrumPadSequencerWidget>()},
+    m_timer{this}
 {
     m_ui->setupUi(this);
 
-    connect(m_ui->spinBoxTempo, qOverload<int>(&QSpinBox::valueChanged), this, &SequencerWidget::tempoChanged);
+    connect(m_ui->spinBoxTempo, qOverload<int>(&QSpinBox::valueChanged), this, &DrumPadSequencerWidget::tempoChanged);
 
-    connect(m_ui->comboBoxSequence, qOverload<int>(&QComboBox::currentIndexChanged), this, &SequencerWidget::sequenceSelected);
+    connect(m_ui->comboBoxSequence, qOverload<int>(&QComboBox::currentIndexChanged), this, &DrumPadSequencerWidget::sequenceSelected);
 
-    connect(m_ui->pushButtonUp, &QAbstractButton::pressed, this, &SequencerWidget::selectPrevSequence);
-    connect(m_ui->pushButtonDown, &QAbstractButton::pressed, this, &SequencerWidget::selectNextSequence);
-    connect(m_ui->pushButtonPlayPause, &QAbstractButton::pressed, this, &SequencerWidget::playPause);
-    connect(m_ui->pushButtonStop, &QAbstractButton::pressed, this, &SequencerWidget::stop);
+    connect(m_ui->pushButtonUp, &QAbstractButton::pressed, this, &DrumPadSequencerWidget::selectPrevSequence);
+    connect(m_ui->pushButtonDown, &QAbstractButton::pressed, this, &DrumPadSequencerWidget::selectNextSequence);
+    connect(m_ui->pushButtonPlayPause, &QAbstractButton::pressed, this, &DrumPadSequencerWidget::playPause);
+    connect(m_ui->pushButtonStop, &QAbstractButton::pressed, this, &DrumPadSequencerWidget::stop);
 
     connect(m_ui->horizontalSlider, &QSlider::valueChanged, this, [=](int value){ m_pos = value; updateStatusLabel(); });
 
-    connect(&m_timer, &QTimer::timeout, this, &SequencerWidget::timeout);
+    connect(&m_timer, &QTimer::timeout, this, &DrumPadSequencerWidget::timeout);
 
     m_timer.setTimerType(Qt::PreciseTimer);
 
     updateStatusLabel();
 }
 
-SequencerWidget::~SequencerWidget() = default;
+DrumPadSequencerWidget::~DrumPadSequencerWidget() = default;
 
-void SequencerWidget::loadSettings(DrumMachineSettings &settings)
+void DrumPadSequencerWidget::loadSettings(DrumMachineSettings &settings)
 {
+    m_settings = &settings;
+
     m_ui->pushButtonUp->setLearnSetting(settings.drumpadPrevSequence());
     m_ui->pushButtonDown->setLearnSetting(settings.drumpadNextSequence());
     m_ui->pushButtonPlayPause->setLearnSetting(settings.drumpadPlayPause());
-    m_ui->pushButtonStop->setLearnSetting(settings.drumpadStop());
+    m_ui->pushButtonStop->setLearnSetting(settings.drumpadStopSequence());
 
     connect(m_ui->pushButtonUp, &MidiButton::learnSettingChanged, &settings, &DrumMachineSettings::setDrumpadPrevSequence);
     connect(m_ui->pushButtonDown, &MidiButton::learnSettingChanged, &settings, &DrumMachineSettings::setDrumpadNextSequence);
     connect(m_ui->pushButtonPlayPause, &MidiButton::learnSettingChanged, &settings, &DrumMachineSettings::setDrumpadPlayPause);
-    connect(m_ui->pushButtonStop, &MidiButton::learnSettingChanged, &settings, &DrumMachineSettings::setDrumpadStop);
+    connect(m_ui->pushButtonStop, &MidiButton::learnSettingChanged, &settings, &DrumMachineSettings::setDrumpadStopSequence);
 }
 
-void SequencerWidget::unsendColors()
+void DrumPadSequencerWidget::unsendColors()
 {
     m_sendColors = false;
+
+    const quint8 color = m_settings ? m_settings->colorOff() : quint8{0};
 
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonUp->learnSetting().channel,
         .cmd = m_ui->pushButtonUp->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonUp->learnSetting().note,
-        .velocity = 0
+        .velocity = color
     });
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonDown->learnSetting().channel,
         .cmd = m_ui->pushButtonDown->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonDown->learnSetting().note,
-        .velocity = 0
+        .velocity = color
     });
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonPlayPause->learnSetting().channel,
         .cmd = m_ui->pushButtonPlayPause->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonPlayPause->learnSetting().note,
-        .velocity = 0
+        .velocity = color
     });
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonStop->learnSetting().channel,
         .cmd = m_ui->pushButtonStop->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonStop->learnSetting().note,
-        .velocity = 0
+        .velocity = color
     });
 }
 
-void SequencerWidget::sendColors()
+void DrumPadSequencerWidget::sendColors()
 {
     m_sendColors = true;
 
@@ -91,32 +96,32 @@ void SequencerWidget::sendColors()
         .cmd = m_ui->pushButtonUp->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonUp->learnSetting().note,
-        .velocity = 127
+        .velocity = m_settings ? m_settings->drumpadColorPrevSequence() : quint8{127}
     });
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonDown->learnSetting().channel,
         .cmd = m_ui->pushButtonDown->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonDown->learnSetting().note,
-        .velocity = 127
+        .velocity = m_settings ? m_settings->drumpadColorNextSequence() : quint8{127}
     });
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonPlayPause->learnSetting().channel,
         .cmd = m_ui->pushButtonPlayPause->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonPlayPause->learnSetting().note,
-        .velocity = 60
+        .velocity = m_settings ? m_settings->drumpadColorPlayPause() : quint8{3}
     });
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonStop->learnSetting().channel,
         .cmd = m_ui->pushButtonStop->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonStop->learnSetting().note,
-        .velocity = 3
+        .velocity = m_settings ? m_settings->drumpadColorStopSequence() : quint8{60}
     });
 }
 
-void SequencerWidget::setPreset(const drumpad_presets::Preset &preset)
+void DrumPadSequencerWidget::setPreset(const drumpad_presets::Preset &preset)
 {
     if (preset.tempo)
         m_ui->spinBoxTempo->setValue(*preset.tempo);
@@ -155,7 +160,7 @@ void SequencerWidget::setPreset(const drumpad_presets::Preset &preset)
     sequenceSelected();
 }
 
-void SequencerWidget::midiReceived(const midi::MidiMessage &message)
+void DrumPadSequencerWidget::midiReceived(const midi::MidiMessage &message)
 {
     m_ui->pushButtonUp->midiReceived(message);
     m_ui->pushButtonDown->midiReceived(message);
@@ -163,7 +168,7 @@ void SequencerWidget::midiReceived(const midi::MidiMessage &message)
     m_ui->pushButtonStop->midiReceived(message);
 }
 
-void SequencerWidget::playPause()
+void DrumPadSequencerWidget::playPause()
 {
     if (m_timer.isActive())
     {
@@ -177,7 +182,7 @@ void SequencerWidget::playPause()
     }
 }
 
-void SequencerWidget::stop()
+void DrumPadSequencerWidget::stop()
 {
     m_timer.stop();
     m_ui->pushButtonPlayPause->setText(tr("▶"));
@@ -186,12 +191,12 @@ void SequencerWidget::stop()
     updateStatusLabel();
 }
 
-void SequencerWidget::tempoChanged(int tempo)
+void DrumPadSequencerWidget::tempoChanged(int tempo)
 {
     m_timer.setInterval(1000. * 60. / tempo / 4.);
 }
 
-void SequencerWidget::sequenceSelected()
+void DrumPadSequencerWidget::sequenceSelected()
 {
     const auto index = m_ui->comboBoxSequence->currentIndex();
 
@@ -210,7 +215,7 @@ void SequencerWidget::sequenceSelected()
     updateStatusLabel();
 }
 
-void SequencerWidget::timeout()
+void DrumPadSequencerWidget::timeout()
 {
     if (m_selectedSequence && m_selectedSequence->pads)
     {
@@ -244,18 +249,18 @@ void SequencerWidget::timeout()
     updateStatusLabel();
 }
 
-void SequencerWidget::updateStatusLabel()
+void DrumPadSequencerWidget::updateStatusLabel()
 {
     m_ui->labelStatus->setText(QString{"%0 / %1"}.arg(m_pos+1).arg(m_selectedSequence && m_selectedSequence->sequencerSize ? *m_selectedSequence->sequencerSize-1 : -1));
 }
 
-void SequencerWidget::selectPrevSequence()
+void DrumPadSequencerWidget::selectPrevSequence()
 {
     if (const auto index = m_ui->comboBoxSequence->currentIndex(); index > 0)
         m_ui->comboBoxSequence->setCurrentIndex(index - 1);
 }
 
-void SequencerWidget::selectNextSequence()
+void DrumPadSequencerWidget::selectNextSequence()
 {
     if (const auto index = m_ui->comboBoxSequence->currentIndex(); index + 1 < m_ui->comboBoxSequence->count())
         m_ui->comboBoxSequence->setCurrentIndex(index + 1);

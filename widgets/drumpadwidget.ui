@@ -107,7 +107,7 @@
    <property name="orientation">
     <enum>Qt::Vertical</enum>
    </property>
-   <widget class="SequencerWidget" name="sequencerWidget" native="true"/>
+   <widget class="DrumPadSequencerWidget" name="sequencerWidget" native="true"/>
    <widget class="DrumPadSamplesWidget" name="samplesWidget" native="true"/>
   </widget>
  </widget>
@@ -130,9 +130,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>SequencerWidget</class>
+   <class>DrumPadSequencerWidget</class>
    <extends>QWidget</extends>
-   <header>widgets/sequencerwidget.h</header>
+   <header>widgets/drumpadsequencerwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

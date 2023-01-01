@@ -5,7 +5,8 @@
 
 DrumPadPresetDetailWidget::DrumPadPresetDetailWidget(QWidget *parent) :
     QScrollArea{parent},
-    m_ui{std::make_unique<Ui::DrumPadPresetDetailWidget>()}
+    m_ui{std::make_unique<Ui::DrumPadPresetDetailWidget>()},
+    m_tagsModel{this}
 {
     m_ui->setupUi(this);
 

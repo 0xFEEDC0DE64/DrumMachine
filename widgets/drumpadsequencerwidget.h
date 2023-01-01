@@ -8,18 +8,18 @@
 #include <QTimer>
 
 class QLabel;
-namespace Ui { class SequencerWidget; }
+namespace Ui { class DrumPadSequencerWidget; }
 namespace drumpad_presets { struct Preset; struct Sequence; }
 class DrumMachineSettings;
 namespace midi { struct MidiMessage; }
 
-class SequencerWidget : public QWidget
+class DrumPadSequencerWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit SequencerWidget(QWidget *parent = nullptr);
-    ~SequencerWidget() override;
+    explicit DrumPadSequencerWidget(QWidget *parent = nullptr);
+    ~DrumPadSequencerWidget() override;
 
     void loadSettings(DrumMachineSettings &settings);
     void unsendColors();
@@ -48,7 +48,9 @@ private slots:
     void selectNextSequence();
 
 private:
-    const std::unique_ptr<Ui::SequencerWidget> m_ui;
+    const std::unique_ptr<Ui::DrumPadSequencerWidget> m_ui;
+
+    DrumMachineSettings *m_settings{};
 
     std::vector<drumpad_presets::Sequence> m_sequences;
     const drumpad_presets::Sequence *m_selectedSequence{};
