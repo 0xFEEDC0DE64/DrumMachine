@@ -121,14 +121,30 @@ public:
     MidiLearnSetting loopstationPrevPreset() const;
     void setLoopstationPrevPreset(const MidiLearnSetting &value);
 
+    quint8 loopstationColorPrevPreset() const;
+    quint8 defaultLoopstationColorPrevPreset() const;
+    void setLoopstationColorPrevPreset(quint8 loopstationColorPrevPreset);
+
     MidiLearnSetting loopstationNextPreset() const;
     void setLoopstationNextPreset(const MidiLearnSetting &value);
+
+    quint8 loopstationColorNextPreset() const;
+    quint8 defaultLoopstationColorNextPreset() const;
+    void setLoopstationColorNextPreset(quint8 loopstationColorNextPreset);
 
     MidiLearnSetting loopstationPlayPause() const;
     void setLoopstationPlayPause(const MidiLearnSetting &value);
 
+    quint8 loopstationColorPlayPause() const;
+    quint8 defaultLoopstationColorPlayPause() const;
+    void setLoopstationColorPlayPause(quint8 loopstationColorPlayPause);
+
     MidiLearnSetting loopstationStop() const;
     void setLoopstationStop(const MidiLearnSetting &value);
+
+    quint8 loopstationColorStop() const;
+    quint8 defaultLoopstationColorStop() const;
+    void setLoopstationColorStop(quint8 loopstationColorStop);
 
     MidiLearnSetting loopstationSample(quint8 pad) const;
     void setLoopstationSample(quint8 pad, const MidiLearnSetting &value);

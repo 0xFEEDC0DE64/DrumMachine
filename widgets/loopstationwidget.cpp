@@ -97,14 +97,14 @@ void LoopStationWidget::sendColors()
         .cmd = m_ui->pushButtonUp->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonUp->learnSetting().note,
-        .velocity = 127
+        .velocity = m_settings ? m_settings->loopstationColorPrevPreset() : quint8{127}
     });
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonDown->learnSetting().channel,
         .cmd = m_ui->pushButtonDown->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonDown->learnSetting().note,
-        .velocity = 127
+        .velocity = m_settings ? m_settings->loopstationColorNextPreset() : quint8{127}
     });
 
     m_ui->samplesWidget->sendColors();

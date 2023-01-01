@@ -5,6 +5,7 @@
 
 #include "loopstationpresets.h"
 #include "drummachinesettings.h"
+#include "loopstationsettingsdialog.h"
 
 LoopStationSamplesWidget::LoopStationSamplesWidget(QWidget *parent) :
     QWidget{parent},
@@ -152,14 +153,14 @@ void LoopStationSamplesWidget::sendColors()
         .cmd = m_ui->pushButtonPlayPause->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonPlayPause->learnSetting().note,
-        .velocity = 3
+        .velocity = m_settings ? m_settings->loopstationColorPlayPause() : quint8{3}
     });
     emit sendMidi(midi::MidiMessage {
         .channel = m_ui->pushButtonStop->learnSetting().channel,
         .cmd = m_ui->pushButtonStop->learnSetting().cmd,
         .flag = true,
         .note = m_ui->pushButtonStop->learnSetting().note,
-        .velocity = 60
+        .velocity = m_settings ? m_settings->loopstationColorStop() : quint8{60}
     });
 
     for (LoopStationSampleWidget &widget : getWidgets())
@@ -168,7 +169,14 @@ void LoopStationSamplesWidget::sendColors()
 
 void LoopStationSamplesWidget::showSettings()
 {
+    if (!m_settings)
+    {
+        qWarning() << "settings are missing";
+        return;
+    }
 
+    LoopStationSettingsDialog dialog{*m_settings, this};
+    dialog.exec();
 }
 
 void LoopStationSamplesWidget::timeout()

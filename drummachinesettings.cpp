@@ -386,6 +386,21 @@ void DrumMachineSettings::setLoopstationPrevPreset(const MidiLearnSetting &value
     setLearnSetting("loopstation/prevPreset", value);
 }
 
+quint8 DrumMachineSettings::loopstationColorPrevPreset() const
+{
+    return value("loopstation/colorPrevPreset", defaultLoopstationColorPrevPreset()).value<quint8>();
+}
+
+quint8 DrumMachineSettings::defaultLoopstationColorPrevPreset() const
+{
+    return 127;
+}
+
+void DrumMachineSettings::setLoopstationColorPrevPreset(quint8 loopstationColorPrevPreset)
+{
+    setValue("loopstation/colorPrevPreset", loopstationColorPrevPreset);
+}
+
 MidiLearnSetting DrumMachineSettings::loopstationNextPreset() const
 {
     return learnSetting("loopstation/nextPreset");
@@ -394,6 +409,21 @@ MidiLearnSetting DrumMachineSettings::loopstationNextPreset() const
 void DrumMachineSettings::setLoopstationNextPreset(const MidiLearnSetting &value)
 {
     setLearnSetting("loopstation/nextPreset", value);
+}
+
+quint8 DrumMachineSettings::loopstationColorNextPreset() const
+{
+    return value("loopstation/colorNextPreset", defaultLoopstationColorNextPreset()).value<quint8>();
+}
+
+quint8 DrumMachineSettings::defaultLoopstationColorNextPreset() const
+{
+    return 127;
+}
+
+void DrumMachineSettings::setLoopstationColorNextPreset(quint8 loopstationColorNextPreset)
+{
+    setValue("loopstation/colorNextPreset", loopstationColorNextPreset);
 }
 
 MidiLearnSetting DrumMachineSettings::loopstationPlayPause() const
@@ -406,6 +436,21 @@ void DrumMachineSettings::setLoopstationPlayPause(const MidiLearnSetting &value)
     setLearnSetting("loopstation/playPause", value);
 }
 
+quint8 DrumMachineSettings::loopstationColorPlayPause() const
+{
+    return value("loopstation/colorPlayPause", defaultLoopstationColorPlayPause()).value<quint8>();
+}
+
+quint8 DrumMachineSettings::defaultLoopstationColorPlayPause() const
+{
+    return 3;
+}
+
+void DrumMachineSettings::setLoopstationColorPlayPause(quint8 loopstationColorPlayPause)
+{
+    setValue("loopstation/colorPlayPause", loopstationColorPlayPause);
+}
+
 MidiLearnSetting DrumMachineSettings::loopstationStop() const
 {
     return learnSetting("loopstation/stop");
@@ -414,6 +459,21 @@ MidiLearnSetting DrumMachineSettings::loopstationStop() const
 void DrumMachineSettings::setLoopstationStop(const MidiLearnSetting &value)
 {
     setLearnSetting("loopstation/stop", value);
+}
+
+quint8 DrumMachineSettings::loopstationColorStop() const
+{
+    return value("loopstation/colorStop", defaultLoopstationColorStop()).value<quint8>();
+}
+
+quint8 DrumMachineSettings::defaultLoopstationColorStop() const
+{
+    return 60;
+}
+
+void DrumMachineSettings::setLoopstationColorStop(quint8 loopstationColorStop)
+{
+    setValue("loopstation/colorStop", loopstationColorStop);
 }
 
 MidiLearnSetting DrumMachineSettings::loopstationSample(quint8 pad) const

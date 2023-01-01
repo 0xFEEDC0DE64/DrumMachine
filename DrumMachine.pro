@@ -44,6 +44,7 @@ SOURCES += \
     widgets/loopstationpresetdetailwidget.cpp \
     widgets/loopstationsampleswidget.cpp \
     widgets/loopstationsamplewidget.cpp \
+    widgets/loopstationsettingsdialog.cpp \
     widgets/loopstationwidget.cpp \
     widgets/mainwindow.cpp \
     widgets/midibutton.cpp \
@@ -87,6 +88,7 @@ HEADERS += \
     widgets/loopstationpresetdetailwidget.h \
     widgets/loopstationsampleswidget.h \
     widgets/loopstationsamplewidget.h \
+    widgets/loopstationsettingsdialog.h \
     widgets/loopstationwidget.h \
     widgets/mainwindow.h \
     widgets/midibutton.h \
@@ -108,6 +110,7 @@ FORMS += \
     widgets/loopstationpresetdetailwidget.ui \
     widgets/loopstationsampleswidget.ui \
     widgets/loopstationsamplewidget.ui \
+    widgets/loopstationsettingsdialog.ui \
     widgets/loopstationwidget.ui \
     widgets/mainwindow.ui \
     widgets/settingsdialog.ui \
