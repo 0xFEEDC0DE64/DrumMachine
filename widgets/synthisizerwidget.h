@@ -28,9 +28,10 @@ signals:
 
 public slots:
     void midiReceived(const midi::MidiMessage &message);
+    void onQuarterNote();
 
 private:
     const std::unique_ptr<Ui::SynthisizerWidget> m_ui;
 
-    Synthisizer m_synthisizer;
+    std::array<Synthisizer, 10> m_synthisizers;
 };

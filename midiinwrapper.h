@@ -26,9 +26,13 @@ public:
 
 signals:
     void midiReceived(const midi::MidiMessage &message);
+    void onQuarterNote();
 
 private:
     static void mycallback(double deltatime, std::vector<unsigned char> *message, void *userData);
 
     RtMidiIn midiIn;
+
+    int m_timerCounter{};
+    bool m_counting{true};
 };

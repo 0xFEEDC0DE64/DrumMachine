@@ -27,6 +27,8 @@ struct MidiMessage
     bool operator==(const MidiMessage &other) const;
 };
 
+static_assert(sizeof(MidiMessage) == 3);
+
 } // namespace midi
 
 Q_DECLARE_METATYPE(midi::Command)

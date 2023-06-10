@@ -3,6 +3,9 @@
 #include <QCoreApplication>
 #include <QMetaType>
 #include <QDebug>
+#include <QDateTime>
+
+#include <chrono>
 
 #include "midicontainers.h"
 
@@ -67,9 +70,37 @@ void MidiInWrapper::mycallback(double deltatime, std::vector<unsigned char> *mes
         return;
     }
 
+    if (message->size() == 1)
+    {
+        if (const auto opcode = message->at(0); opcode == 250)
+        {
+            wrapper->m_counting = true;
+            wrapper->m_timerCounter = 0;
+        }
+        else if (opcode == 252)
+        {
+            wrapper->m_counting = false;
+        }
+        else if (opcode == 248)
+        {
+            if (wrapper->m_counting)
+            {
+                if (wrapper->m_timerCounter == 0 || wrapper->m_timerCounter == 12)
+                    wrapper->onQuarterNote();
+                wrapper->m_timerCounter++;
+                if (wrapper->m_timerCounter >= 24)
+                    wrapper->m_timerCounter = 0;
+            }
+        }
+        else
+            qWarning() << "unknown opcode" << opcode;
+
+        return;
+    }
+
     if (message->size() < sizeof(midi::MidiMessage))
     {
-        qCritical() << "called with message that is shorter than 3 bytes";
+        qCritical() << "called with message that is shorter than 3 bytes (" << message->size() << ')';
         return;
     }
 

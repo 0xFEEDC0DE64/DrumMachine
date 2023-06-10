@@ -46,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->loopStationWidget->injectNetworkAccessManager(m_networkAccessManager);
 
     connect(&m_midiIn, &MidiInWrapper::midiReceived, this, &MainWindow::midiReceived);
+    connect(&m_midiIn, &MidiInWrapper::onQuarterNote, this, &MainWindow::onQuarterNote);
 
     {
         QEventLoop eventLoop;
@@ -325,6 +326,11 @@ void MainWindow::midiReceived(const midi::MidiMessage &message)
         m_ui->djWidget->midiReceived(message);
     else if (m_ui->tabWidget->currentIndex() == 3)
         m_ui->synthisizerWidget->midiReceived(message);
+}
+
+void MainWindow::onQuarterNote()
+{
+    m_ui->synthisizerWidget->onQuarterNote();
 }
 
 void MainWindow::sendMidi(const midi::MidiMessage &midiMsg)

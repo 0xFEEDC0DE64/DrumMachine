@@ -33,6 +33,7 @@ private slots:
     void openMidiInDevice();
     void openMidiOutDevice();
     void midiReceived(const midi::MidiMessage &message);
+    void onQuarterNote();
     void sendMidi(const midi::MidiMessage &midiMsg);
     void currentChanged(int index);
 

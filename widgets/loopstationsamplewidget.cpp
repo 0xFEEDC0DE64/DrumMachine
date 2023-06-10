@@ -124,13 +124,13 @@ void LoopStationSampleWidget::sendColor(bool force)
         if (m_player.buffer().isValid())
         {
             if (m_category == 0)
-                newColor = m_player.playing() ? 44 : 47; //dunkelblue
+                newColor = m_player.playing() ? 44 : 47; // darkblue
             else if (m_category == 1)
                 newColor = m_player.playing() ? 16 : 19; // green
             else if (m_category == 2)
                 newColor = m_player.playing() ? 48 : 51; // violet
             else if (m_category == 3)
-                newColor = m_player.playing() ? 36 : 39; // hellblue
+                newColor = m_player.playing() ? 36 : 39; // lightblue
             else if (m_category == 4)
                 newColor = m_player.playing() ? 8  : 11; // orange
             else if (m_category == 5)
@@ -203,18 +203,19 @@ void LoopStationSampleWidget::updateStatus()
 #endif
 ;
 
+
         if (m_category == 0)
-            newColor = QColor{bright, dark, bright};
+            newColor = QColor{dark, dark, bright}; // darkblue
         else if (m_category == 1)
-            newColor = QColor{bright, dark, dark};
+            newColor = QColor{dark, bright, dark}; // green
         else if (m_category == 2)
-            newColor = QColor{bright, bright, dark};
+            newColor = QColor{bright, dark, bright}; // violet
         else if (m_category == 3)
-            newColor = QColor{dark, bright, dark};
+            newColor = QColor{dark, bright, bright}; // lightblue
         else if (m_category == 4)
-            newColor = QColor{dark, dark, bright};
+            newColor = QColor{bright, bright, dark}; // yellow
         else if (m_category == 5)
-            newColor = QColor{dark, bright, bright};
+            newColor = QColor{bright, dark, dark}; // red
         else
         {
             qWarning() << "unknown category:" << m_category;
